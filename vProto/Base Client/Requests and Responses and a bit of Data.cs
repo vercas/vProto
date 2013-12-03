@@ -157,6 +157,9 @@ namespace vProto
         /// <returns>The request object.</returns>
         public Request CreateRequest(short? type = null, byte[] payload = null)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
             var req = new Request(this, __getNewRequestID());
 
             if (type != null && type.HasValue)

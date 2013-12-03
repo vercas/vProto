@@ -34,12 +34,16 @@ namespace vProto
         protected System.IO.Stream stream;
 
 
+
         /// <summary>
         /// Gets a value indicating whether the object is disposed or not.
         /// </summary>
         public Boolean Disposed { get; private set; }
 
-        public void Dispose()
+        /// <summary>
+        /// Releases all the resources used by the current instance of vProto.BaseClient.
+        /// </summary>
+        public virtual void Dispose()
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "Object already disposed!");
@@ -122,13 +126,9 @@ namespace vProto
             }
 #endif
 
-            ExtraDispose();
-
             Disposed = true;
             IsConnected = false;
         }
-
-        protected virtual void ExtraDispose() { }
 
 
         /// <summary>
@@ -142,40 +142,6 @@ namespace vProto
 
             if (IsConnected)
             {
-                IsConnected = false;
-
-                /*lock (rec_sync)
-                {
-                    receiving = false;
-                }*/
-
-                /*try
-                {
-                    receiver.Abort();
-                }
-                catch (Exception)
-                {
-
-                }
-
-                try
-                {
-                    sender.Abort();
-                }
-                catch (Exception)
-                {
-
-                }
-
-                try
-                {
-                    client.Close();
-                }
-                finally
-                {
-                    OnDisconnected(new Events.ClientDisconnectedEventArgs(x));
-                }*/
-
                 Dispose();
 
                 OnDisconnected(new Events.ClientDisconnectedEventArgs(x));

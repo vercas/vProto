@@ -166,6 +166,8 @@ namespace vProto
 
         void LowSendPacket_Callback(IAsyncResult ar)
         {
+            //Console.Write("Package sending callback; ");
+
             try
             {
                 lock (send_lock)
@@ -173,6 +175,8 @@ namespace vProto
                     stream.EndWrite(ar);
 
                     sending = packageQueue.Count > 0;
+
+                    //Console.Write("Sending: {0}; Queue count: {1}; ", sending, packageQueue.Count);
                 }
             }
             catch (ObjectDisposedException x)
@@ -209,6 +213,8 @@ namespace vProto
                     if (packageQueue.Count > 0)
                         t = packageQueue.Dequeue();
 
+                //Console.WriteLine((t == null) ? "Nothing queued." : "Item queued!");
+
                 if (t != null)
                     __sendPack(t, true);
             }
@@ -219,12 +225,18 @@ namespace vProto
 
         bool __sendPack(byte[] pack, AsyncCallback cbk, Package st, bool force)
         {
+            //Console.Write("Sending package: {0}; Forced: {1}; ", st.Header.Type, force);
+
             lock (send_lock)
             {
+                //Console.Write("Sending: {0}; ", sending);
+
                 //  If we're sending and we're not being forced to send...
                 if (sending && !force)
                 {
                     packageQueue.Enqueue(new QueuedPackage(pack, cbk, st));
+
+                    //Console.WriteLine("Queued.");
                 }
                 else
                 {
@@ -233,6 +245,8 @@ namespace vProto
                     try
                     {
                         stream.BeginWrite(pack, 0, pack.Length, cbk, st);
+
+                        //Console.WriteLine("Sent!");
                     }
                     catch (ObjectDisposedException x)
                     {
@@ -258,6 +272,9 @@ namespace vProto
 
         internal protected void _SendPack(byte[] payload, PackageHeader header, Action cbk = null, object state = null)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
             if (payload == null)
                 throw new ArgumentNullException("payload", "Payload array cannot be null.");
 
@@ -266,6 +283,9 @@ namespace vProto
 
         internal protected void _SendPack(System.IO.Stream payload, PackageHeader header, int? len = null, Action cbk = null, object state = null)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
             if (payload == null)
                 throw new ArgumentNullException("payload", "Payload stream cannot be null.");
 

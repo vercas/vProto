@@ -28,7 +28,7 @@ namespace Server
             serv.Dispose();
         }
 
-        static void serv_ClientConnected(object sender, vProto.Events.ServerClientConnectedEventArgs e)
+        static void serv_ClientConnected(vProto.Server sender, vProto.Events.ServerClientConnectedEventArgs e)
         {
             Console.WriteLine("Client CONNECTED\t{0}", e.ID);
 

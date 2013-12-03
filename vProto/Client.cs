@@ -13,6 +13,9 @@ using System.Threading;
 
 namespace vProto
 {
+    /// <summary>
+    /// Handles communication with a server.
+    /// </summary>
     public class Client
         : BaseClient
     {
@@ -32,25 +35,31 @@ namespace vProto
         }
 
 
-        protected override void ExtraDispose()
-        {
-            //
-        }
-
 
         string srvName;
 
 
+
+        /// <summary>
+        /// Initializes a new instance of the vProto.Client class.
+        /// </summary>
+        /// <param name="srvname">optional; Server name for SSL certificate verification. Use null for no SSL.</param>
         public Client(string srvname = null)
         {
             srvName = srvname;
         }
 
 
+
+        /// <summary>
+        /// Starts an asynchronous request for a remote host connection.
+        /// </summary>
+        /// <param name="ep">The IP address and port of the remote host.</param>
+        /// <returns>True if the connection was requested; otherwise false (if already connected or connection failed from the start)</returns>
         public bool Connect(IPEndPoint ep)
         {
             if (Disposed)
-                throw new ObjectDisposedException("vProto.Client", "Re-instantiate the client to reconnect!");
+                throw new ObjectDisposedException(base.GetType().FullName, "Re-instantiate the client to reconnect!");
 
             if (IsConnected)
                 return false;
@@ -67,7 +76,7 @@ namespace vProto
 
             try
             {
-                client.BeginConnect(ep.Address, ep.Port, new AsyncCallback(ConnectionCallback), null);
+                client.BeginConnect(ep.Address, ep.Port, ConnectionCallback, null);
 
                 return true;
             }
@@ -98,7 +107,7 @@ namespace vProto
 
                 if (srvName == null)
                 {
-                    heartbeatTimer = new System.Threading.Timer(new System.Threading.TimerCallback(__heartbeatTimerCallback), null, HeartbeatInterval, HeartbeatInterval);
+                    heartbeatTimer = new System.Threading.Timer(__heartbeatTimerCallback, null, HeartbeatInterval, HeartbeatInterval);
 
                     IsConnected = true;
 
@@ -108,15 +117,15 @@ namespace vProto
 
                     LowStartGettingPackets();
 
-                    Console.WriteLine("Destination: {0}", client.Client.RemoteEndPoint);
+                    //Console.WriteLine("Destination: {0}", client.Client.RemoteEndPoint);
                 }
                 else
                 {
-                    Sstream = new SslStream(Nstream, false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+                    Sstream = new SslStream(Nstream, false, ValidateServerCertificate, null);
 
                     try
                     {
-                        Sstream.BeginAuthenticateAsClient(srvName, new AsyncCallback(FinishAuthentication), null);
+                        Sstream.BeginAuthenticateAsClient(srvName, FinishAuthentication, null);
                     }
                     catch (Exception x)
                     {
@@ -143,7 +152,7 @@ namespace vProto
                 return;
             }
 
-            heartbeatTimer = new System.Threading.Timer(new System.Threading.TimerCallback(__heartbeatTimerCallback), null, new TimeSpan(0, 0, 1), HeartbeatInterval);
+            heartbeatTimer = new System.Threading.Timer(__heartbeatTimerCallback, null, new TimeSpan(0, 0, 1), HeartbeatInterval);
 
             IsConnected = true;
 
@@ -153,7 +162,7 @@ namespace vProto
 
             LowStartGettingPackets();
 
-            Console.WriteLine("Destination: {0}", client.Client.RemoteEndPoint);
+            //Console.WriteLine("Destination: {0}", client.Client.RemoteEndPoint);
         }
     }
 }

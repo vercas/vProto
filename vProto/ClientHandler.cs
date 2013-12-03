@@ -13,13 +13,17 @@ using System.Threading;
 
 namespace vProto
 {
+    /// <summary>
+    /// Handles a client connected to a server.
+    /// </summary>
     public class ClientHandler
         : BaseClient
     {
-        //
-
-
+        /// <summary>
+        /// Gets the unique ID of the client.
+        /// </summary>
         public Int32 ID { get; internal set; }
+
 
 
         internal ClientHandler(TcpClient client, X509Certificate cert)

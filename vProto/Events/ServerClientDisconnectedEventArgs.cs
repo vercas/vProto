@@ -7,31 +7,33 @@ using System.Threading.Tasks;
 namespace vProto.Events
 {
     /// <summary>
-    /// Provides data for the vProto.Server.ClientConnected event. This class cannot be inherited.
+    /// Provides data for the vProto.Server.ClientDisconnected event. This class cannot be inherited.
     /// </summary>
     [Serializable]
-    public sealed class ServerClientConnectedEventArgs
-        : EventArgs
+    public sealed class ServerClientDisconnectedEventArgs
+        : ExceptionCarryingEventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the vProto.Events.ServerClientConnectedEventArgs with the specified client object and client ID.
+        /// Initializes a new instance of the vProto.Events.ServerClientDisconnectedEventArgs with the specified client object, client ID and exception.
         /// </summary>
         /// <param name="id">The ID of the client.</param>
         /// <param name="client">The client object.</param>
-        public ServerClientConnectedEventArgs(int id, BaseClient client)
-            : base()
+        /// <param name="x">The exception carried by the event.</param>
+        public ServerClientDisconnectedEventArgs(int id, BaseClient client, Exception x)
+            : base(x)
         {
             ID = id;
             Client = client;
         }
 
         /// <summary>
-        /// Initializes a new instance of the vProto.Events.ServerClientConnectedEventArgs with the specified client handler object.
+        /// Initializes a new instance of the vProto.Events.ServerClientDisconnectedEventArgs with the specified client handler object and exception.
         /// <para>The client ID will be extracted from the client handler object.</para>
         /// </summary>
         /// <param name="client">The client handler object.</param>
-        public ServerClientConnectedEventArgs(ClientHandler client)
-            : this(client.ID, client)
+        /// <param name="x">The exception carried by the event.</param>
+        public ServerClientDisconnectedEventArgs(ClientHandler client, Exception x)
+            : this(client.ID, client, x)
         { }
 
 

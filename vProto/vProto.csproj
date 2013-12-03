@@ -55,6 +55,8 @@
     <Compile Include="Events\DataReceivedEventArgs.cs" />
     <Compile Include="Events\RequestReceivedEventArgs.cs" />
     <Compile Include="Events\PipeFailureEventArgs.cs" />
+    <Compile Include="Events\ServerClientConnectionFailedEventArgs.cs" />
+    <Compile Include="Events\ServerClientDisconnectedEventArgs.cs" />
     <Compile Include="Events\ServerClientConnectedEventArgs.cs" />
     <Compile Include="Events\ClientConnectionFailedEventArgs.cs" />
     <Compile Include="Events\ClientAuthFailedEventArgs.cs" />
@@ -78,9 +80,12 @@
     <Compile Include="Request\Payload.cs" />
     <Compile Include="Request\Properties.cs" />
     <Compile Include="Request\Send, abort, timeout and response.cs" />
-    <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base Client\Package Sending.cs" />
+    <Compile Include="Server\Client Management.cs" />
+    <Compile Include="Server\Listening.cs" />
+    <Compile Include="Server\Events.cs" />
+    <Compile Include="Server\%40 Constructor, status and Disposal.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

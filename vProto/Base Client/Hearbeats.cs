@@ -231,9 +231,12 @@ namespace vProto
         /// Sends a heartbeat package to the other end.
         /// <para>Used to check connection health and calculate the ping.</para>
         /// </summary>
-        /// <returns>False if a heartbeat is already awaiting; otherwise true.</returns>
+        /// <returns>False if a heartbeat is already awaiting or disconnected; otherwise true.</returns>
         public bool SendHeartbeat()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName);
+
             if (!IsConnected)
                 return false;
 

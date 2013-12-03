@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ExceptionType = System.Net.Sockets.SocketException;
-
 namespace vProto.Events
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.ServerStartupFailedEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public ServerStartupFailedEventArgs(ExceptionType x)
+        public ServerStartupFailedEventArgs(System.Net.Sockets.SocketException x)
             : base(x)
         {
             
