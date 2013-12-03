@@ -57,8 +57,13 @@ namespace vProto
 
             client = new TcpClient();
 
+#if RECEIVER_THREAD
             receiver = new Thread(new ThreadStart(ReceiverLoop));
+#endif
+
+#if SENDER_THREAD
             sender = new Thread(new ThreadStart(SenderLoop));
+#endif
 
             try
             {

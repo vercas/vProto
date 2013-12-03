@@ -30,7 +30,7 @@ namespace vProto.Packages
 
 
 
-        internal List<Action> callbacks = new List<Action>();
+        internal List<Action> Callbacks = new List<Action>();
         internal Object State = null;
     }
 }

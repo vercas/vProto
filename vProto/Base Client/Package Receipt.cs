@@ -17,6 +17,7 @@ namespace vProto
 
 
 
+#if RECEIVER_THREAD
         protected bool LowStartGettingPackets()
         {
             if (Disposed)
@@ -101,6 +102,16 @@ namespace vProto
 
                     packetBytesRead += amnt;
 
+                    if (packetBytesRead == packetHeaderSize)
+                    {
+                        Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
+                        uint len = lastHeader.Size;
+
+                        expectedSize = (int)len + packetHeaderSize;
+
+                        packetPayloadBuff = new byte[len];
+                    }
+
                     if (packetBytesRead == expectedSize)
                     {
                         try
@@ -116,38 +127,13 @@ namespace vProto
 
                         break;
                     }
-                    else if (packetBytesRead == packetHeaderSize)
-                    {
-                        Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
-                        uint len = lastHeader.Size;
-
-                        expectedSize = (int)len + packetHeaderSize;
-
-                        packetPayloadBuff = new byte[len];
-
-                        if (len == 0)
-                        {
-                            try
-                            {
-                                OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff));
-                            }
-                            finally
-                            {
-                                packetPayloadBuff = null;
-                            }
-
-                            break;
-                        }
-                    }
-
-                    //  else continue, lol.
                 }
             }
         }//*/
 
+#else
 
-
-        /*object rec_sync = new object();
+        object rec_sync = new object();
         bool receiving = false;
 
         byte[] packetHeaderBuff = new byte[packetHeaderSize], packetPayloadBuff = null;
@@ -228,6 +214,19 @@ namespace vProto
 
             packetBytesRead += amnt;
 
+            if (packetBytesRead == packetHeaderSize)
+            {
+                Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
+
+                expectedSize = (int)lastHeader.Size + packetHeaderSize;
+
+                if (packetPayloadBuff == null)
+                    packetPayloadBuff = new byte[lastHeader.Size];
+                else
+                    System.Diagnostics.Debug.Assert(false, "This really should not happen.");
+
+                //  Length 0 will be handled in the next conditional.
+            }
 
             if (packetBytesRead == expectedSize)
             {
@@ -248,53 +247,7 @@ namespace vProto
                     LowStartGettingPackets();
                 }
             }
-            else if (packetBytesRead == packetHeaderSize)
-            {
-                Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
-
-                expectedSize = (int)lastHeader.Size + packetHeaderSize;
-
-                if (packetPayloadBuff == null)
-                    packetPayloadBuff = new byte[lastHeader.Size];
-
-                if (lastHeader.Size == 0)
-                    try
-                    {
-                        OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff));
-                    }
-                    finally
-                    {
-                        packetPayloadBuff = null;
-                        //  Luckily this is just a reference!
-
-                        lock (rec_sync)
-                            receiving = false;
-
-                        //  Should someone call the function between these two instructions, it's fine. :3
-
-                        LowStartGettingPackets();
-                    }
-            }
-            else if (packetBytesRead > packetHeaderSize)
-            {
-                try
-                {
-                    stream.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
-                }
-                catch (ObjectDisposedException x)
-                {
-                    _CheckIfStopped(x);
-
-                    return;
-                }
-                catch (Exception x)
-                {
-                    _OnPipeFailure(x, false, null);
-
-                    return;
-                }
-            }
-            else
+            else if (packetPayloadBuff == null)
             {
                 try
                 {
@@ -313,6 +266,26 @@ namespace vProto
                     return;
                 }
             }
+            else
+            {
+                try
+                {
+                    stream.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                }
+                catch (ObjectDisposedException x)
+                {
+                    _CheckIfStopped(x);
+
+                    return;
+                }
+                catch (Exception x)
+                {
+                    _OnPipeFailure(x, false, null);
+
+                    return;
+                }
+            }
         }//*/
+#endif
     }
 }

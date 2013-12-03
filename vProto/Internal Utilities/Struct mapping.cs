@@ -28,6 +28,22 @@ namespace vProto.Internal_Utilities
             return arr;
         }
 
+        public static int StructureToByteArray<T>(T obj, byte[] arr, int start = 0)
+            where T : struct
+        {
+            int len = Marshal.SizeOf(obj);
+
+            IntPtr ptr = Marshal.AllocHGlobal(len);
+
+            Marshal.StructureToPtr(obj, ptr, true);
+
+            Marshal.Copy(ptr, arr, start, len);
+
+            Marshal.FreeHGlobal(ptr);
+
+            return len;
+        }
+
         public static int ByteArrayToStructure<T>(byte[] bytearray, ref T obj, int start = 0)
             where T : struct
         {

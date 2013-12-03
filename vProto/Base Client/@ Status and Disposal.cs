@@ -23,8 +23,13 @@ namespace vProto
         protected NetworkStream Nstream;
         protected SslStream Sstream;
 
+#if RECEIVER_THREAD
         protected Thread receiver;
+#endif
+
+#if SENDER_THREAD
         protected Thread sender;
+#endif
 
         protected System.IO.Stream stream;
 
@@ -86,6 +91,7 @@ namespace vProto
 
             //  First make sure the receiver is not sleeping. Then abort it.
 
+#if RECEIVER_THREAD
             try
             {
                 receiver.Interrupt();
@@ -103,7 +109,9 @@ namespace vProto
             {
 
             }
+#endif
 
+#if SENDER_THREAD
             try
             {
                 sender.Abort();
@@ -112,6 +120,7 @@ namespace vProto
             {
 
             }
+#endif
 
             ExtraDispose();
 

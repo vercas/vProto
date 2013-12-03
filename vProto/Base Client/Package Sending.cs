@@ -17,11 +17,9 @@ namespace vProto
     using Events;
     using Packages;
 
-    /*using StateType = Packages.Package;
-    using QueuedPackageType = Internal_Utilities.QueuedPackage;*/
-
     partial class BaseClient
     {
+#if SENDER_THREAD
         bool LowSendPacket(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
             if (Disposed)
@@ -32,15 +30,15 @@ namespace vProto
             
             header.Size = (uint)bodeh.Length;
 
+            var st = new Package(header, bodeh) { State = state };
+
+            if (cbk != null)
+                st.Callbacks.Add(cbk);
+
             lock (send_lock)
             {
                 sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packetHeaderSize);
                 sendingBuffer.Write(bodeh, 0, bodeh.Length);
-
-                var st = new Package(header, bodeh) { State = state };
-
-                if (cbk != null)
-                    st.callbacks.Add(cbk);
 
                 toSend.Enqueue(st);
             }
@@ -116,7 +114,7 @@ namespace vProto
 
                     foreach (var pack in tempQ)
                     {
-                        foreach (var cbk in pack.callbacks)
+                        foreach (var cbk in pack.Callbacks)
                             cbk();
 
                         OnInternalPacketSent(pack);
@@ -131,37 +129,39 @@ namespace vProto
             }
         }
 
+#else
 
         /// <summary>
         /// Gets a value indicating whether a packet is being sent.
         /// <para>Attempting to send anything else while this value is true will add the package to a queue, which will be sent as soon as the pipe is free.</para>
         /// </summary>
-        public Boolean IsSendingPacket { get { return false; } }
+        public Boolean IsSendingPacket { get { return sending; } }
+        //  I don't know if making a property whose existence depends on a preprocessor directive is a good idea...
 
 
-        /*private object send_lock = new object();
+        private object send_lock = new object();
         private bool sending = false;
 
-        Queue<QueuedPackageType> packageQueue = new Queue<QueuedPackageType>();
+        Queue<QueuedPackage> packageQueue = new Queue<QueuedPackage>();
 
         bool LowSendPacket(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
-            var len = bodeh.Length + packetHeaderSize;
-            byte[] pack = new byte[len];
-
             header.Size = (uint)bodeh.Length;
 
-            Struct_mapping.StructureToByteArray(header).CopyTo(pack, 0);
-            bodeh.CopyTo(pack, packetHeaderSize);
+            byte[] pack = new byte[bodeh.Length + packetHeaderSize];
 
-            var st = new StateType(header, bodeh);
+            bodeh.CopyTo(pack,
+                Struct_mapping.StructureToByteArray(header, pack, 0) );
 
-            st.State = state;
+            //  The StructureToByteArray function will write the structure to the specified byte array starting at the specified index, and return the length.
+            //  Thus, the copying of the body starts 1 unit after the end of the header.
+
+            var st = new Package(header, bodeh) { State = state };
 
             if (cbk != null)
-                st.callbacks.Add(cbk);
+                st.Callbacks.Add(cbk);
 
-            return __sendPack(pack, LowSendPacket_Callback, st);
+            return __sendPack(pack, LowSendPacket_Callback, st, false);
         }
 
         void LowSendPacket_Callback(IAsyncResult ar)
@@ -183,71 +183,75 @@ namespace vProto
             }
             catch (Exception x)
             {
-                _OnPipeFailure(x, true, ar.AsyncState as StateType);
+                _OnPipeFailure(x, true, ar.AsyncState as Package);
 
                 return;
             }
 
-            var state = ar.AsyncState as StateType;
+            var state = ar.AsyncState as Package;
 
             try
             {
                 if (state != null)
                 {
-                    foreach (var cbk in state.callbacks)
+                    foreach (var cbk in state.Callbacks)
                         cbk();
 
                     OnInternalPacketSent(state);
                 }
                 //else dafuq?
             }
-            finally //  The world goes on without you. :(
+            finally
             {
-                QueuedPackageType t = null;
+                QueuedPackage t = null;
 
                 lock (send_lock)
                     if (packageQueue.Count > 0)
                         t = packageQueue.Dequeue();
 
                 if (t != null)
-                    __sendPack(t.payload, t.callback, t.state, true);
+                    __sendPack(t, true);
             }
         }
 
 
-        bool __sendPack(byte[] pack, AsyncCallback cbk, StateType st, bool force = false)
+        bool __sendPack(QueuedPackage pck, bool force) { return __sendPack(pck.Data, pck.AsynchronousCallback, pck.PackageObject, force); }
+
+        bool __sendPack(byte[] pack, AsyncCallback cbk, Package st, bool force)
         {
-            try
+            lock (send_lock)
             {
-                lock (send_lock)
+                //  If we're sending and we're not being forced to send...
+                if (sending && !force)
                 {
-                    //  If we're sending and we're not being forced to send...
-                    if (!force && sending)
-                    {
-                        packageQueue.Enqueue(new QueuedPackageType(pack, cbk, st));
-                    }
-                    else
+                    packageQueue.Enqueue(new QueuedPackage(pack, cbk, st));
+                }
+                else
+                {
+                    sending = true;
+
+                    try
                     {
                         stream.BeginWrite(pack, 0, pack.Length, cbk, st);
-                        sending = true;
+                    }
+                    catch (ObjectDisposedException x)
+                    {
+                        _CheckIfStopped(x);
+
+                        return false;
+                    }
+                    catch (Exception x)
+                    {
+                        _OnPipeFailure(x, true, st);
+
+                        return false;
                     }
                 }
-
-                return true;
             }
-            catch (ObjectDisposedException x)
-            {
-                _CheckIfStopped(x);
 
-                return false;
-            }
-            catch (Exception x)
-            {
-                _OnPipeFailure(x, true, st);
-
-                return false;
-            }
-        }*/
+            return true;
+        }//*/
+#endif
 
 
         //  These functions also check their arguments.
