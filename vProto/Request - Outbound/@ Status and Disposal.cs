@@ -13,7 +13,7 @@ namespace vProto
     /// <summary>
     /// Desc
     /// </summary>
-    public sealed partial class Request
+    public sealed partial class OutboundRequest
         : IDisposable
     {
         /// <summary>
@@ -77,7 +77,7 @@ namespace vProto
         }
 
 
-        ~Request()
+        ~OutboundRequest()
         {
             try
             {
@@ -91,7 +91,7 @@ namespace vProto
 
 
         //  Only internally...
-        internal Request(BaseClient cl, short id)
+        internal OutboundRequest(BaseClient cl, short id)
         {
             client = cl;
             this.id = id;

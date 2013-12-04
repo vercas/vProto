@@ -8,7 +8,7 @@ namespace vProto
 {
     using Events;
 
-    partial class Request
+    partial class OutboundRequest
     {
         public event RequestEventHandler<ResponseReceivedEventArgs> ResponseReceived;
         public event RequestEventHandler RequestSent;
@@ -21,7 +21,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddResponseReceivedHandler(RequestEventHandler<ResponseReceivedEventArgs> handler)
+        public OutboundRequest AddResponseReceivedHandler(RequestEventHandler<ResponseReceivedEventArgs> handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -39,7 +39,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestSentHandler(RequestEventHandler handler)
+        public OutboundRequest AddRequestSentHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -57,7 +57,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestAbortedHandler(RequestEventHandler handler)
+        public OutboundRequest AddRequestAbortedHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -75,7 +75,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestTimeoutHandler(RequestEventHandler handler)
+        public OutboundRequest AddRequestTimeoutHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);

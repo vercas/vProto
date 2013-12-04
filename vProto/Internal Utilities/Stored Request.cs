@@ -9,7 +9,7 @@ namespace vProto.Internal_Utilities
     internal class StoredRequest
     {
         public short ID;
-        public Request req;
+        public OutboundRequest req;
         public System.Threading.Timer timeouttimer;
     }
 }

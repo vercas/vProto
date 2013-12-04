@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    partial class Request
+    partial class OutboundRequest
     {
         System.IO.MemoryStream str = null;
 
@@ -20,7 +20,7 @@ namespace vProto
         /// </summary>
         /// <param name="bt">Array of bytes constituting the payload.</param>
         /// <returns>The request object.</returns>
-        public Request SetPayload(byte[] bt)
+        public OutboundRequest SetPayload(byte[] bt)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -49,7 +49,7 @@ namespace vProto
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <param name="origin">The point from which seeking in the stream should take place.</param>
         /// <returns>The request object.</returns>
-        public Request SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
+        public OutboundRequest SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -89,7 +89,7 @@ namespace vProto
         /// <param name="stream">The stream from which the data is extracted.</param>
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <returns>The request object.</returns>
-        public Request SetPayload(System.IO.Stream stream, int length = -1)
+        public OutboundRequest SetPayload(System.IO.Stream stream, int length = -1)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);

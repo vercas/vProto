@@ -52,6 +52,16 @@ namespace vProto
         {
             var sr = new StoredRequest() { ID = pack.Header.IDTop };
 
+            /*sr.timeouttimer = new System.Threading.Timer(new System.Threading.TimerCallback(delegate(object state)
+            {
+                if (!req.Responded)
+                {
+                    PendingInboundRequests.Remove(sr.ID);
+                    req.DeclareTimeout();
+                    sr.timeouttimer.Dispose();
+                }
+            }), null, ((int)pack.Header.RequestTimeout) * 10, System.Threading.Timeout.Infinite);//*/
+
             PendingInboundRequests.Add(sr.ID, sr);
 
             OnRequestReceived(new RequestReceivedEventArgs(pack.Payload, pack.Header.IDBottom));
@@ -59,7 +69,7 @@ namespace vProto
 
         protected virtual void OnInternalRequestSent(StateType pack)
         {
-            var req = pack.State as Request;
+            var req = pack.State as OutboundRequest;
 
             var sr = new StoredRequest() { ID = pack.Header.IDTop, req = req };
 
@@ -155,12 +165,12 @@ namespace vProto
         /// <param name="type">An optional number to identify the type of request. Can be specified later.</param>
         /// <param name="payload">The data to send; mandatory but may be specified later.</param>
         /// <returns>The request object.</returns>
-        public Request CreateRequest(short? type = null, byte[] payload = null)
+        public OutboundRequest CreateRequest(short? type = null, byte[] payload = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            var req = new Request(this, __getNewRequestID());
+            var req = new OutboundRequest(this, __getNewRequestID());
 
             if (type != null && type.HasValue)
                 req.SetType(type.Value);

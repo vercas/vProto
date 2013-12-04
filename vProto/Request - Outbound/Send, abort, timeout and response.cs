@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    partial class Request
+    partial class OutboundRequest
     {
         /// <summary>
         /// Attempts to send the request.
         /// <para>Upon success, the request is marked as sent and disposed of.</para>
         /// </summary>
         /// <returns></returns>
-        public Request Send()
+        public OutboundRequest Send()
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot send a disposed request!", (Exception)null);
@@ -39,7 +39,7 @@ namespace vProto
         /// Marks the request as aborted and disposed and raises the appropriate event.
         /// </summary>
         /// <returns></returns>
-        public Request Abort()
+        public OutboundRequest Abort()
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot abort a disposed request!", (Exception)null);
