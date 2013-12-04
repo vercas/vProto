@@ -21,6 +21,7 @@ namespace vProto
         Dictionary<short, StoredRequestType> PendingInboundRequests = new Dictionary<short, StoredRequestType>();
 
 
+
         short reqCounter = short.MinValue;
 
         private short __getNewRequestID()
@@ -35,7 +36,7 @@ namespace vProto
                     if (!PendingOutboundRequests.ContainsKey(s))
                         return reqCounter = s;
 
-                throw new Exception("How the fuck can you have 65536 pending outgoing requests..?" + Environment.NewLine + "You really need to fix shit up.");
+                throw new Exception("How on Earth can you have 65536 pending outgoing requests..?" + Environment.NewLine + "You really need to fix stuff up.");
             }
             else
             {
@@ -49,8 +50,7 @@ namespace vProto
 
         protected virtual void OnInternalRequestReceived(StateType pack)
         {
-            var sr = new StoredRequest();
-            sr.ID = pack.Header.IDTop;
+            var sr = new StoredRequest() { ID = pack.Header.IDTop };
 
             PendingInboundRequests.Add(sr.ID, sr);
 
@@ -61,9 +61,7 @@ namespace vProto
         {
             var req = pack.State as Request;
 
-            var sr = new StoredRequest();
-            sr.ID = pack.Header.IDTop;
-            sr.req = req;
+            var sr = new StoredRequest() { ID = pack.Header.IDTop, req = req };
 
             sr.timeouttimer = new System.Threading.Timer(new System.Threading.TimerCallback(delegate(object state)
             {
@@ -74,6 +72,8 @@ namespace vProto
                     sr.timeouttimer.Dispose();
                 }
             }), null, ((int)pack.Header.RequestTimeout) * 10, System.Threading.Timeout.Infinite);
+
+            //  I would gladly declare this with the other properties of 'sr' in the constructor, if only it didn't access 'sr' directly.
 
             PendingOutboundRequests.Add(sr.ID, sr);
         }
@@ -109,7 +109,7 @@ namespace vProto
 
         protected virtual void OnInternalResponseSent(StateType pack)
         {
-
+            //  The inbound request should be cleaned up after the request was sent.
         }
 
 
