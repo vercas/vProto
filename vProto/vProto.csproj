@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Base Client\Connection.cs" />
     <Compile Include="Base Client\Abstract Methods.cs" />
+    <Compile Include="Base Client\Speed.cs" />
     <Compile Include="Base Client\Hearbeats.cs" />
     <Compile Include="Base Client\Requests and Responses and a bit of Data.cs" />
     <Compile Include="Base Client\Events.cs" />

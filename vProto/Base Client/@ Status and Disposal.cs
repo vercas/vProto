@@ -63,6 +63,15 @@ namespace vProto
 
             }
 
+            try
+            {
+                speedCountingTimer.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
+
             //  First make sure the receiver is not sleeping. Then abort it.
 
 #if RECEIVER_THREAD
@@ -154,7 +163,8 @@ namespace vProto
             sender = new Thread(new ThreadStart(SenderLoop));
 #endif
 
-            heartbeatTimer = new System.Threading.Timer(new System.Threading.TimerCallback(__heartbeatTimerCallback), null, HeartbeatInterval, HeartbeatInterval);
+            heartbeatTimer = new System.Threading.Timer(__heartbeatTimerCallback, null, HeartbeatInterval, HeartbeatInterval);
+            speedCountingTimer = new Timer(__speedCountingTimerCallback, null, new TimeSpan(0), new TimeSpan(0, 0, 1));
 
             IsConnected = true;
 

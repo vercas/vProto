@@ -100,12 +100,13 @@ namespace vProto
              * Wrong things shouldn't happen.
              * Things that shouldn't happen should be debugged.
              */
-            
 
-            if (PendingOutboundRequests.ContainsKey(pack.Header.IDTop))
+            var id = pack.Header.IDTop;
+
+            if (PendingOutboundRequests.ContainsKey(id) && !PendingOutboundRequests[id].req.Disposed)
             {
-                var sr = PendingOutboundRequests[pack.Header.IDTop];
-                PendingOutboundRequests.Remove(pack.Header.IDTop);
+                var sr = PendingOutboundRequests[id];
+                PendingOutboundRequests.Remove(id);
                 sr.req.DeclareResponded(pack.Payload);
                 sr.timeouttimer.Dispose();
             }

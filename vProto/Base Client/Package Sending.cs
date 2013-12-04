@@ -95,8 +95,10 @@ namespace vProto
 
                     try
                     {
-                        tempBuffer.CopyTo(stream, (int)Math.Min(tempBuffer.Length, int.MaxValue));
+                        tempBuffer.CopyTo(streamIn, (int)Math.Min(tempBuffer.Length, int.MaxValue));
                         //  Really making sure here.
+                        
+                        __addSent((int)Math.Min(tempBuffer.Length, int.MaxValue));
                     }
                     catch (ObjectDisposedException x)
                     {
@@ -193,6 +195,8 @@ namespace vProto
             }
 
             var state = ar.AsyncState as Package;
+
+            __addSent(state.Payload.Length + packetHeaderSize);
 
             try
             {

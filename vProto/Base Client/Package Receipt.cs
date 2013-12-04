@@ -102,6 +102,8 @@ namespace vProto
 
                     packetBytesRead += amnt;
 
+                    __addReceived(amnt);
+
                     if (packetBytesRead == packetHeaderSize)
                     {
                         Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
@@ -213,6 +215,8 @@ namespace vProto
             }
 
             packetBytesRead += amnt;
+
+            __addReceived(amnt);
 
             if (packetBytesRead == packetHeaderSize)
             {
