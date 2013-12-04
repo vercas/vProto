@@ -19,10 +19,6 @@ namespace vProto
     public abstract partial class BaseClient
         : IDisposable
     {
-        protected TcpClient client;
-        protected NetworkStream Nstream;
-        protected SslStream Sstream;
-
 #if RECEIVER_THREAD
         protected Thread receiver;
 #endif
@@ -31,7 +27,8 @@ namespace vProto
         protected Thread sender;
 #endif
 
-        protected System.IO.Stream stream;
+        protected System.IO.Stream streamIn;
+        protected System.IO.Stream streamOut;
 
 
 
@@ -47,33 +44,6 @@ namespace vProto
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "Object already disposed!");
-
-            try
-            {
-                client.Close();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            try
-            {
-                Sstream.Close();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            try
-            {
-                Nstream.Close();
-            }
-            catch (Exception)
-            {
-
-            }
 
             try
             {
@@ -136,16 +106,71 @@ namespace vProto
         /// </summary>
         public Boolean IsConnected { get; protected set; }
 
-        protected void _CheckIfStopped(Exception x)
+        protected void _CheckIfStopped(Exception x, bool force = false)
         {
             Console.WriteLine("CHECKING IF STOPPED OMG");
 
-            if (IsConnected)
+            if (IsConnected || force)
             {
                 Dispose();
 
                 OnDisconnected(new Events.ClientDisconnectedEventArgs(x));
             }
         }
+
+
+
+        internal Int32 _id = -1;
+
+        /// <summary>
+        /// Gets the unique ID of the client.
+        /// </summary>
+        public Int32 ID
+        {
+            get
+            {
+                return _id;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Initializes the client communication through the specified stream(s).
+        /// <para>The stream(s) passed on to this function are not disposed by the base client! Disposal will have to be performed by the provider.</para>
+        /// </summary>
+        /// <param name="strIn">The communication input stream. This is the stream which is checked for incomming packages (read from).</param>
+        /// <param name="strOut">optional; The communication output stream. This is the stream which is given outgoing packages (written to). If null, will be the same as the input stream.</param>
+        protected void InitializeFromStreams(System.IO.Stream strIn, System.IO.Stream strOut = null)
+        {
+            if (strIn == null)
+                throw new ArgumentNullException("strIn", "Input stream may not be null!");
+
+#if RECEIVER_THREAD
+            receiver = new Thread(new ThreadStart(ReceiverLoop));
+#endif
+
+#if SENDER_THREAD
+            sender = new Thread(new ThreadStart(SenderLoop));
+#endif
+
+            heartbeatTimer = new System.Threading.Timer(new System.Threading.TimerCallback(__heartbeatTimerCallback), null, HeartbeatInterval, HeartbeatInterval);
+
+            IsConnected = true;
+
+            streamIn = strIn;
+            streamOut = strOut ?? strIn;
+
+            OnConnected(new EventArgs());
+
+            LowStartGettingPackets();
+        }
+
+
+
+        /// <summary>
+        /// Gets whether this vProto.BaseClient handles a server's connection to a client (true) or handles a client's connection to a server (false).
+        /// </summary>
+        public Boolean IsClientHandler { get; protected set; }
     }
 }

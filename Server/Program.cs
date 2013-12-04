@@ -8,7 +8,7 @@ namespace Server
 {
     class Program
     {
-        static vProto.Server serv;
+        static vProto.BaseServer serv;
 
         static void Main(string[] args)
         {
@@ -17,7 +17,11 @@ namespace Server
             if (System.IO.File.Exists("cert.pfx") && System.IO.File.Exists("pw.txt"))
                 cert = new System.Security.Cryptography.X509Certificates.X509Certificate2("cert.pfx", System.IO.File.ReadAllText("pw.txt"));
 
-            serv = new vProto.Server(5665, cert);
+            //serv = new vProto.BaseServer(5665, cert);
+            if (cert == null)
+                serv = new vProto.Protocols.TCP.Server(5665);
+            else
+                serv = new vProto.Protocols.TCP.SSL.Server(5665, cert);
 
             serv.ClientConnected += serv_ClientConnected;
 
@@ -28,7 +32,7 @@ namespace Server
             serv.Dispose();
         }
 
-        static void serv_ClientConnected(vProto.Server sender, vProto.Events.ServerClientConnectedEventArgs e)
+        static void serv_ClientConnected(vProto.BaseServer sender, vProto.Events.ServerClientConnectedEventArgs e)
         {
             Console.WriteLine("Client CONNECTED\t{0}", e.ID);
 
@@ -40,22 +44,22 @@ namespace Server
 
         static void Client_ReceiptFailed(vProto.BaseClient sender, vProto.Events.PipeFailureEventArgs e)
         {
-            Console.WriteLine("Receipt failed for {0}", (sender as vProto.ClientHandler).ID);
+            Console.WriteLine("Receipt failed for {0}", sender.ID);
         }
 
         static void Client_SendFailed(vProto.BaseClient sender, vProto.Events.PipeFailureEventArgs e)
         {
-            Console.WriteLine("Send failed for {0}", (sender as vProto.ClientHandler).ID);
+            Console.WriteLine("Send failed for {0}", sender.ID);
         }
 
         static void Client_RequestReceived(vProto.BaseClient sender, vProto.Events.RequestReceivedEventArgs e)
         {
-            Console.WriteLine("Received request \"{0}\" from {1}.", Encoding.UTF8.GetString(e.Payload), (sender as vProto.ClientHandler).ID);
+            Console.WriteLine("Received request \"{0}\" from {1}.", Encoding.UTF8.GetString(e.Payload), sender.ID);
         }
 
-        static void Client_Disconnected(object sender, vProto.Events.ClientDisconnectedEventArgs e)
+        static void Client_Disconnected(vProto.BaseClient sender, vProto.Events.ClientDisconnectedEventArgs e)
         {
-            Console.WriteLine("Client {0} DISCONNECTED", (sender as vProto.ClientHandler).ID);
+            Console.WriteLine("Client {0} DISCONNECTED", sender.ID);
         }
     }
 }

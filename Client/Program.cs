@@ -8,7 +8,7 @@ namespace Client
 {
     class Program
     {
-        static vProto.Client client;
+        static vProto.BaseClient client;
 
         static void Main(string[] args)
         {
@@ -26,7 +26,12 @@ namespace Client
             if (System.IO.File.Exists("name.txt"))
                 name = System.IO.File.ReadAllText("name.txt");
 
-            client = new vProto.Client(name);
+            var ep = new System.Net.IPEndPoint(System.Net.IPAddress.Parse(System.IO.File.ReadAllText("ip.txt")), 5665);
+
+            if (name == null)
+                client = new vProto.Protocols.TCP.Client(ep);
+            else
+                client = new vProto.Protocols.TCP.SSL.Client(ep, name);
 
             client.Disconnected += client_Disconnected;
             client.AuthFailed += client_AuthFailed;
@@ -35,7 +40,7 @@ namespace Client
             client.SendFailed += client_SendFailed;
             client.ReceiptFailed += client_ReceiptFailed;
 
-            client.Connect(new System.Net.IPEndPoint(System.Net.IPAddress.Parse(System.IO.File.ReadAllText("ip.txt")), 5665));
+            client.Connect();
 
             uint n;
             int a;

@@ -17,15 +17,9 @@ namespace vProto
     /// <summary>
     /// Listens and handles connections.
     /// </summary>
-    public partial class Server
+    public abstract partial class BaseServer
         : IDisposable
     {
-        TcpListener listener;
-
-        X509Certificate cert;
-
-
-
         /// <summary>
         /// Gets a value indicating whether the object is disposed or not.
         /// </summary>
@@ -34,20 +28,11 @@ namespace vProto
         /// <summary>
         /// Releases all the resources used by the current instance of vProto.Server.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             for (int i = 0; i < _chs.Length; i++)
                 if (_chs[i] != null && !_chs[i].Disposed)
                     _chs[i].Dispose();
-
-            try
-            {
-                listener.Stop();
-            }
-            catch (Exception)
-            {
-
-            }
 
             Disposed = true;
             IsOn = false;
@@ -55,9 +40,12 @@ namespace vProto
 
 
 
-        public Boolean IsOn { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether the server is on and listening.
+        /// </summary>
+        public Boolean IsOn { get; protected set; }
 
-        private void _CheckIfStopped(Exception x)
+        protected void _CheckIfStopped(Exception x)
         {
             if (IsOn)
             {
@@ -65,19 +53,6 @@ namespace vProto
 
                 OnServerStopped(new ServerStoppedEventArgs(x));
             }
-        }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of the vProto.Server class.
-        /// </summary>
-        /// <param name="port">The port on which to listen for incomming connections.</param>
-        /// <param name="cert">optional; The X.509 certificate to use for SSL authentication. Use null for no SSL.</param>
-        public Server(int port, X509Certificate cert = null)
-        {
-            listener = new TcpListener(IPAddress.Any, port);
-            this.cert = cert;
         }
     }
 }

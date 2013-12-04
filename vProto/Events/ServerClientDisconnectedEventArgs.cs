@@ -32,7 +32,7 @@ namespace vProto.Events
         /// </summary>
         /// <param name="client">The client handler object.</param>
         /// <param name="x">The exception carried by the event.</param>
-        public ServerClientDisconnectedEventArgs(ClientHandler client, Exception x)
+        public ServerClientDisconnectedEventArgs(BaseClient client, Exception x)
             : this(client.ID, client, x)
         { }
 

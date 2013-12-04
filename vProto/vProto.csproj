@@ -41,14 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Client\Connection.cs" />
+    <Compile Include="Base Client\Abstract Methods.cs" />
     <Compile Include="Base Client\Hearbeats.cs" />
     <Compile Include="Base Client\Requests and Responses and a bit of Data.cs" />
     <Compile Include="Base Client\Events.cs" />
     <Compile Include="Base Client\%40 Status and Disposal.cs" />
     <Compile Include="Base Client\Package Receipt.cs" />
     <Compile Include="Base Client\Pipe Event Handling.cs" />
-    <Compile Include="Client.cs" />
-    <Compile Include="ClientHandler.cs" />
     <Compile Include="Events\%40 Delegates.cs" />
     <Compile Include="Events\%40ExceptionCarryingEvent.cs" />
     <Compile Include="Events\ResponseReceivedEventArgs.cs" />
@@ -64,8 +64,6 @@
     <Compile Include="Events\ListeningFailedEventArgs.cs" />
     <Compile Include="Events\ServerStoppedEventArgs.cs" />
     <Compile Include="Events\ServerStartupFailedEventArgs.cs" />
-    <Compile Include="IHandleClient.cs" />
-    <Compile Include="IHandleServer.cs" />
     <Compile Include="Internal Utilities\Allocator.cs" />
     <Compile Include="Internal Utilities\Bit Conversions.cs" />
     <Compile Include="Internal Utilities\IHazID.cs" />
@@ -75,6 +73,10 @@
     <Compile Include="Internal Utilities\Struct mapping.cs" />
     <Compile Include="Packages\Package.cs" />
     <Compile Include="Packages\Packet Header.cs" />
+    <Compile Include="Protocols\TCP\Client.cs" />
+    <Compile Include="Protocols\TCP\Server.cs" />
+    <Compile Include="Protocols\TCP\SSL\Client.cs" />
+    <Compile Include="Protocols\TCP\SSL\Server.cs" />
     <Compile Include="Request\%40 Status and Disposal.cs" />
     <Compile Include="Request\Events.cs" />
     <Compile Include="Request\Payload.cs" />
@@ -82,10 +84,11 @@
     <Compile Include="Request\Send, abort, timeout and response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base Client\Package Sending.cs" />
+    <Compile Include="Server\Abstract Methods.cs" />
     <Compile Include="Server\Client Management.cs" />
     <Compile Include="Server\Listening.cs" />
     <Compile Include="Server\Events.cs" />
-    <Compile Include="Server\%40 Constructor, status and Disposal.cs" />
+    <Compile Include="Server\%40 Status and Disposal.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

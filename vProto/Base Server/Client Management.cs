@@ -14,9 +14,18 @@ namespace vProto
 {
     using vProto.Events;
 
-    partial class Server
+    partial class BaseServer
     {
-        internal ClientHandler[] _chs = new ClientHandler[10];
+        protected void ClientReceived(BaseClient client)
+        {
+            _AddClient(client);
+
+            OnClientConnected(new ServerClientConnectedEventArgs(client));
+        }
+
+
+
+        internal BaseClient[] _chs = new BaseClient[10];
         object _chs_sync = new object();
 
 
@@ -25,7 +34,7 @@ namespace vProto
         {
             lock (_chs_sync)
             {
-                ClientHandler[] n = new ClientHandler[_chs.Length * 2];
+                BaseClient[] n = new BaseClient[_chs.Length * 2];
 
                 _chs.CopyTo(n, 0);
                 //  Indices need to be preserved...
@@ -34,7 +43,7 @@ namespace vProto
             }
         }
 
-        private int _AddClient(ClientHandler h)
+        private int _AddClient(BaseClient h)
         {
             lock (_chs_sync)
                 for (int i = 0; i < _chs.Length; i++)   //  Even with 100,000 clients, this loop won't be an issue.
@@ -43,7 +52,7 @@ namespace vProto
                         h.Disconnected += h_Disconnected;
                         //  I gotta subscribe to the event here (unfortunately, inside a lock) so it won't get added twice. This is the only code block guaranteed to run just once when this function is called.
 
-                        return (_chs[i] = h).ID = i;
+                        return (_chs[i] = h)._id = i;
                         //  I love assignment as expression!
                     }
 
@@ -54,7 +63,7 @@ namespace vProto
             return _AddClient(h);
         }
 
-        private void _RemoveClient(ClientHandler h)
+        private void _RemoveClient(BaseClient h)
         {
             lock (_chs_sync)
                 if (h.ID > -1 && h.ID < _chs.Length)
@@ -71,11 +80,9 @@ namespace vProto
 
         void h_Disconnected(BaseClient sender, Events.ClientDisconnectedEventArgs e)
         {
-            var handler = sender as ClientHandler;
+            _RemoveClient(sender);
 
-            _RemoveClient(handler);
-
-            OnClientDisconnected(new ServerClientDisconnectedEventArgs(handler, e.Exception));
+            OnClientDisconnected(new ServerClientDisconnectedEventArgs(sender, e.Exception));
         }
     }
 }

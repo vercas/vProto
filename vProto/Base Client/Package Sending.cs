@@ -172,7 +172,7 @@ namespace vProto
             {
                 lock (send_lock)
                 {
-                    stream.EndWrite(ar);
+                    streamIn.EndWrite(ar);
 
                     sending = packageQueue.Count > 0;
 
@@ -244,7 +244,7 @@ namespace vProto
 
                     try
                     {
-                        stream.BeginWrite(pack, 0, pack.Length, cbk, st);
+                        streamIn.BeginWrite(pack, 0, pack.Length, cbk, st);
 
                         //Console.WriteLine("Sent!");
                     }

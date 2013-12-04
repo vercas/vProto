@@ -14,7 +14,7 @@ namespace vProto
 {
     using vProto.Events;
 
-    partial class Server
+    partial class BaseServer
     {
         public event ServerEventHandler ServerStarted;
         public event ServerEventHandler<ServerStartupFailedEventArgs> ServerStartupFailed;

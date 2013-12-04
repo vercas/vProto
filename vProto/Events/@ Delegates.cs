@@ -18,9 +18,9 @@ namespace vProto.Events
     where TEventArgs : EventArgs;
 
 
-    public delegate void ServerEventHandler(Server sender, EventArgs e);
+    public delegate void ServerEventHandler(BaseServer sender, EventArgs e);
 
-    public delegate void ServerEventHandler<TEventArgs>(Server sender, TEventArgs e)
+    public delegate void ServerEventHandler<TEventArgs>(BaseServer sender, TEventArgs e)
     where TEventArgs : EventArgs;
 
 

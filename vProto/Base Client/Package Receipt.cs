@@ -58,7 +58,7 @@ namespace vProto
 
                             //stream.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
                             //amnt = stream.Read(packetHeaderBuff, 0, packetHeaderSize);
-                            amnt = stream.Read(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead);
+                            amnt = streamOut.Read(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead);
                         }
                         catch (ObjectDisposedException x)
                         {
@@ -78,7 +78,7 @@ namespace vProto
                             //Console.WriteLine("PAYLOAD Receipt start.");
 
                             //stream.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
-                            amnt = stream.Read(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead);
+                            amnt = streamOut.Read(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead);
                         }
                         catch (ObjectDisposedException x)
                         {
@@ -158,7 +158,7 @@ namespace vProto
 
             try
             {
-                stream.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
+                streamOut.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
 
                 //Console.WriteLine("Receipt start.");
 
@@ -184,7 +184,7 @@ namespace vProto
 
             try
             {
-                amnt = stream.EndRead(ar);
+                amnt = streamOut.EndRead(ar);
             }
             catch (ObjectDisposedException x)
             {
@@ -251,7 +251,7 @@ namespace vProto
             {
                 try
                 {
-                    stream.BeginRead(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamOut.BeginRead(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {
@@ -270,7 +270,7 @@ namespace vProto
             {
                 try
                 {
-                    stream.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamOut.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {

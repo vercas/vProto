@@ -17,7 +17,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.ServerStartupFailedEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public ServerStartupFailedEventArgs(System.Net.Sockets.SocketException x)
+        public ServerStartupFailedEventArgs(Exception x)
             : base(x)
         {
             

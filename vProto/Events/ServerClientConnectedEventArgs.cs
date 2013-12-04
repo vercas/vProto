@@ -30,7 +30,7 @@ namespace vProto.Events
         /// <para>The client ID will be extracted from the client handler object.</para>
         /// </summary>
         /// <param name="client">The client handler object.</param>
-        public ServerClientConnectedEventArgs(ClientHandler client)
+        public ServerClientConnectedEventArgs(BaseClient client)
             : this(client.ID, client)
         { }
 
