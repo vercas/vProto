@@ -47,7 +47,9 @@ namespace vProto
 
         protected virtual void OnInternalRequestReceived(Package pack)
         {
-            var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10), DateTime.Now);
+            var timeout = new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10) - Ping;
+
+            var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, timeout, DateTime.Now);
 
             var sr = new StoredRequest() { ID = pack.Header.IDTop, res = res };
 
@@ -59,7 +61,7 @@ namespace vProto
                     res.DeclareTimeout();
                     sr.timeouttimer.Dispose();
                 }
-            }), null, ((int)pack.Header.RequestTimeout) * 10, System.Threading.Timeout.Infinite);//*/
+            }), null, timeout, System.Threading.Timeout.InfiniteTimeSpan);//*/
 
             PendingResponses.Add(sr.ID, sr);
 

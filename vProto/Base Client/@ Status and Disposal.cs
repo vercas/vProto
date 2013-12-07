@@ -155,6 +155,9 @@ namespace vProto
             if (strIn == null)
                 throw new ArgumentNullException("strIn", "Input stream may not be null!");
 
+            Ping = TimeSpan.Zero;
+            //  Default value for ping, aiding response timing.
+
 #if RECEIVER_THREAD
             receiver = new Thread(new ThreadStart(ReceiverLoop));
 #endif
