@@ -16,14 +16,14 @@ namespace vProto
         /// Default interval at which heartbeats are sent.
         /// <para>30 seconds.</para>
         /// </summary>
-        public static readonly TimeSpan HeartbeatInterval = new TimeSpan(0, 0, 2);
+        public static readonly TimeSpan HeartbeatInterval = new TimeSpan(0, 0, 30);
 
         /// <summary>
         /// Default value for heartbeat timeout.
         /// <para>10 seconds.</para>
         /// </summary>
-        public static readonly TimeSpan DefaultHeartbeatTimeout = new TimeSpan(0, 0, 1);
-        //public static readonly TimeSpan DefaultHeartbeatTimeout = new TimeSpan(0, 0, 10);
+        public static readonly TimeSpan DefaultHeartbeatTimeout = new TimeSpan(0, 0, 10);
+
         /// <summary>
         /// Minimum value for heartbeat timeout.
         /// <para>500 milliseconds or half a second.</para>

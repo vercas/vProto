@@ -23,7 +23,7 @@ namespace vProto
         public Response SetPayload(byte[] bt)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
 
             if (bt == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");
@@ -52,7 +52,7 @@ namespace vProto
         public Response SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
 
             if (stream == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");
@@ -92,7 +92,7 @@ namespace vProto
         public Response SetPayload(System.IO.Stream stream, int length = -1)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
 
             if (stream == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");

@@ -24,7 +24,7 @@ namespace vProto
         public Request AddResponseReceivedHandler(RequestEventHandler<ResponseReceivedEventArgs> handler)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (handler == null)
                 throw new ArgumentNullException("handler");
@@ -42,7 +42,7 @@ namespace vProto
         public Request AddRequestSentHandler(RequestEventHandler handler)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (handler == null)
                 throw new ArgumentNullException("handler");
@@ -60,7 +60,7 @@ namespace vProto
         public Request AddRequestAbortedHandler(RequestEventHandler handler)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (handler == null)
                 throw new ArgumentNullException("handler");
@@ -78,7 +78,7 @@ namespace vProto
         public Request AddRequestTimeoutHandler(RequestEventHandler handler)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (handler == null)
                 throw new ArgumentNullException("handler");

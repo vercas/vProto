@@ -43,7 +43,7 @@ namespace vProto
         public Request SetStateObject(Object value)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             State = value;
             return this;
@@ -64,7 +64,7 @@ namespace vProto
         public Request SetType(Int16 value)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             Type = value;
             return this;
@@ -112,7 +112,7 @@ namespace vProto
         public Request SetTimeout(Int32 value)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             Timeout = value;
             return this;

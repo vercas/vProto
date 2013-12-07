@@ -20,7 +20,7 @@ namespace vProto
         public Request Send()
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot send a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot send a disposed request!");
 
             client._SendPack(str, new Packages.PackageHeader() { IDTop = id, IDBottom = Type, Type = Packages.PackageType.Request, RequestTimeout = __timeout }, null, null, this);
 
@@ -42,7 +42,7 @@ namespace vProto
         public Request Abort()
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot abort a disposed request!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot abort a disposed request!");
 
             try
             {

@@ -25,7 +25,7 @@ namespace vProto
         public Response SetStateObject(Object value)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
 
             State = value;
             return this;

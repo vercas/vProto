@@ -20,7 +20,7 @@ namespace vProto
         public Response Send()
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot send a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot send a disposed response!");
 
             client._SendPack(str, new Packages.PackageHeader() { IDTop = id, IDBottom = Type, Type = Packages.PackageType.Response }, null, null, this);
 
@@ -44,7 +44,7 @@ namespace vProto
         public Response Abort()
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot abort a disposed response!", (Exception)null);
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot abort a disposed response!");
 
             try
             {
