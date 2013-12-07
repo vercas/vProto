@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    partial class OutboundRequest
+    partial class Response
     {
         System.IO.MemoryStream str = null;
 
 
         /// <summary>
-        /// Sets the payload of the request.
+        /// Sets the payload of the response.
         /// </summary>
         /// <param name="bt">Array of bytes constituting the payload.</param>
-        /// <returns>The request object.</returns>
-        public OutboundRequest SetPayload(byte[] bt)
+        /// <returns>The response object.</returns>
+        public Response SetPayload(byte[] bt)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
 
             if (bt == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");
@@ -42,17 +42,17 @@ namespace vProto
         }
 
         /// <summary>
-        /// Extracts the contents of the given stream according to the parameters and assigns them as the request payload.
+        /// Extracts the contents of the given stream according to the parameters and assigns them as the response payload.
         /// </summary>
         /// <param name="stream">The stream from which the data is extracted.</param>
         /// <param name="offset">The offset at which to begin extraction relative to the seek origin.</param>
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <param name="origin">The point from which seeking in the stream should take place.</param>
-        /// <returns>The request object.</returns>
-        public OutboundRequest SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
+        /// <returns>The response object.</returns>
+        public Response SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
 
             if (stream == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");
@@ -84,15 +84,15 @@ namespace vProto
         }
 
         /// <summary>
-        /// Extracts the contents of the given stream according to the parameters and assigns them as the request payload.
+        /// Extracts the contents of the given stream according to the parameters and assigns them as the response payload.
         /// </summary>
         /// <param name="stream">The stream from which the data is extracted.</param>
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
-        /// <returns>The request object.</returns>
-        public OutboundRequest SetPayload(System.IO.Stream stream, int length = -1)
+        /// <returns>The response object.</returns>
+        public Response SetPayload(System.IO.Stream stream, int length = -1)
         {
             if (Disposed)
-                throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
+                throw new ObjectDisposedException("Cannot change a disposed response!", (Exception)null);
 
             if (stream == null)
                 throw new ArgumentNullException("bt", "Payload cannot be null!");

@@ -54,7 +54,9 @@ namespace Server
 
         static void Client_RequestReceived(vProto.BaseClient sender, vProto.Events.RequestReceivedEventArgs e)
         {
-            Console.WriteLine("Received request \"{0}\" from {1}.", Encoding.UTF8.GetString(e.Payload), sender.ID);
+            Console.WriteLine("Received request \"{0}\" from {1}.", Encoding.UTF8.GetString(e.Response.RequestPayload), sender.ID);
+
+            e.Response.SetPayload(Encoding.UTF8.GetBytes(e.Response.RequestPayload.Length.ToString())).Send();
         }
 
         static void Client_Disconnected(vProto.BaseClient sender, vProto.Events.ClientDisconnectedEventArgs e)

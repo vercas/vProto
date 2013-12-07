@@ -13,39 +13,35 @@ namespace vProto
     /// <summary>
     /// Desc
     /// </summary>
-    public sealed partial class OutboundRequest
+    public sealed partial class Response
         : IDisposable
     {
         /// <summary>
-        /// Gets a value indicating whether the request is disposed or not.
+        /// Gets a value indicating whether the response is disposed or not.
         /// </summary>
         public Boolean Disposed { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the request has been successfully sent.
+        /// Gets a value indicating whether the response has been successfully sent.
         /// </summary>
         public Boolean Sent { get; private set; }
         /// <summary>
-        /// Gets a value indicating whether the request has been aborted.
+        /// Gets a value indicating whether the response has been aborted.
         /// </summary>
         public Boolean Aborted { get; private set; }
         /// <summary>
-        /// Gets a value indicating whether the request has timed out.
+        /// Gets a value indicating whether the response has timed out.
         /// </summary>
         public Boolean TimedOut { get; private set; }
-        /// <summary>
-        /// Gets a value indicating whether the request has been responded to.
-        /// </summary>
-        public Boolean Responded { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the request is (still) pending.
-        /// <para>A pending request hasn't been sent or aborted (yet).</para>
+        /// Gets a value indicating whether the response is (still) pending.
+        /// <para>A pending response hasn't been sent or aborted (yet).</para>
         /// </summary>
-        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut || Responded); } }
+        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut); } }
 
         /// <summary>
-        /// Sends the request and closes it, cleaning up resources and preventing changes.
+        /// Sends the response and closes it, cleaning up resources and preventing changes.
         /// <para>The disposal happens even if the sending failed.</para>
         /// </summary>
         public void Dispose()
@@ -67,7 +63,10 @@ namespace vProto
 
             try
             {
-                str.Close();
+                if (str != null)
+                    str.Close();
+
+                reqstr.Close();
             }
             catch { }
             finally
@@ -77,7 +76,7 @@ namespace vProto
         }
 
 
-        ~OutboundRequest()
+        ~Response()
         {
             try
             {
@@ -91,12 +90,20 @@ namespace vProto
 
 
         //  Only internally...
-        internal OutboundRequest(BaseClient cl, short id)
+        internal Response(BaseClient cl, short id, short type, byte[] reqpayload, TimeSpan timeout, DateTime receivalTime)
         {
             client = cl;
             this.id = id;
+            this.Type = type;
 
-            Disposed = Sent = Aborted = TimedOut = Responded = false;
+            Timeout = timeout;
+            TimeRquested = receivalTime;
+            TimeDue = receivalTime + timeout;
+
+            reqarr = reqpayload;
+            reqstr = new System.IO.MemoryStream(reqpayload);
+
+            Disposed = Sent = Aborted = TimedOut = false;
         }
     }
 }

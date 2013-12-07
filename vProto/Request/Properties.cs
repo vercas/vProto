@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    partial class OutboundRequest
+    partial class Request
     {
         /// <summary>
         /// Default request timeout.
@@ -40,7 +40,7 @@ namespace vProto
         /// </summary>
         /// <param name="value">The state object.</param>
         /// <returns>The request object.</returns>
-        public OutboundRequest SetStateObject(Object value)
+        public Request SetStateObject(Object value)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -61,7 +61,7 @@ namespace vProto
         /// </summary>
         /// <param name="value">The type.</param>
         /// <returns>The request object.</returns>
-        public OutboundRequest SetType(Int16 value)
+        public Request SetType(Int16 value)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);
@@ -109,7 +109,7 @@ namespace vProto
         /// </summary>
         /// <param name="value">The timeout amount in milliseconds.</param>
         /// <returns>The request object.</returns>
-        public OutboundRequest SetTimeout(Int32 value)
+        public Request SetTimeout(Int32 value)
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot change a disposed request!", (Exception)null);

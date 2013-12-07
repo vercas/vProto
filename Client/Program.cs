@@ -78,7 +78,7 @@ namespace Client
                 //client.SendShizzle("", 0);
                 //client.SendShizzle(s, 9999);
 
-                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).Send();
+                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).Send();
             }
             else
             {
@@ -88,6 +88,11 @@ namespace Client
             }
 
             goto go;
+        }
+
+        static void responseHandler(vProto.Request sender, vProto.BaseClient client, vProto.Events.ResponseReceivedEventArgs e)
+        {
+            Console.WriteLine("Response received: {0}", Encoding.UTF8.GetString(e.Payload));
         }
 
         static void client_ReceiptFailed(vProto.BaseClient sender, vProto.Events.PipeFailureEventArgs e)

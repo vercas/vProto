@@ -10,15 +10,12 @@ namespace vProto
     using Events;
     using Packages;
 
-    using StateType = Packages.Package;
-    using StoredRequestType = Internal_Utilities.StoredRequest;
-
     //public delegate void ResponseHandler(BaseClient client, byte[] payload);
 
     partial class BaseClient
     {
-        Dictionary<short, StoredRequestType> PendingOutboundRequests = new Dictionary<short, StoredRequestType>();
-        Dictionary<short, StoredRequestType> PendingInboundRequests = new Dictionary<short, StoredRequestType>();
+        Dictionary<short, StoredRequest> PendingRequests = new Dictionary<short, StoredRequest>();
+        Dictionary<short, StoredRequest> PendingResponses = new Dictionary<short, StoredRequest>();
 
 
 
@@ -33,14 +30,14 @@ namespace vProto
             if (reqCounter == short.MaxValue)
             {
                 for (short s = short.MinValue; s <= short.MaxValue; s++)
-                    if (!PendingOutboundRequests.ContainsKey(s))
+                    if (!PendingRequests.ContainsKey(s))
                         return reqCounter = s;
 
                 throw new Exception("How on Earth can you have 65536 pending outgoing requests..?" + Environment.NewLine + "You really need to fix stuff up.");
             }
             else
             {
-                while (PendingOutboundRequests.ContainsKey(reqCounter))
+                while (PendingRequests.ContainsKey(reqCounter))
                     reqCounter++;
 
                 return reqCounter++;
@@ -48,28 +45,32 @@ namespace vProto
         }
 
 
-        protected virtual void OnInternalRequestReceived(StateType pack)
+        protected virtual void OnInternalRequestReceived(Package pack)
         {
-            var sr = new StoredRequest() { ID = pack.Header.IDTop };
+            var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10), DateTime.Now);
 
-            /*sr.timeouttimer = new System.Threading.Timer(new System.Threading.TimerCallback(delegate(object state)
+            var sr = new StoredRequest() { ID = pack.Header.IDTop, res = res };
+
+            sr.timeouttimer = new System.Threading.Timer(new System.Threading.TimerCallback(delegate(object state)
             {
-                if (!req.Responded)
+                if (!res.Sent)
                 {
-                    PendingInboundRequests.Remove(sr.ID);
-                    req.DeclareTimeout();
+                    PendingResponses.Remove(sr.ID);
+                    res.DeclareTimeout();
                     sr.timeouttimer.Dispose();
                 }
             }), null, ((int)pack.Header.RequestTimeout) * 10, System.Threading.Timeout.Infinite);//*/
 
-            PendingInboundRequests.Add(sr.ID, sr);
+            PendingResponses.Add(sr.ID, sr);
 
-            OnRequestReceived(new RequestReceivedEventArgs(pack.Payload, pack.Header.IDBottom));
+            //Console.WriteLine("Received request: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
+
+            OnRequestReceived(new RequestReceivedEventArgs(res));
         }
 
-        protected virtual void OnInternalRequestSent(StateType pack)
+        protected virtual void OnInternalRequestSent(Package pack)
         {
-            var req = pack.State as OutboundRequest;
+            var req = pack.State as Request;
 
             var sr = new StoredRequest() { ID = pack.Header.IDTop, req = req };
 
@@ -77,7 +78,7 @@ namespace vProto
             {
                 if (!req.Responded)
                 {
-                    PendingOutboundRequests.Remove(sr.ID);
+                    PendingRequests.Remove(sr.ID);
                     req.DeclareTimeout();
                     sr.timeouttimer.Dispose();
                 }
@@ -85,11 +86,13 @@ namespace vProto
 
             //  I would gladly declare this with the other properties of 'sr' in the constructor, if only it didn't access 'sr' directly.
 
-            PendingOutboundRequests.Add(sr.ID, sr);
+            PendingRequests.Add(sr.ID, sr);
+
+            //Console.WriteLine("Sent request: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
         }
 
 
-        protected virtual void OnInternalResponseReceived(StateType pack)
+        protected virtual void OnInternalResponseReceived(Package pack)
         {
             /* Getting unmatching requests might not be a bad thing all the time.
              * For example, requests might time out quickly and the responses might arrive later.
@@ -101,14 +104,20 @@ namespace vProto
              * Things that shouldn't happen should be debugged.
              */
 
+            //Console.WriteLine("Received response: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
+
             var id = pack.Header.IDTop;
 
-            if (PendingOutboundRequests.ContainsKey(id) && !PendingOutboundRequests[id].req.Disposed)
+            if (PendingRequests.ContainsKey(id))
             {
-                var sr = PendingOutboundRequests[id];
-                PendingOutboundRequests.Remove(id);
-                sr.req.DeclareResponded(pack.Payload);
+                var sr = PendingRequests[id];
+                PendingRequests.Remove(id);
                 sr.timeouttimer.Dispose();
+
+                //if (!sr.req.Disposed) //  What on Earth was I thinking?!
+
+                if (!sr.req.Responded)
+                    sr.req.DeclareResponded(pack.Payload);
             }
 #if DEBUG
             else
@@ -118,20 +127,41 @@ namespace vProto
 #endif
         }
 
-        protected virtual void OnInternalResponseSent(StateType pack)
+        protected virtual void OnInternalResponseSent(Package pack)
         {
-            //  The inbound request should be cleaned up after the request was sent.
+            //Console.WriteLine("Sent response: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
+
+            var id = pack.Header.IDTop;
+
+            if (PendingResponses.ContainsKey(id))
+            {
+                var sr = PendingResponses[id];
+                PendingResponses.Remove(id);
+                sr.timeouttimer.Dispose();
+
+                //  The response will be disposed and declared sent when this is invoked.
+            }
+#if DEBUG
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Sent bogus response of id {0} and type {1}. Shouldn't happen...", pack.Header.IDTop, pack.Header.IDBottom);
+            }
+#endif
         }
 
 
-        protected virtual void OnInternalRequestSendFailed(StateType pack)
+        protected virtual void OnInternalRequestSendFailed(Package pack)
         {
-            Console.WriteLine("Failed to send reQUest {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Failed to send request {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+#endif
         }
 
-        protected virtual void OnInternalResponseSendFailed(StateType pack)
+        protected virtual void OnInternalResponseSendFailed(Package pack)
         {
-            Console.WriteLine("Failed to send reSPonse {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Failed to send response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+#endif
         }
 
 
@@ -166,12 +196,12 @@ namespace vProto
         /// <param name="type">An optional number to identify the type of request. Can be specified later.</param>
         /// <param name="payload">The data to send; mandatory but may be specified later.</param>
         /// <returns>The request object.</returns>
-        public OutboundRequest CreateRequest(short? type = null, byte[] payload = null)
+        public Request CreateRequest(short? type = null, byte[] payload = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            var req = new OutboundRequest(this, __getNewRequestID());
+            var req = new Request(this, __getNewRequestID());
 
             if (type != null && type.HasValue)
                 req.SetType(type.Value);

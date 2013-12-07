@@ -12,9 +12,9 @@ namespace vProto.Events
     where TEventArgs : EventArgs;
 
 
-    public delegate void RequestEventHandler(OutboundRequest sender, BaseClient client, EventArgs e);
+    public delegate void RequestEventHandler(Request sender, BaseClient client, EventArgs e);
 
-    public delegate void RequestEventHandler<TEventArgs>(OutboundRequest sender, BaseClient client, TEventArgs e)
+    public delegate void RequestEventHandler<TEventArgs>(Request sender, BaseClient client, TEventArgs e)
     where TEventArgs : EventArgs;
 
 

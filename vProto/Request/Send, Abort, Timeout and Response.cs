@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    partial class OutboundRequest
+    partial class Request
     {
         /// <summary>
         /// Attempts to send the request.
         /// <para>Upon success, the request is marked as sent and disposed of.</para>
         /// </summary>
         /// <returns></returns>
-        public OutboundRequest Send()
+        public Request Send()
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot send a disposed request!", (Exception)null);
@@ -39,7 +39,7 @@ namespace vProto
         /// Marks the request as aborted and disposed and raises the appropriate event.
         /// </summary>
         /// <returns></returns>
-        public OutboundRequest Abort()
+        public Request Abort()
         {
             if (Disposed)
                 throw new ObjectDisposedException("Cannot abort a disposed request!", (Exception)null);
@@ -52,8 +52,7 @@ namespace vProto
             catch { }
             finally
             {
-                Disposed = true;
-                Aborted = true;
+                Disposed = Aborted = true;
 
                 OnRequestAborted(new EventArgs());
             }
@@ -63,16 +62,34 @@ namespace vProto
 
         internal void DeclareTimeout()
         {
-            TimedOut = true;
+            try
+            {
+                if (str != null)
+                    str.Close();
+            }
+            catch { }
+            finally
+            {
+                Disposed = Aborted = TimedOut = true;
 
-            OnRequestTimeout(new EventArgs());
+                OnRequestTimeout(new EventArgs());
+            }
         }
 
         internal void DeclareResponded(byte[] payload)
         {
-            Responded = true;
+            try
+            {
+                if (str != null)
+                    str.Close();
+            }
+            catch { }
+            finally
+            {
+                Disposed = Responded = true;
 
-            OnResponseReceived(new Events.ResponseReceivedEventArgs(payload));
+                OnResponseReceived(new Events.ResponseReceivedEventArgs(payload));
+            }
         }
     }
 }
