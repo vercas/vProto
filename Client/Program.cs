@@ -78,13 +78,24 @@ namespace Client
                 //client.SendShizzle("", 0);
                 //client.SendShizzle(s, 9999);
 
-                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).Send();
+                //client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
+                try
+                {
+                    var t = client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendAsync();
+                    t.Wait();
+
+                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(t.Result));
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Inline request exception: {0}", x.ToString());
+                }
             }
             else
             {
                 //client.SendShizzle(s, 1337);
 
-                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).Send();
+                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendFluent();
             }
 
             goto go;

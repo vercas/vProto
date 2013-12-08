@@ -120,7 +120,7 @@ namespace vProto
 
                 //if (!sr.req.Disposed) //  What on Earth was I thinking?!
 
-                if (sr.req.Pending)
+                if (sr.req.AwaitingResult)
                     sr.req.DeclareResponded(pack.Payload);
             }
 #if DEBUG
@@ -167,7 +167,7 @@ namespace vProto
 
                 //if (!sr.req.Disposed) //  What on Earth was I thinking?!
 
-                if (sr.req.Pending)
+                if (sr.req.AwaitingResult)
                     sr.req.DeclareFailure(x, true);
             }
 #if DEBUG
@@ -213,7 +213,7 @@ namespace vProto
 
                 //if (!sr.req.Disposed) //  What on Earth was I thinking?!
 
-                if (sr.req.Pending)
+                if (sr.req.AwaitingResult)
                     sr.req.DeclareFailure(x, false);
             }
 #if DEBUG

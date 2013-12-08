@@ -148,6 +148,9 @@ namespace vProto
 
         bool LowSendPacket(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
+            if (!IsConnected)
+                return false;
+
             header.Size = (uint)bodeh.Length;
 
             byte[] pack = new byte[bodeh.Length + packetHeaderSize];

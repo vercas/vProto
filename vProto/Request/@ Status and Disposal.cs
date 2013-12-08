@@ -43,10 +43,16 @@ namespace vProto
         public Boolean Responded { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether the request is (still) pending.
-        /// <para>A pending request hasn't been sent or aborted (yet).</para>
+        /// Gets a value indicating whether the request is pending.
+        /// <para>A pending request hasn't been sent or aborted yet, hasn't timed out and hasn't failed.</para>
         /// </summary>
         public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut || Failed || Responded); } }
+
+        /// <summary>
+        /// Gets a value indicating whether the request is sent and awaiting a result.
+        /// <para>Possible results are a response, failure or timeout.</para>
+        /// </summary>
+        public Boolean AwaitingResult { get { return Sent && !(TimedOut || Failed || Responded); } }
 
         /// <summary>
         /// Sends the request and closes it, cleaning up resources and preventing changes.
@@ -59,7 +65,7 @@ namespace vProto
             else
                 try
                 {
-                    Send();
+                    Abort();
 
                     return;
                     //  We don't need the code below again, do we? :P
