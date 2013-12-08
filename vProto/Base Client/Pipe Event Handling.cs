@@ -10,11 +10,9 @@ namespace vProto
     using Events;
     using Packages;
 
-    using StateType = Packages.Package;
-    
     partial class BaseClient
     {
-        protected virtual void OnInternalPacketReceived(StateType pack)
+        protected virtual void OnInternalPacketReceived(Package pack)
         {
             switch (pack.Header.Type)
             {
@@ -38,7 +36,7 @@ namespace vProto
             }
         }
 
-        protected virtual void OnInternalPacketSent(StateType pack)
+        protected virtual void OnInternalPacketSent(Package pack)
         {
             switch (pack.Header.Type)
             {
@@ -52,7 +50,7 @@ namespace vProto
         }
 
 
-        private void _OnPipeFailure(Exception x, bool outg, StateType pack)
+        private void _OnPipeFailure(Exception x, bool outg, Package pack)
         {
             try
             {//*/
@@ -65,15 +63,24 @@ namespace vProto
                     switch (pack.Header.Type)
                     {
                         case PackageType.Request:
-                            OnInternalRequestSendFailed(pack);
+                            OnInternalRequestSendFailed(pack, x);
                             break;
                         case PackageType.Response:
-                            OnInternalResponseSendFailed(pack);
+                            OnInternalResponseSendFailed(pack, x);
                             break;
 
                         case PackageType.HeartbeatRequest:
-                        case PackageType.HeartbeatResponse:
-                            OnInternalHeartbeatFailure(pack);
+                        //case PackageType.HeartbeatResponse:
+                            OnInternalHeartbeatFailure(pack, x);
+                            break;
+                    }
+                }
+                else if (pack != null)
+                {
+                    switch (pack.Header.Type)
+                    {
+                        case PackageType.Response:
+                            OnInternalResponseReceiveFailed(pack, x);
                             break;
                     }
                 }

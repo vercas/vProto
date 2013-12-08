@@ -8,8 +8,6 @@ namespace vProto
 {
     using Packages;
 
-    using StateType = Packages.Package;
-
     partial class BaseClient
     {
         /// <summary>
@@ -195,7 +193,7 @@ namespace vProto
         /* The methods that handle heartbeat-specific pipe events.
          */
 
-        protected virtual void OnInternalHeartbeatRequestReceived(StateType pack)
+        protected virtual void OnInternalHeartbeatRequestReceived(Package pack)
         {
             //Console.WriteLine("Bouncing heartbeat.");
 
@@ -204,7 +202,7 @@ namespace vProto
                     break;
         }
 
-        protected virtual void OnInternalHeartbeatResponseReceived(StateType pack)
+        protected virtual void OnInternalHeartbeatResponseReceived(Package pack)
         {
             bool awaiting = false;
 
@@ -221,7 +219,7 @@ namespace vProto
             }
         }
 
-        protected virtual void OnInternalHeartbeatFailure(StateType pack)
+        protected virtual void OnInternalHeartbeatFailure(Package pack, Exception x)
         {
             __scoreHeartbeatFailure();
         }

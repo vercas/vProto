@@ -34,6 +34,10 @@ namespace vProto
         /// </summary>
         public Boolean TimedOut { get; private set; }
         /// <summary>
+        /// Gets a value indicating whether the request produced an exception.
+        /// </summary>
+        public Boolean Failed { get; private set; }
+        /// <summary>
         /// Gets a value indicating whether the request has been responded to.
         /// </summary>
         public Boolean Responded { get; private set; }
@@ -42,7 +46,7 @@ namespace vProto
         /// Gets a value indicating whether the request is (still) pending.
         /// <para>A pending request hasn't been sent or aborted (yet).</para>
         /// </summary>
-        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut || Responded); } }
+        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut || Failed || Responded); } }
 
         /// <summary>
         /// Sends the request and closes it, cleaning up resources and preventing changes.
@@ -96,7 +100,7 @@ namespace vProto
             client = cl;
             this.id = id;
 
-            Disposed = Sent = Aborted = TimedOut = Responded = false;
+            Disposed = Sent = Aborted = TimedOut = Failed = Responded = false;
         }
     }
 }

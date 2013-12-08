@@ -52,6 +52,7 @@
     <Compile Include="Base Client\Pipe Event Handling.cs" />
     <Compile Include="Events\%40 Delegates.cs" />
     <Compile Include="Events\%40ExceptionCarryingEvent.cs" />
+    <Compile Include="Events\RequestFailureEventArgs.cs" />
     <Compile Include="Events\ResponseReceivedEventArgs.cs" />
     <Compile Include="Events\DataReceivedEventArgs.cs" />
     <Compile Include="Events\RequestReceivedEventArgs.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Request\Events.cs" />
     <Compile Include="Request\Payload.cs" />
     <Compile Include="Request\Properties.cs" />
-    <Compile Include="Request\Send, Abort, Timeout and Response.cs" />
+    <Compile Include="Request\Send, Abort, Timeout, Error and Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Base Client\Package Sending.cs" />
     <Compile Include="Base Server\Abstract Methods.cs" />

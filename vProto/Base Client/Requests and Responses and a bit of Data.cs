@@ -45,6 +45,7 @@ namespace vProto
         }
 
 
+
         protected virtual void OnInternalRequestReceived(Package pack)
         {
             var timeout = new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10) - Ping;
@@ -94,6 +95,7 @@ namespace vProto
         }
 
 
+
         protected virtual void OnInternalResponseReceived(Package pack)
         {
             /* Getting unmatching requests might not be a bad thing all the time.
@@ -118,7 +120,7 @@ namespace vProto
 
                 //if (!sr.req.Disposed) //  What on Earth was I thinking?!
 
-                if (!sr.req.Responded)
+                if (sr.req.Pending)
                     sr.req.DeclareResponded(pack.Payload);
             }
 #if DEBUG
@@ -152,19 +154,76 @@ namespace vProto
         }
 
 
-        protected virtual void OnInternalRequestSendFailed(Package pack)
+
+        protected virtual void OnInternalRequestSendFailed(Package pack, Exception x)
         {
+            var id = pack.Header.IDTop;
+
+            if (PendingRequests.ContainsKey(id))
+            {
+                var sr = PendingRequests[id];
+                PendingRequests.Remove(id);
+                sr.timeouttimer.Dispose();
+
+                //if (!sr.req.Disposed) //  What on Earth was I thinking?!
+
+                if (sr.req.Pending)
+                    sr.req.DeclareFailure(x, true);
+            }
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("Failed to send request {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to send request {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+            }
 #endif
         }
 
-        protected virtual void OnInternalResponseSendFailed(Package pack)
+        protected virtual void OnInternalResponseSendFailed(Package pack, Exception x)
         {
+            /*var id = pack.Header.IDTop;
+
+            if (PendingRequests.ContainsKey(id))
+            {
+                var sr = PendingRequests[id];
+                PendingRequests.Remove(id);
+                sr.timeouttimer.Dispose();
+
+                //if (!sr.req.Disposed) //  What on Earth was I thinking?!
+
+                if (sr.req.Pending)
+                    sr.req.DeclareFailure(x, true);
+            }*/
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("Failed to send response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+            //else
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to send response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+            }
 #endif
         }
+
+        protected virtual void OnInternalResponseReceiveFailed(Package pack, Exception x)
+        {
+            var id = pack.Header.IDTop;
+
+            if (PendingRequests.ContainsKey(id))
+            {
+                var sr = PendingRequests[id];
+                PendingRequests.Remove(id);
+                sr.timeouttimer.Dispose();
+
+                //if (!sr.req.Disposed) //  What on Earth was I thinking?!
+
+                if (sr.req.Pending)
+                    sr.req.DeclareFailure(x, false);
+            }
+#if DEBUG
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to receive response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+            }
+#endif
+        }
+
 
 
         /// <summary>
@@ -190,6 +249,7 @@ namespace vProto
         {
             _SendPack(payload, new PackageHeader() { ID = id, Type = PackageType.Data }, len, cbk);
         }
+
 
 
         /// <summary>

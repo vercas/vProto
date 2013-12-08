@@ -70,9 +70,25 @@ namespace vProto
             catch { }
             finally
             {
-                Disposed = Aborted = TimedOut = true;
+                Disposed = TimedOut = true;
 
                 OnRequestTimeout(new EventArgs());
+            }
+        }
+
+        internal void DeclareFailure(Exception x, bool sending)
+        {
+            try
+            {
+                if (str != null)
+                    str.Close();
+            }
+            catch { }
+            finally
+            {
+                Disposed = Failed = true;
+
+                OnRequestFailure(new Events.RequestFailureEventArgs(x, sending));
             }
         }
 

@@ -33,12 +33,16 @@ namespace vProto
         /// Gets a value indicating whether the response has timed out.
         /// </summary>
         public Boolean TimedOut { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether the response produced an exception.
+        /// </summary>
+        public Boolean Failed { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the response is (still) pending.
         /// <para>A pending response hasn't been sent or aborted (yet).</para>
         /// </summary>
-        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut); } }
+        public Boolean Pending { get { return !(Disposed || Sent || Aborted || TimedOut || Failed); } }
 
         /// <summary>
         /// Sends the response and closes it, cleaning up resources and preventing changes.
@@ -103,7 +107,7 @@ namespace vProto
             reqarr = reqpayload;
             reqstr = new System.IO.MemoryStream(reqpayload);
 
-            Disposed = Sent = Aborted = TimedOut = false;
+            Disposed = Sent = Aborted = TimedOut = Failed = false;
         }
     }
 }

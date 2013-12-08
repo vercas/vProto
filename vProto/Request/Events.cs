@@ -14,6 +14,7 @@ namespace vProto
         public event RequestEventHandler RequestSent;
         public event RequestEventHandler RequestAborted;
         public event RequestEventHandler RequestTimeout;
+        public event RequestEventHandler<RequestFailureEventArgs> RequestFailure;
 
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestSentHandler(RequestEventHandler handler)
+        public Request AddSentHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
@@ -57,7 +58,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestAbortedHandler(RequestEventHandler handler)
+        public Request AddAbortedHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
@@ -75,7 +76,7 @@ namespace vProto
         /// </summary>
         /// <param name="handler">The handler to add to the event.</param>
         /// <returns>The current request object.</returns>
-        public Request AddRequestTimeoutHandler(RequestEventHandler handler)
+        public Request AddTimeoutHandler(RequestEventHandler handler)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
@@ -84,6 +85,24 @@ namespace vProto
                 throw new ArgumentNullException("handler");
 
             RequestTimeout += handler;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a delegate to the RequestFailure event of this request.
+        /// </summary>
+        /// <param name="handler">The handler to add to the event.</param>
+        /// <returns>The current request object.</returns>
+        public Request AddFailureHandler(RequestEventHandler<RequestFailureEventArgs> handler)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
+
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            RequestFailure += handler;
 
             return this;
         }
@@ -122,6 +141,17 @@ namespace vProto
         /*protected virtual*/ void OnRequestTimeout(EventArgs e)
         {
             RequestEventHandler handler = RequestTimeout;
+
+            if (handler != null)
+            {
+                handler(this, client, e);
+            }
+        }
+
+        /*protected virtual*/
+        void OnRequestFailure(RequestFailureEventArgs e)
+        {
+            RequestEventHandler<RequestFailureEventArgs> handler = RequestFailure;
 
             if (handler != null)
             {
