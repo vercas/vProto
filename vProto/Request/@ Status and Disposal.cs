@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
 
 namespace vProto
 {
@@ -16,6 +8,10 @@ namespace vProto
     public sealed partial class Request
         : IDisposable
     {
+        private object __syncObject = new object();
+
+
+
         /// <summary>
         /// Gets a value indicating whether the request is disposed or not.
         /// </summary>
@@ -89,15 +85,12 @@ namespace vProto
 
         ~Request()
         {
-            try
-            {
-                Abort();
-            }
-            catch { }   //  For God's sake. :S
+            Dispose();
         }
 
         internal BaseClient client;
-        short id;
+        internal short id;
+        internal bool isInternal = false;
 
 
         //  Only internally...

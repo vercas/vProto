@@ -54,7 +54,7 @@ namespace Server
 
         static void Client_RequestReceived(vProto.BaseClient sender, vProto.Events.RequestReceivedEventArgs e)
         {
-            Console.WriteLine("Received request \"{0}\" from {1}.", Encoding.UTF8.GetString(e.Response.RequestPayload), sender.ID);
+            Console.WriteLine("Received request of {0} byes from {1}.", e.Response.RequestPayload.Length, sender.ID);
 
             e.Response.SetPayload(Encoding.UTF8.GetBytes(e.Response.RequestPayload.Length.ToString())).Send();
         }

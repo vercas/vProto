@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
+using System.IO;
 
 namespace vProto
 {
     partial class Response
     {
-        System.IO.MemoryStream str = null;
+        MemoryStream str = new MemoryStream();
 
 
         /// <summary>
@@ -35,7 +28,7 @@ namespace vProto
                 }
                 catch { }
 
-            str = new System.IO.MemoryStream(bt);
+            str = new MemoryStream(bt);
             //str.Write(bt, 0, bt.Length);
 
             return this;
@@ -49,7 +42,7 @@ namespace vProto
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <param name="origin">The point from which seeking in the stream should take place.</param>
         /// <returns>The response object.</returns>
-        public Response SetPayload(System.IO.Stream stream, int length = -1, int offset = 0, System.IO.SeekOrigin origin = System.IO.SeekOrigin.Begin)
+        public Response SetPayload(Stream stream, int length = -1, int offset = 0, SeekOrigin origin = SeekOrigin.Begin)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
@@ -78,7 +71,7 @@ namespace vProto
                 read += stream.Read(ba, read, length - read);
             }
 
-            str = new System.IO.MemoryStream(ba);
+            str = new MemoryStream(ba);
 
             return this;
         }
@@ -89,7 +82,7 @@ namespace vProto
         /// <param name="stream">The stream from which the data is extracted.</param>
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <returns>The response object.</returns>
-        public Response SetPayload(System.IO.Stream stream, int length = -1)
+        public Response SetPayload(Stream stream, int length = -1)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");
@@ -116,7 +109,7 @@ namespace vProto
                 read += stream.Read(ba, read, length - read);
             }
 
-            str = new System.IO.MemoryStream(ba);
+            str = new MemoryStream(ba);
 
             return this;
         }

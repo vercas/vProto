@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
+using System.IO;
 
 namespace vProto
 {
@@ -16,6 +9,10 @@ namespace vProto
     public sealed partial class Response
         : IDisposable
     {
+        private object __syncObject = new object();
+
+
+
         /// <summary>
         /// Gets a value indicating whether the response is disposed or not.
         /// </summary>
@@ -90,7 +87,8 @@ namespace vProto
         }
 
         internal BaseClient client;
-        short id;
+        internal short id;
+        internal bool isInternal = false;
 
 
         //  Only internally...
@@ -105,7 +103,7 @@ namespace vProto
             TimeDue = receivalTime + timeout;
 
             reqarr = reqpayload;
-            reqstr = new System.IO.MemoryStream(reqpayload);
+            reqstr = new MemoryStream(reqpayload);
 
             Disposed = Sent = Aborted = TimedOut = Failed = false;
         }

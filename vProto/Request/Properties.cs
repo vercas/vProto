@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
 
 namespace vProto
 {
@@ -16,17 +8,17 @@ namespace vProto
         /// Default request timeout.
         /// <para>10 seconds.</para>
         /// </summary>
-        public const int DefaultTimeout = 10000;
+        public static readonly TimeSpan DefaultTimeout = new TimeSpan(0, 0, 0, 10, 0);
         /// <summary>
         /// Maximum timeout value.
         /// <para>655360 milliseconds or 655 seconds or 10 minutes and 55 seconds.</para>
         /// </summary>
-        public const int MaxTimeout = ((int)ushort.MaxValue) * 10;
+        public static readonly TimeSpan MaxTimeout = new TimeSpan(0, 0, 0, 0, ((int)ushort.MaxValue) * 10);
         /// <summary>
         /// Minimum timeout value.
         /// <para>1 millisecond.</para>
         /// </summary>
-        public const int MinTimeout = 1;    //  For the true perfectionists out there. Somewhere.
+        public static readonly TimeSpan MinTimeout = new TimeSpan(0, 0, 0, 0, 1);    //  For the true perfectionists out there. Somewhere.
 
 
 
@@ -73,13 +65,13 @@ namespace vProto
 
 
         #region Timeout
-        private int _timeout = DefaultTimeout;
-        private ushort __timeout = (ushort)(DefaultTimeout / 10);
+        private TimeSpan _timeout = DefaultTimeout;
+        private ushort __timeout = (ushort)(Convert.ToInt32(DefaultTimeout.TotalMilliseconds) / 10);
         /// <summary>
-        /// Gets or sets the number of milliseconds to wait for a response to this request before declaring timeout.
+        /// Gets or sets the amount of time to wait for a response to this request before declaring timeout.
         /// <para>0 means no timeout!</para>
         /// </summary>
-        public Int32 Timeout
+        public TimeSpan Timeout
         {
             get
             {
@@ -87,11 +79,15 @@ namespace vProto
             }
             set
             {
-                if (value == 0)
+                /*if (value == TimeSpan.Zero)
                 {
-                    _timeout = __timeout = 0;
+                    _timeout = value;
+                    __timeout = 0;
+
                     return;
-                }
+                }*/
+
+                //  Was I retarded when I wrote the lines commented above?
 
                 if (value < MinTimeout)
                     throw new ArgumentOutOfRangeException("value", "Value must be strictly positive!");
@@ -100,7 +96,7 @@ namespace vProto
                     throw new ArgumentOutOfRangeException("value", "Value cannot exceed " + MaxTimeout + " milliseconds!");
 
                 _timeout = value;
-                __timeout = (ushort)(value / 10);
+                __timeout = (ushort)(Convert.ToInt32(value.TotalMilliseconds) / 10);
                 //  Best cheat in the world.
             }
         }
@@ -110,6 +106,19 @@ namespace vProto
         /// <param name="value">The timeout amount in milliseconds.</param>
         /// <returns>The request object.</returns>
         public Request SetTimeout(Int32 value)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
+
+            Timeout = new TimeSpan(0, 0, 0, 0, value);
+            return this;
+        }
+        /// <summary>
+        /// Sets the timeout of the request.
+        /// </summary>
+        /// <param name="value">The timeout amount.</param>
+        /// <returns>The request object.</returns>
+        public Request SetTimeout(TimeSpan value)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");

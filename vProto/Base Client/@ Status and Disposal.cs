@@ -1,14 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.Security;
-using System.Security;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
+using System.IO;
 using System.Threading;
 
 namespace vProto
@@ -27,8 +18,8 @@ namespace vProto
         protected Thread sender;
 #endif
 
-        protected System.IO.Stream streamIn;
-        protected System.IO.Stream streamOut;
+        protected Stream streamIn;
+        protected Stream streamOut;
 
 
 
@@ -117,7 +108,7 @@ namespace vProto
 
         protected void _CheckIfStopped(Exception x, bool force = false)
         {
-            Console.WriteLine("CHECKING IF STOPPED OMG");
+            //Console.WriteLine("CHECKING IF STOPPED OMG");
 
             if (IsConnected || force)
             {
@@ -150,7 +141,7 @@ namespace vProto
         /// </summary>
         /// <param name="strIn">The communication input stream. This is the stream which is checked for incomming packages (read from).</param>
         /// <param name="strOut">optional; The communication output stream. This is the stream which is given outgoing packages (written to). If null, will be the same as the input stream.</param>
-        protected void InitializeFromStreams(System.IO.Stream strIn, System.IO.Stream strOut = null)
+        protected void InitializeFromStreams(Stream strIn, Stream strOut = null)
         {
             if (strIn == null)
                 throw new ArgumentNullException("strIn", "Input stream may not be null!");
@@ -166,7 +157,7 @@ namespace vProto
             sender = new Thread(new ThreadStart(SenderLoop));
 #endif
 
-            heartbeatTimer = new System.Threading.Timer(__heartbeatTimerCallback, null, HeartbeatInterval, HeartbeatInterval);
+            heartbeatTimer = new Timer(__heartbeatTimerCallback, null, HeartbeatInterval, HeartbeatInterval);
             speedCountingTimer = new Timer(__speedCountingTimerCallback, null, new TimeSpan(0), new TimeSpan(0, 0, 1));
 
             IsConnected = true;

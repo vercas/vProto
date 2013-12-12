@@ -50,6 +50,8 @@
     <Compile Include="Base Client\%40 Status and Disposal.cs" />
     <Compile Include="Base Client\Package Receipt.cs" />
     <Compile Include="Base Client\Pipe Event Handling.cs" />
+    <Compile Include="Collections\PendingResponseCollection.cs" />
+    <Compile Include="Collections\PendingRequestCollection.cs" />
     <Compile Include="Events\%40 Delegates.cs" />
     <Compile Include="Events\%40ExceptionCarryingEvent.cs" />
     <Compile Include="Events\RequestFailureEventArgs.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Internal Utilities\IHazID.cs" />
     <Compile Include="Internal Utilities\Queued Package.cs" />
     <Compile Include="Internal Utilities\Stored Request-Response.cs" />
+    <Compile Include="Packages\Internal Request Types.cs" />
     <Compile Include="Packages\Package Types.cs" />
     <Compile Include="Internal Utilities\Struct mapping.cs" />
     <Compile Include="Packages\Package.cs" />

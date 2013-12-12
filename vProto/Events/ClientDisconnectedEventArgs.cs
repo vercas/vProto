@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ExceptionType = System.Exception;
 
 namespace vProto.Events
 {
@@ -19,7 +13,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.ClientDisconnectedEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public ClientDisconnectedEventArgs(ExceptionType x)
+        public ClientDisconnectedEventArgs(Exception x)
             : base(x)
         {
             

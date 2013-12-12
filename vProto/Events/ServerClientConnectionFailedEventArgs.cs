@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ExceptionType = System.Exception;
-using ClientType = vProto.BaseClient;
 
 namespace vProto.Events
 {
@@ -23,7 +16,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.ServerClientConnectionFailedEventArgs with the specified client object, client ID and exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public ServerClientConnectionFailedEventArgs(/*int id, ClientType client,*/ ExceptionType x)
+        public ServerClientConnectionFailedEventArgs(/*int id, BaseClient client,*/ Exception x)
             : base(x)
         {
             //ID = id;
@@ -39,7 +32,7 @@ namespace vProto.Events
         /// <summary>
         /// Gets the client object.
         /// </summary>
-        public ClientType Client { get; private set; }
+        public BaseClient Client { get; private set; }
         //*/
     }
 }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ClientType = vProto.BaseClient;
+using System.IO;
 
 namespace vProto.Events
 {
@@ -24,14 +19,14 @@ namespace vProto.Events
         {
             Payload = payload;
             if (payload != null)
-                PayloadStream = new System.IO.MemoryStream(payload);
+                PayloadStream = new MemoryStream(payload);
         }
 
 
         /// <summary>
         /// Gets a memory stream over the payload.
         /// </summary>
-        public System.IO.MemoryStream PayloadStream { get; private set; }
+        public MemoryStream PayloadStream { get; private set; }
         /// <summary>
         /// Gets the array of bytes that make up the Response payload.
         /// </summary>

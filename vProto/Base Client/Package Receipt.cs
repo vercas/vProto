@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace vProto
 {
     using Internal_Utilities;
-    using Events;
     using Packages;
 
     partial class BaseClient
     {
-        const int packetHeaderSize = Packages.PackageHeader.StructSize;
+        const int packetHeaderSize = PackageHeader.StructSize;
 
 
 

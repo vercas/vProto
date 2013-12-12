@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
 
 namespace vProto
 {
+    using Events;
+    using Packages;
+
     partial class Request
     {
         /// <summary>
@@ -23,19 +19,24 @@ namespace vProto
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot send a disposed request!");
 
-            try
+            lock (__syncObject)
             {
-                client._SendPack(str, new Packages.PackageHeader() { IDTop = id, IDBottom = Type, Type = Packages.PackageType.Request, RequestTimeout = __timeout }, null, null, this);
+                try
+                {
+                    client._SendPack(str, new PackageHeader() { IDTop = id, IDBottom = Type, Type = this.isInternal ? PackageType.InternalRequest : PackageType.Request, RequestTimeout = __timeout }, null, null, this);
+                }
+                catch { }
 
-                Sent = Disposed = true;
+                try
+                {
+                    str.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Sent = true;
+                }
             }
-            catch { }
-
-            try
-            {
-                str.Close();
-            }
-            catch { }
 
             return this;
         }
@@ -49,68 +50,72 @@ namespace vProto
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot abort a disposed request!");
 
-            try
-            {
-                if (str != null)
-                    str.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = Aborted = true;
+            lock (__syncObject)
+                try
+                {
+                    if (str != null)
+                        str.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Aborted = true;
 
-                OnRequestAborted(new EventArgs());
-            }
+                    OnRequestAborted(new EventArgs());
+                }
 
             return this;
         }
 
         internal void DeclareTimeout()
         {
-            try
-            {
-                if (str != null)
-                    str.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = TimedOut = true;
+            lock (__syncObject)
+                try
+                {
+                    if (str != null)
+                        str.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = TimedOut = true;
 
-                OnRequestTimeout(new EventArgs());
-            }
+                    OnRequestTimeout(new EventArgs());
+                }
         }
 
         internal void DeclareFailure(Exception x, bool sending)
         {
-            try
-            {
-                if (str != null)
-                    str.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = Failed = true;
+            lock (__syncObject)
+                try
+                {
+                    if (str != null)
+                        str.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Failed = true;
 
-                OnRequestFailure(new Events.RequestFailureEventArgs(x, sending));
-            }
+                    OnRequestFailure(new RequestFailureEventArgs(x, sending));
+                }
         }
 
         internal void DeclareResponded(byte[] payload)
         {
-            try
-            {
-                if (str != null)
-                    str.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = Responded = true;
+            lock (__syncObject)
+                try
+                {
+                    if (str != null)
+                        str.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Responded = true;
 
-                OnResponseReceived(new Events.ResponseReceivedEventArgs(payload));
-            }
+                    OnResponseReceived(new ResponseReceivedEventArgs(payload));
+                }
         }
 
 
@@ -128,13 +133,13 @@ namespace vProto
 
             TaskCompletionSource<byte[]> tcs = new TaskCompletionSource<byte[]>();
 
-            AddResponseReceivedHandler(delegate(Request sender, BaseClient client, Events.ResponseReceivedEventArgs e)
+            AddResponseReceivedHandler(delegate(Request sender, BaseClient client, ResponseReceivedEventArgs e)
             {
                 tcs.TrySetResult(e.Payload);
             }).AddTimeoutHandler(delegate(Request sender, BaseClient client, EventArgs e)
             {
                 tcs.TrySetCanceled();
-            }).AddFailureHandler(delegate(Request sender, BaseClient client, Events.RequestFailureEventArgs e)
+            }).AddFailureHandler(delegate(Request sender, BaseClient client, RequestFailureEventArgs e)
             {
                 tcs.TrySetException(e.Exception);
             }).SendFluent();

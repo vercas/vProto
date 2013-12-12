@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using ExceptionType = System.IO.IOException;
+using System.IO;
 
 namespace vProto.Events
 {
@@ -19,7 +14,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.ListeningFailedEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public ListeningFailedEventArgs(ExceptionType x)
+        public ListeningFailedEventArgs(IOException x)
             : base(x)
         {
             

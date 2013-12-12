@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace vProto
 {
-    using Internal_Utilities;
     using Events;
     using Packages;
 
@@ -24,7 +19,7 @@ namespace vProto
                     break;
 
                 case PackageType.Data:
-                    OnDataReceived(new Events.DataReceivedEventArgs(pack.Payload, pack.Header.ID));
+                    OnDataReceived(new DataReceivedEventArgs(pack.Payload, pack.Header.ID));
                     break;
 
                 case PackageType.HeartbeatRequest:

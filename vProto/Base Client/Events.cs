@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace vProto
 {
-    using Internal_Utilities;
     using Events;
-    using Packages;
 
     partial class BaseClient
     {

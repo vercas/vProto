@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace vProto.Events
 {
@@ -17,7 +13,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.RequestFailureEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
-        public RequestFailureEventArgs(System.Exception x, bool sending = true)
+        public RequestFailureEventArgs(Exception x, bool sending = true)
             : base(x)
         {
             Sending = sending;

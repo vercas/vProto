@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
 
 namespace vProto
 {
+    using Packages;
+
     partial class Response
     {
         /// <summary>
@@ -22,17 +16,26 @@ namespace vProto
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot send a disposed response!");
 
-            client._SendPack(str, new Packages.PackageHeader() { IDTop = id, IDBottom = Type, Type = Packages.PackageType.Response }, null, null, this);
-
-            Sent = Disposed = true;
-
-            try
+            lock (__syncObject)
             {
-                str.Close();
+                try
+                {
+                    client._SendPack(str, new PackageHeader() { IDTop = id, IDBottom = Type, Type = isInternal ? PackageType.InternalResponse : PackageType.Response }, null, null, this);
+                }
+                catch { }
 
-                reqstr.Close();
+                try
+                {
+                    str.Close();
+
+                    reqstr.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Sent = true;
+                }
             }
-            catch { }
 
             return this;
         }
@@ -46,20 +49,22 @@ namespace vProto
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot abort a disposed response!");
 
-            try
+            lock (__syncObject)
             {
-                if (str != null)
-                    str.Close();
+                try
+                {
+                    if (str != null)
+                        str.Close();
 
-                reqstr.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = true;
-                Aborted = true;
+                    reqstr.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = Aborted = true;
 
-                //OnresponseAborted(new EventArgs());
+                    //OnresponseAborted(new EventArgs());
+                }
             }
 
             return this;
@@ -67,19 +72,22 @@ namespace vProto
 
         internal void DeclareTimeout()
         {
-            try
+            lock (__syncObject)
             {
-                if (str != null)
-                    str.Close();
+                try
+                {
+                    if (str != null)
+                        str.Close();
 
-                reqstr.Close();
-            }
-            catch { }
-            finally
-            {
-                Disposed = TimedOut = true;
+                    reqstr.Close();
+                }
+                catch { }
+                finally
+                {
+                    Disposed = TimedOut = true;
 
-                //OnRequestTimeout(new EventArgs());
+                    //OnRequestTimeout(new EventArgs());
+                }
             }
         }
     }

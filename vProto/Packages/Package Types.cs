@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace vProto.Packages
+﻿namespace vProto.Packages
 {
     /// <summary>
     /// Represents all the types of packages used by the protocol.
@@ -20,5 +14,8 @@ namespace vProto.Packages
 
         HeartbeatRequest = 4,
         HeartbeatResponse = 5,
+
+        InternalRequest = 6,
+        InternalResponse = 7,
     }
 }

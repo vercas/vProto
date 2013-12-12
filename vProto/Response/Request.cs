@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*  A few notes:
- *  1.  try-finally doesn't catch exceptions!!
- */
+using System.IO;
 
 namespace vProto
 {
     partial class Response
     {
-        System.IO.MemoryStream reqstr = null;
+        MemoryStream reqstr = null;
         byte[] reqarr = null;
 
 
@@ -20,7 +13,7 @@ namespace vProto
         /// <summary>
         /// Gets a memory stream over the request's payload.
         /// </summary>
-        public System.IO.MemoryStream RequestPayloadStream { get { return reqstr; } }
+        public MemoryStream RequestPayloadStream { get { return reqstr; } }
 
         /// <summary>
         /// Gets an array of bites containing the payload of the request.

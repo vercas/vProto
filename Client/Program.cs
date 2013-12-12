@@ -81,10 +81,7 @@ namespace Client
                 //client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
                 try
                 {
-                    var t = client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendAsync();
-                    t.Wait();
-
-                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(t.Result));
+                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendAsync().Result));
                 }
                 catch (Exception x)
                 {
@@ -95,7 +92,7 @@ namespace Client
             {
                 //client.SendShizzle(s, 1337);
 
-                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendFluent();
+                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
             }
 
             goto go;

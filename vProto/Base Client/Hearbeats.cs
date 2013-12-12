@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace vProto
 {
@@ -82,7 +82,7 @@ namespace vProto
         /* Heartbeat regulating timer.
          */
 
-        protected System.Threading.Timer heartbeatTimer = null;
+        protected Timer heartbeatTimer = null;
 
         protected void __heartbeatTimerCallback(object state)
         {
@@ -108,7 +108,7 @@ namespace vProto
          * This is messy.
          */
 
-        System.Threading.Timer heartbeatTimeoutTimer = null;
+        Timer heartbeatTimeoutTimer = null;
 
         private void __heartbeatTimeoutCallback(object state)
         {
@@ -139,7 +139,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(_hbTimeout, System.Threading.Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(_hbTimeout, Timeout.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {
@@ -159,7 +159,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(System.Threading.Timeout.InfiniteTimeSpan, System.Threading.Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {
@@ -181,7 +181,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(System.Threading.Timeout.InfiniteTimeSpan, System.Threading.Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {
@@ -245,13 +245,13 @@ namespace vProto
                     awaitingHeartbeat = true;
 
             if (heartbeatTimeoutTimer == null)
-                heartbeatTimeoutTimer = new System.Threading.Timer(new System.Threading.TimerCallback(__heartbeatTimeoutCallback));
+                heartbeatTimeoutTimer = new Timer(new TimerCallback(__heartbeatTimeoutCallback));
 
             lastIDsent = __getNewHeartbeatID();
 
             __prepareHeartbeat();
 
-            bool ok = LowSendPacket(new Packages.PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
+            bool ok = LowSendPacket(new PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
 
             if (!ok)
                 __scoreHeartbeatFailure();

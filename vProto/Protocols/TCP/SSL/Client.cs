@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Security;
-using System.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 
 namespace vProto.Protocols.TCP.SSL
 {
+    using Events;
+
     /// <summary>
     /// A TCP/IP client.
     /// </summary>
@@ -78,7 +74,7 @@ namespace vProto.Protocols.TCP.SSL
             }
             catch (Exception x)
             {
-                OnAuthFailed(new Events.ClientAuthFailedEventArgs(x));
+                OnAuthFailed(new ClientAuthFailedEventArgs(x));
 
                 _CheckIfStopped(x, true);
             }
@@ -109,7 +105,7 @@ namespace vProto.Protocols.TCP.SSL
             }
             catch (Exception x)
             {
-                OnAuthFailed(new Events.ClientAuthFailedEventArgs(x));
+                OnAuthFailed(new ClientAuthFailedEventArgs(x));
 
                 _CheckIfStopped(x, true);
             }
@@ -125,7 +121,7 @@ namespace vProto.Protocols.TCP.SSL
             }
             catch (Exception x)
             {
-                OnAuthFailed(new Events.ClientAuthFailedEventArgs(x));
+                OnAuthFailed(new ClientAuthFailedEventArgs(x));
 
                 _CheckIfStopped(x, true);
 
@@ -143,7 +139,7 @@ namespace vProto.Protocols.TCP.SSL
             }
             catch (Exception x)
             {
-                OnAuthFailed(new Events.ClientAuthFailedEventArgs(x));
+                OnAuthFailed(new ClientAuthFailedEventArgs(x));
 
                 _CheckIfStopped(x, true);
 

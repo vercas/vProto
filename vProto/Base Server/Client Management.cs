@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.Security;
-using System.Security;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 
 namespace vProto
 {
-    using vProto.Events;
+    using Events;
 
     partial class BaseServer
     {
@@ -78,7 +68,7 @@ namespace vProto
 
 
 
-        void h_Disconnected(BaseClient sender, Events.ClientDisconnectedEventArgs e)
+        void h_Disconnected(BaseClient sender, ClientDisconnectedEventArgs e)
         {
             _RemoveClient(sender);
 
