@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace vProto
 {
@@ -81,7 +82,7 @@ namespace vProto
 
             RmiReturn ret = null;
 
-            Console.WriteLine("RMI Call reuqest:\n    {0}\n    {1}\n    {2} args", call.Interface, call.Method, call.Args.Length);
+            //Console.WriteLine("RMI Call reuqest:\n    {0}\n    {1}\n    {2} args", call.Interface, call.Method, call.Args.Length);
 
             object o;
 
@@ -89,7 +90,14 @@ namespace vProto
             {
                 try
                 {
-                    var result = o.GetType().GetMethod(call.Method).Invoke(o, call.Args);
+                    /*var types = new Type[call.Args.Length];
+
+                    for (int i = 0; i < types.Length; i++)
+                        types[i] = call.Args[i].GetType();
+
+                    var result = o.GetType().GetMethod(call.Method, types).Invoke(o, call.Args); // Y U NO WORK? :( */
+
+                    var result = o.GetType().GetMethod(call.Method, BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod).Invoke(o, call.Args);
 
                     ret = new RmiReturn(result, call.Args, null);
                 }

@@ -11,6 +11,8 @@ namespace Common_Test_Shizzle
         int Test(string asd);
         void Fail();
         bool Blah(string asd, out int lawl);
+
+        string Proparoo { get; set; }
     }
 
     public class RMI_Object
@@ -31,6 +33,18 @@ namespace Common_Test_Shizzle
         public bool Blah(string asd, out int lawl)
         {
             return int.TryParse(asd, out lawl);
+        }
+
+        public string Proparoo
+        {
+            get
+            {
+                return DateTime.Today.ToString();
+            }
+            set
+            {
+                Console.WriteLine("Proparoo set to {0}!", value);
+            }
         }
     }
 }

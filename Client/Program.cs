@@ -110,9 +110,9 @@ namespace Client
                 {
                     client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Fail();
                 }
-                catch(AccessViolationException x)
+                catch(Exception x)
                 {
-                    Console.WriteLine("Got exception from RMI: {0}", x.Message);
+                    Console.WriteLine("Got exception from RMI: {0}", x);
                 }
             }
             else if (s.Substring(0, 4) == "out ")
@@ -128,6 +128,30 @@ namespace Client
                 catch (Exception x)
                 {
                     Console.WriteLine("Failed RMI out test...");
+                    Console.WriteLine(x.ToString());
+                }
+            }
+            else if (s == "propget")
+            {
+                try
+                {
+                    Console.WriteLine("Property is: {0}", client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Proparoo);
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Failed RMI propget test...");
+                    Console.WriteLine(x.ToString());
+                }
+            }
+            else if (s.Substring(0, 8) == "propset ")
+            {
+                try
+                {
+                    client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Proparoo = s.Substring(8);
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Failed RMI propset test...");
                     Console.WriteLine(x.ToString());
                 }
             }
