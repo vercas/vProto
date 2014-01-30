@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace vProto.Internal_Utilities
+namespace vProto.Internals
 {
     internal class StoredRequest
     {

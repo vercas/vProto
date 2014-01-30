@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Server
 {
@@ -27,9 +27,17 @@ namespace Server
 
             serv.Start();
 
+            var updater = new Timer(new TimerCallback(delegate(object state)
+            {
+                Console.Title = string.Format("Speed: In {0}; Out {1}", serv.IncommingSpeed, serv.OutgoingSpeed);
+
+            }), null, 1000, 1000);
+
             Console.ReadLine();
 
             serv.Dispose();
+
+            updater.Dispose();
         }
 
         static void serv_ClientConnected(vProto.BaseServer sender, vProto.Events.ServerClientConnectedEventArgs e)
@@ -40,6 +48,8 @@ namespace Server
             e.Client.RequestReceived += Client_RequestReceived;
             e.Client.SendFailed += Client_SendFailed;
             e.Client.ReceiptFailed += Client_ReceiptFailed;
+
+            e.Client.RegisterRmiService<Common_Test_Shizzle.RMI_Interface>(new Common_Test_Shizzle.RMI_Object());
         }
 
         static void Client_ReceiptFailed(vProto.BaseClient sender, vProto.Events.PipeFailureEventArgs e)

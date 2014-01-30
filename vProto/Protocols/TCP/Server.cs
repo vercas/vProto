@@ -145,7 +145,7 @@ namespace vProto.Protocols.TCP
         /// </summary>
         protected virtual void HandleTcpClient(TcpClient client)
         {
-            ClientReceived(new Client(client));
+            ClientReceived(new Client(this, client));
         }
     }
 }

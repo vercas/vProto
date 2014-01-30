@@ -50,6 +50,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common Test Shizzle\Common Test Shizzle.csproj">
+      <Project>{88f2b6cd-e615-4476-8519-ebc61c4e7143}</Project>
+      <Name>Common Test Shizzle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\vProto\vProto.csproj">
       <Project>{b71627e2-d86d-44e4-8b55-1e1c28a95493}</Project>
       <Name>vProto</Name>

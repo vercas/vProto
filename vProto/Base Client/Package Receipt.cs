@@ -2,7 +2,7 @@
 
 namespace vProto
 {
-    using Internal_Utilities;
+    using Internals;
     using Packages;
 
     partial class BaseClient
@@ -136,6 +136,8 @@ namespace vProto
         int packetBytesRead = 0, expectedSize = -1;
         PackageHeader lastHeader = new PackageHeader();
 
+        DateTime receiptStartTime; //  Not the most precise, but surely the fastest way of accomplishing this.
+
         protected bool LowStartGettingPackets()
         {
             lock (rec_sync)
@@ -223,6 +225,8 @@ namespace vProto
                 else
                     System.Diagnostics.Debug.Assert(false, "This really should not happen.");
 
+                receiptStartTime = DateTime.Now;
+
                 //  Length 0 will be handled in the next conditional.
             }
 
@@ -230,7 +234,7 @@ namespace vProto
             {
                 try
                 {
-                    OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff));
+                    OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff) { time = DateTime.Now - receiptStartTime });
                 }
                 finally
                 {

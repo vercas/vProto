@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace vProto.Internal_Utilities
+namespace vProto.Internals
 {
     internal class Allocator<T>
         where T : class

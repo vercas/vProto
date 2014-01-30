@@ -3,12 +3,13 @@
 namespace vProto
 {
     using Events;
+    using Internals;
 
     /// <summary>
     /// Listens and handles connections.
     /// </summary>
     public abstract partial class BaseServer
-        : IDisposable
+        : _RequestHandler, IDisposable
     {
         /// <summary>
         /// Gets a value indicating whether the object is disposed or not.
@@ -23,6 +24,15 @@ namespace vProto
             for (int i = 0; i < _chs.Length; i++)
                 if (_chs[i] != null && !_chs[i].Disposed)
                     _chs[i].Dispose();
+
+            try
+            {
+                speedCountingTimer.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
 
             Disposed = true;
             IsOn = false;

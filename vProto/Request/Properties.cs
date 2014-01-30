@@ -69,7 +69,6 @@ namespace vProto
         private ushort __timeout = (ushort)(Convert.ToInt32(DefaultTimeout.TotalMilliseconds) / 10);
         /// <summary>
         /// Gets or sets the amount of time to wait for a response to this request before declaring timeout.
-        /// <para>0 means no timeout!</para>
         /// </summary>
         public TimeSpan Timeout
         {
@@ -88,6 +87,7 @@ namespace vProto
                 }*/
 
                 //  Was I retarded when I wrote the lines commented above?
+                //  No timeout can mean a memory leak because request handling requires a state machine.
 
                 if (value < MinTimeout)
                     throw new ArgumentOutOfRangeException("value", "Value must be strictly positive!");

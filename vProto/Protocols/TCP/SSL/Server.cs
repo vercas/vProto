@@ -31,7 +31,7 @@ namespace vProto.Protocols.TCP.SSL
 
         protected override void HandleTcpClient(TcpClient client)
         {
-            ClientReceived(new Client(client, cert));
+            ClientReceived(new Client(this, client, cert));
         }
 
         //  Unlike the parent's handling function, this one feeds in a new type of client to the base server.

@@ -53,7 +53,7 @@ namespace vProto
 
 
         /// <summary>
-        /// Gets the connection's latency.
+        /// Gets a delayed and inaccurate approximation of the connection's one-way latency.
         /// </summary>
         public TimeSpan Ping { get; internal set; }
 
@@ -174,7 +174,7 @@ namespace vProto
                 awaitingHeartbeat = false;
                 consecutiveFailures = 0;
 
-                Ping = DateTime.Now - heartbeatSendTime;
+                Ping = new TimeSpan((DateTime.Now - heartbeatSendTime).Ticks / 2);
 
                 //Console.WriteLine("Heartbeat success! ({0})", Ping);
             }

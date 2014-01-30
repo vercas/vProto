@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace vProto.Internal_Utilities
+namespace vProto.Internals
 {
     internal static class Struct_mapping
     {

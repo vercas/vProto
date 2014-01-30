@@ -12,9 +12,12 @@ namespace vProto
             switch (pack.Header.Type)
             {
                 case PackageType.Request:
+                case PackageType.InternalRequest:
                     OnInternalRequestReceived(pack);
                     break;
+
                 case PackageType.Response:
+                case PackageType.InternalResponse:
                     OnInternalResponseReceived(pack);
                     break;
 
@@ -25,6 +28,7 @@ namespace vProto
                 case PackageType.HeartbeatRequest:
                     OnInternalHeartbeatRequestReceived(pack);
                     break;
+
                 case PackageType.HeartbeatResponse:
                     OnInternalHeartbeatResponseReceived(pack);
                     break;
@@ -36,9 +40,12 @@ namespace vProto
             switch (pack.Header.Type)
             {
                 case PackageType.Request:
+                case PackageType.InternalRequest:
                     OnInternalRequestSent(pack);
                     break;
+
                 case PackageType.Response:
+                case PackageType.InternalResponse:
                     OnInternalResponseSent(pack);
                     break;
             }
@@ -58,9 +65,12 @@ namespace vProto
                     switch (pack.Header.Type)
                     {
                         case PackageType.Request:
+                        case PackageType.InternalRequest:
                             OnInternalRequestSendFailed(pack, x);
                             break;
+
                         case PackageType.Response:
+                        case PackageType.InternalResponse:
                             OnInternalResponseSendFailed(pack, x);
                             break;
 

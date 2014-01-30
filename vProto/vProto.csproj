@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SENDER_THREAD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -26,7 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;SENDER_THREAD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Client\Remote Method Invocation.cs" />
     <Compile Include="Base Client\Connection.cs" />
     <Compile Include="Base Client\Abstract Methods.cs" />
+    <Compile Include="Base Client\Request Handlers.cs" />
     <Compile Include="Base Client\Speed.cs" />
     <Compile Include="Base Client\Hearbeats.cs" />
     <Compile Include="Base Client\Requests and Responses and a bit of Data.cs" />
@@ -50,8 +52,10 @@
     <Compile Include="Base Client\%40 Status and Disposal.cs" />
     <Compile Include="Base Client\Package Receipt.cs" />
     <Compile Include="Base Client\Pipe Event Handling.cs" />
+    <Compile Include="Base Server\Speed.cs" />
     <Compile Include="Collections\PendingResponseCollection.cs" />
     <Compile Include="Collections\PendingRequestCollection.cs" />
+    <Compile Include="Collections\RequestHandlerCollection.cs" />
     <Compile Include="Events\%40 Delegates.cs" />
     <Compile Include="Events\%40ExceptionCarryingEvent.cs" />
     <Compile Include="Events\RequestFailureEventArgs.cs" />
@@ -69,9 +73,11 @@
     <Compile Include="Events\ServerStoppedEventArgs.cs" />
     <Compile Include="Events\ServerStartupFailedEventArgs.cs" />
     <Compile Include="Internal Utilities\Allocator.cs" />
+    <Compile Include="Internal Utilities\Binary Serialization.cs" />
     <Compile Include="Internal Utilities\Bit Conversions.cs" />
     <Compile Include="Internal Utilities\IHazID.cs" />
     <Compile Include="Internal Utilities\Queued Package.cs" />
+    <Compile Include="Internal Utilities\RMI Containers.cs" />
     <Compile Include="Internal Utilities\Stored Request-Response.cs" />
     <Compile Include="Packages\Internal Request Types.cs" />
     <Compile Include="Packages\Package Types.cs" />
@@ -82,6 +88,9 @@
     <Compile Include="Protocols\TCP\Server.cs" />
     <Compile Include="Protocols\TCP\SSL\Client.cs" />
     <Compile Include="Protocols\TCP\SSL\Server.cs" />
+    <Compile Include="Proxies\%40 Interfaces.cs" />
+    <Compile Include="Proxies\Synchronous Proxy.cs" />
+    <Compile Include="Internal Utilities\RequestHandler.cs" />
     <Compile Include="Response\%40 Status and Disposal.cs" />
     <Compile Include="Response\Request.cs" />
     <Compile Include="Response\Payload.cs" />

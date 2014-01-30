@@ -4,11 +4,18 @@ using System.Threading;
 
 namespace vProto.Collections
 {
-    using Internal_Utilities;
+    using Internals;
 
-    internal class PendingResponseCollection : ICollection<Response>
+    public class PendingResponseCollection : ICollection<Response>
     {
         internal Dictionary<short, StoredRequest> dict = new Dictionary<short, StoredRequest>();
+
+
+
+        internal PendingResponseCollection()
+        {
+            //  Nope.
+        }
 
 
 

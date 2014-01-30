@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace vProto
 {
-    using Internal_Utilities;
+    using Internals;
     using Events;
     using Packages;
     using Collections;
@@ -23,19 +23,24 @@ namespace vProto
 
         protected virtual void OnInternalRequestReceived(Package pack)
         {
-            var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10) - Ping, DateTime.Now) { isInternal = pack.Header.Type == PackageType.InternalRequest };
+            var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10), DateTime.Now) { isInternal = pack.Header.Type == PackageType.InternalRequest };
 
             if (pack.Header.Type == PackageType.InternalRequest)
             {
                 PendingInternalResponses.Add(res);
 
-                //   will do something
+                var e = new RequestReceivedEventArgs(res);
+
+                InternalRequestHandlers.ExecuteHandler(pack.Header.IDBottom, this, e);
             }
             else
             {
                 PendingResponses.Add(res);
 
-                OnRequestReceived(new RequestReceivedEventArgs(res));
+                var e = new RequestReceivedEventArgs(res);
+
+                OnRequestReceived(e);
+                RequestHandlers.ExecuteHandler(pack.Header.IDBottom, this, e);
             }
 
             //Console.WriteLine("Received request: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);

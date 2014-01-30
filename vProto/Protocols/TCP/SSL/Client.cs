@@ -58,8 +58,8 @@ namespace vProto.Protocols.TCP.SSL
 
 
 
-        internal Client(TcpClient client, X509Certificate certificate)
-            : base()
+        internal Client(BaseServer server, TcpClient client, X509Certificate certificate)
+            : base(server)
         {
             this.client = client;
             Nstream = client.GetStream();

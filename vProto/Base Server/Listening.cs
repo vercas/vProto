@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace vProto
 {
@@ -20,6 +21,8 @@ namespace vProto
 
             try
             {
+                speedCountingTimer = new Timer(__speedCountingTimerCallback, null, new TimeSpan(0), new TimeSpan(0, 0, 1));
+
                 return StartListening();
             }
             catch (Exception x)

@@ -4,11 +4,18 @@ using System.Threading;
 
 namespace vProto.Collections
 {
-    using Internal_Utilities;
+    using Internals;
 
-    internal class PendingRequestCollection : ICollection<Request>
+    public class PendingRequestCollection : ICollection<Request>
     {
         internal Dictionary<short, StoredRequest> dict = new Dictionary<short, StoredRequest>();
+
+
+
+        internal PendingRequestCollection()
+        {
+            //  Nope.
+        }
 
 
 
@@ -21,6 +28,8 @@ namespace vProto.Collections
 
             timeouttimer = new Timer(new TimerCallback(delegate(object state)
             {
+                //Console.WriteLine("Timeout timer for #{0}.", item.id);
+
                 if (item.AwaitingResult)
                 {
                     dict.Remove(item.id);
@@ -35,6 +44,8 @@ namespace vProto.Collections
                 }
                 catch { }
             }), null, item.Timeout, Timeout.InfiniteTimeSpan);
+
+            //Console.WriteLine("Timeout for {0} is {1}, against {2}.", item.id, item.Timeout, Request.DefaultTimeout);
 
             dict.Add(item.id, new StoredRequest() { ID = item.id, req = item, timeouttimer = timeouttimer });
         }

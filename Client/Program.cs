@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Client
 {
@@ -42,6 +43,14 @@ namespace Client
 
             client.Connect();
 
+            //ThreadPool.SetMaxThreads(40, 40);
+
+            var updater = new Timer(new TimerCallback(delegate(object state)
+            {
+                Console.Title = string.Format("Speed: In {0}; Out {1}; Ping: {2}", client.IncommingSpeed, client.OutgoingSpeed, client.Ping.TotalMilliseconds);
+
+            }), null, 1000, 1000);
+
             uint n;
             int a;
 
@@ -50,14 +59,21 @@ namespace Client
 
             if (s == "!")
             {
-                client.Dispose();
+                if (!client.Disposed)
+                    client.Dispose();
+
+                updater.Dispose();
 
                 return;
             }
             else if (s == "hb")
             {
                 if (!client.SendHeartbeat())
+#if SENDER_THREAD
+                    Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat);
+#else
                     Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat, client.IsSendingPacket);
+#endif
             }
             else if (uint.TryParse(s, out n))
             {
@@ -81,18 +97,55 @@ namespace Client
                 //client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
                 try
                 {
-                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).SendAsync().Result));
+                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(10000).SendAsync().Result));
                 }
                 catch (Exception x)
                 {
                     Console.WriteLine("Inline request exception: {0}", x.ToString());
                 }
             }
+            else if (s == "fail")
+            {
+                try
+                {
+                    client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Fail();
+                }
+                catch(AccessViolationException x)
+                {
+                    Console.WriteLine("Got exception from RMI: {0}", x.Message);
+                }
+            }
+            else if (s.Substring(0, 4) == "out ")
+            {
+                try
+                {
+                    int asd = -1;
+
+                    var res = client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Blah(s.Substring(4), out asd);
+
+                    Console.WriteLine("Out parameter test result: {0}, {1}", res, asd);
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Failed RMI out test...");
+                    Console.WriteLine(x.ToString());
+                }
+            }
             else
             {
                 //client.SendShizzle(s, 1337);
 
-                client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
+                //client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
+
+                try
+                {
+                    Console.WriteLine("Inline RMI call result: {0}", client.ProxyRmiService<Common_Test_Shizzle.RMI_Interface>().Test(s));
+                }
+                catch (Exception x)
+                {
+                    Console.WriteLine("Failed RMI call...");
+                    Console.WriteLine(x.ToString());
+                }
             }
 
             goto go;

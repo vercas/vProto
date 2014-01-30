@@ -49,16 +49,17 @@ namespace vProto.Protocols.TCP
         /// <summary>
         /// Default constructor to be used by inheriting classes.
         /// </summary>
-        internal Client()
+        /// <param name="server">Server object which owns this client.</param>
+        protected Client(BaseServer server)
         {
-            IsClientHandler = true;
+            Owner = server;
         }
 
 
 
-        internal Client(TcpClient client)
+        internal Client(BaseServer server, TcpClient client)
         {
-            IsClientHandler = true;
+            Owner = server;
 
             this.client = client;
             Nstream = client.GetStream();
@@ -74,7 +75,7 @@ namespace vProto.Protocols.TCP
         /// <param name="server">The address of the server to which this client will connect.</param>
         public Client(IPEndPoint server)
         {
-            IsClientHandler = false;
+            Owner = null;
 
             client = new TcpClient();
 

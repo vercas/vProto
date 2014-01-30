@@ -4,11 +4,14 @@ using System.Threading;
 
 namespace vProto
 {
+    using Collections;
+    using Internals;
+
     /// <summary>
     /// Base class for objects which handle network streams.
     /// </summary>
     public abstract partial class BaseClient
-        : IDisposable
+        : _RequestHandler, IDisposable
     {
 #if RECEIVER_THREAD
         protected Thread receiver;
@@ -165,6 +168,13 @@ namespace vProto
             streamIn = strIn;
             streamOut = strOut ?? strIn;
 
+            if (Owner != null)
+            {
+                //  I temporarily forgot what I was supposed to do here.
+            }
+
+            __registerDefaultInternalRequestHandlers();
+
             OnConnected(new EventArgs());
 
             LowStartGettingPackets();
@@ -174,7 +184,15 @@ namespace vProto
 
         /// <summary>
         /// Gets whether this vProto.BaseClient handles a server's connection to a client (true) or handles a client's connection to a server (false).
+        /// <para>Equivalent to checking whether the owner is non-null.</para>
         /// </summary>
-        public Boolean IsClientHandler { get; protected set; }
+        public Boolean IsClientHandler { get { return Owner != null; } }
+
+        /// <summary>
+        /// Gets or sets the server which owns this client object.
+        /// <para>If non-null, this instance becomes known as a client handler.</para>
+        /// <para>Must be set before initializing the client over streams.</para>
+        /// </summary>
+        protected BaseServer Owner { get; set; }
     }
 }

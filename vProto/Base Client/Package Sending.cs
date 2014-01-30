@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace vProto
 {
-    using Internal_Utilities;
+    using Internals;
     using Packages;
 
     partial class BaseClient
@@ -30,7 +30,7 @@ namespace vProto
                 sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packetHeaderSize);
                 sendingBuffer.Write(bodeh, 0, bodeh.Length);
 
-                toSend.Enqueue(st);
+                sendingQueue.Enqueue(st);
             }
 
             return true;
@@ -40,55 +40,60 @@ namespace vProto
 
         private object send_lock = new object();
 
-        Queue<Package> toSend = new Queue<Package>();
+        Queue<Package> sendingQueue = new Queue<Package>();
+        Queue<Package> backQueue = new Queue<Package>();
 
         System.IO.MemoryStream sendingBuffer = new System.IO.MemoryStream();
-        System.IO.MemoryStream tempBuffer = new System.IO.MemoryStream();
+        System.IO.MemoryStream backBuffer = new System.IO.MemoryStream();
 
         //  Swapped buffers. Brilliant idea.
 
         protected void SenderLoop()
         {
-            Queue<Package> tempQ = new Queue<Package>();
+            Queue<Package> tempQueue;
+            System.IO.MemoryStream tempBuffer;
 
-            //System.IO.MemoryStream tempB = new System.IO.MemoryStream();
-            System.IO.MemoryStream temp;
+            int tempWriteNum;
+            byte[] tempWriteBuffer = new byte[64 * 1024];   //  To be honest, there IS enough RAM.
 
             while (!Disposed)
             {
-                tempQ.Clear();
-
                 //tempB.Seek(0, System.IO.SeekOrigin.Begin);
                 //tempB.SetLength(0);
 
+                //  Emptying the old buffa' and the queue.
+                backQueue.Clear();
+
+                backBuffer.Seek(0, System.IO.SeekOrigin.Begin);
+                backBuffer.SetLength(0);
+
                 lock (send_lock)
                 {
-                    while (toSend.Count > 0)
-                        tempQ.Enqueue(toSend.Dequeue());
+                    //  Buffer shift!
 
-                    //sendingBuffer.CopyTo(tempB);
+                    tempQueue = sendingQueue;
+                    sendingQueue = backQueue;
+                    backQueue = tempQueue;
 
-                    temp = sendingBuffer;
-                    sendingBuffer = tempBuffer;
-                    tempBuffer = temp;
-
-                    //  Emptying the new sending buffa'!
-                    sendingBuffer.Seek(0, System.IO.SeekOrigin.Begin);
-                    sendingBuffer.SetLength(0);
+                    tempBuffer = sendingBuffer;
+                    sendingBuffer = backBuffer;
+                    backBuffer = tempBuffer;
                 }
 
-                if (tempQ.Count > 0)
+                if (backQueue.Count > 0)
                 {
-                    Console.WriteLine("Sending {0} packages, totalling in {1} bytes!", tempQ.Count, tempBuffer.Length);
+                    backBuffer.Seek(0, System.IO.SeekOrigin.Begin);
 
-                    tempBuffer.Seek(0, System.IO.SeekOrigin.Begin);
+                    //Console.WriteLine("Sending {0} packages, totalling in {1} bytes!", backQueue.Count, backBuffer.Length);
 
                     try
                     {
-                        tempBuffer.CopyTo(streamIn, (int)Math.Min(tempBuffer.Length, int.MaxValue));
-                        //  Really making sure here.
-                        
-                        __addSent((int)Math.Min(tempBuffer.Length, int.MaxValue));
+                        while ((tempWriteNum = backBuffer.Read(tempWriteBuffer, 0, tempWriteBuffer.Length)) != 0)
+                        {
+                            streamIn.Write(tempWriteBuffer, 0, tempWriteNum);
+
+                            __addSent(tempWriteNum);
+                        }
                     }
                     catch (ObjectDisposedException x)
                     {
@@ -98,13 +103,13 @@ namespace vProto
                     }
                     catch (Exception x)
                     {
-                        foreach (var pack in tempQ)
+                        foreach (var pack in backQueue)
                             _OnPipeFailure(x, true, pack);
 
                         return;
                     }
 
-                    foreach (var pack in tempQ)
+                    foreach (var pack in backQueue)
                     {
                         foreach (var cbk in pack.Callbacks)
                             cbk();
@@ -133,6 +138,7 @@ namespace vProto
 
         private object send_lock = new object();
         private bool sending = false;
+        private DateTime sendStartTime;
 
         Queue<QueuedPackage> packageQueue = new Queue<QueuedPackage>();
 
@@ -188,8 +194,13 @@ namespace vProto
             }
 
             var state = ar.AsyncState as Package;
+            state.time = DateTime.Now - sendStartTime;
+            var bytes = state.Payload.Length + packetHeaderSize;
 
-            __addSent(state.Payload.Length + packetHeaderSize);
+            __addSent(state.time.TotalSeconds > 1.0 ? (int)((double)bytes / state.time.TotalSeconds) : bytes);
+            //  This has to be calculated depending on the timespan for the sake of delivering accurate information.
+            //  Otherwise, sending a 100-megabyte packet will display an outgoing speed of 100 megabytes for a second when the package was successfully sent.
+            //  The check is there because anything that took under one second will be handled by the timer. Also, preventing a division by 0.
 
             try
             {
@@ -241,6 +252,8 @@ namespace vProto
 
                     try
                     {
+                        sendStartTime = DateTime.Now;
+
                         streamIn.BeginWrite(pack, 0, pack.Length, cbk, st);
 
                         //Console.WriteLine("Sent!");

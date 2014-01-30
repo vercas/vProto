@@ -29,5 +29,6 @@ namespace vProto.Packages
 
         internal List<Action> Callbacks = new List<Action>();
         internal Object State = null;
+        internal TimeSpan time = TimeSpan.MinValue;
     }
 }
