@@ -70,7 +70,7 @@ namespace Client
             {
                 if (!client.SendHeartbeat())
 #if SENDER_THREAD
-                    Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat);
+                    Console.WriteLine("Refused to send! {0} {1}", client.IsConnected, client.IsAwaitingHeartbeat);
 #else
                     Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat, client.IsSendingPacket);
 #endif

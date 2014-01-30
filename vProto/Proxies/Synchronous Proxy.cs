@@ -9,7 +9,8 @@ namespace vProto.Proxies
     using Internals;
     using Packages;
 
-    public class SynchronousProxy<TService> : RealProxy, INamedProxy, ITypedProxy<TService>
+    public class SynchronousProxy<TService>
+        : RealProxy, INamedProxy, ITypedProxy<TService>
         where TService : class
     {
         static SynchronousProxy()
@@ -81,30 +82,6 @@ namespace vProto.Proxies
 
                 var req = client.__createInternalRequest(InternalRequestType.RMI);
 
-                //  Method calls may take up quite a lot of space.
-                //  4 Kibibytes are allocated by default in the buffer.
-
-                /*var payload = new MemoryStream(4096);
-
-                using (var bw = new BinaryWriter(payload, Encoding.UTF8, true))
-                {
-                    bw.Write(name);
-
-                    bw.Write(mcm.MethodName);
-
-                    var data = BinarySerialization.Serialize(mcm.InArgs);
-
-                    bw.Write(data.Length);
-                    bw.Write(data);
-
-                    System.Diagnostics.Debug.WriteLine("RMI: {0}", mcm.Uri);
-                }
-
-                return Handle(req.SetPayload(payload, -1, 0, SeekOrigin.Begin), mcm);//*/
-
-                //return Handle(req.SetPayload(BinarySerialization.Serialize(mcmsg)), mcmsg);
-                //  Is this a sin?
-
                 return Handle(req.SetPayload(BinarySerialization.Serialize(new RmiCall(Type, mcm.MethodName, mcm.Args))), mcm);
             }
 
@@ -129,7 +106,7 @@ namespace vProto.Proxies
             var ret = BinarySerialization.Deserialize<RmiReturn>(res);
 
             if (ret.Exception == null)
-                return new ReturnMessage(ret.Return, new object[0], 0, mcm.LogicalCallContext, mcm);
+                return new ReturnMessage(ret.Return, ret.Args, ret.Args.Length, mcm.LogicalCallContext, mcm);
             else
                 return new ReturnMessage(ret.Exception, mcm);
         }
