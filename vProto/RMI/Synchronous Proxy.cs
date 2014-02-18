@@ -4,7 +4,7 @@ using System.Text;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 
-namespace vProto.Proxies
+namespace vProto.RMI
 {
     using Internals;
     using Packages;

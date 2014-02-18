@@ -6,7 +6,7 @@ namespace vProto
 {
     using Events;
     using Internals;
-    using Proxies;
+    using RMI;
 
     partial class BaseClient
     {
