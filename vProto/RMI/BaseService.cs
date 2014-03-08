@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET_4_0_PLUS
+using System;
 using System.Threading;
 
 namespace vProto.RMI
@@ -19,3 +20,4 @@ namespace vProto.RMI
         }
     }
 }
+#endif

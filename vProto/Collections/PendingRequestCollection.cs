@@ -43,7 +43,7 @@ namespace vProto.Collections
                     timeouttimer.Dispose();
                 }
                 catch { }
-            }), null, item.Timeout, Timeout.InfiniteTimeSpan);
+            }), null, item.Timeout, BaseClient.InfiniteTimeSpan);
 
             //Console.WriteLine("Timeout for {0} is {1}, against {2}.", item.id, item.Timeout, Request.DefaultTimeout);
 

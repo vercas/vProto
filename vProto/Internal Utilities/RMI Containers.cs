@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace vProto.Internals
 {
@@ -24,11 +21,11 @@ namespace vProto.Internals
     [Serializable]
     internal class RmiReturn
     {
-        [System.Runtime.Serialization.OptionalField]
+        [OptionalField]
         public object Return;
-        [System.Runtime.Serialization.OptionalField]
+        [OptionalField]
         public object[] Args;   //  Used for out parameters. :C
-        [System.Runtime.Serialization.OptionalField]
+        [OptionalField]
         public Exception Exception;
 
         public RmiReturn(object a, object[] b, Exception x)

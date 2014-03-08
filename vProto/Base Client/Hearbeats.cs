@@ -137,7 +137,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(_hbTimeout, Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(_hbTimeout, BaseClient.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {
@@ -162,7 +162,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(BaseClient.InfiniteTimeSpan, BaseClient.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {
@@ -184,7 +184,7 @@ namespace vProto
 
             try
             {
-                heartbeatTimeoutTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+                heartbeatTimeoutTimer.Change(BaseClient.InfiniteTimeSpan, BaseClient.InfiniteTimeSpan);
             }
             catch (ObjectDisposedException)
             {

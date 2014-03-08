@@ -17,6 +17,7 @@ namespace vProto
         public static readonly Version ProtocolVersion = new Version(0, 1);
 
         private static readonly byte[] emptyPayload = new byte[0];
+        internal static readonly TimeSpan InfiniteTimeSpan = new TimeSpan(0, 0, 0, 0, -1);
 
 
 

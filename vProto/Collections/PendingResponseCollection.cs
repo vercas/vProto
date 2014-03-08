@@ -41,7 +41,7 @@ namespace vProto.Collections
                     timeouttimer.Dispose();
                 }
                 catch { }
-            }), null, item.Timeout, Timeout.InfiniteTimeSpan);
+            }), null, item.Timeout, BaseClient.InfiniteTimeSpan);
 
             dict.Add(item.id, new StoredRequest() { ID = item.id, res = item, timeouttimer = timeouttimer });
         }

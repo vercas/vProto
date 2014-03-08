@@ -12,33 +12,57 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug .NET 4.5|AnyCPU' ">
+    <AssemblyName>vProto.Debug</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SENDER_THREAD</DefineConstants>
+    <OutputPath>..\Releases\4.5\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SENDER_THREAD;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release .NET 4.5|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;SENDER_THREAD</DefineConstants>
+    <OutputPath>..\Releases\4.5\</OutputPath>
+    <DefineConstants>TRACE;SENDER_THREAD;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 4.0|AnyCPU'">
+    <AssemblyName>vProto.Debug</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Releases\4.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SENDER_THREAD;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release .NET 4.0|AnyCPU'">
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OutputPath>..\Releases\4.0\</OutputPath>
+    <DefineConstants>TRACE;SENDER_THREAD;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base Client\Peers.cs" />
@@ -113,7 +137,9 @@
     <Compile Include="Base Server\Events.cs" />
     <Compile Include="Base Server\%40 Status and Disposal.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="key.pfx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -122,4 +148,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <!--<Target Name="Build">
+    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net45\;IntermediateOutputPath=obj\Release\net45\;TargetFrameworkVersion=v4.5" />
+    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net40\;IntermediateOutputPath=obj\Release\net40\;TargetFrameworkVersion=v4.0" />
+    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net35\;IntermediateOutputPath=obj\Release\net35\;TargetFrameworkVersion=v3.5" />
+  </Target>-->
 </Project>

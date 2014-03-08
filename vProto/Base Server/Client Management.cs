@@ -49,7 +49,9 @@ namespace vProto
                                 if (_chs[j] != null)
                                     _chs[j].GivePeer(i);
 
-                        return (_chs[i] = h)._id = i;
+                        _chs[i] = h;
+
+                        return h._id = i;
                         //  I love assignment as expression!
                     }
 
@@ -63,14 +65,14 @@ namespace vProto
         private void _RemoveClient(BaseClient h)
         {
             lock (_chs_sync)
-                if (h.ID > -1 && h.ID < _chs.Length)
+                if (h._id > -1 && h._id < _chs.Length)
                 {
-                    _chs[h.ID] = null;
+                    _chs[h._id] = null;
 
                     if (_peering)
                         for (int j = 0; j < _chs.Length; j++)
                             if (_chs[j] != null)
-                                _chs[j].TakePeer(h.ID);
+                                _chs[j].TakePeer(h._id);
                 }
                 // else what the heck is going on?
         }

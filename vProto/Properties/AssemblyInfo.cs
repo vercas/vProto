@@ -14,9 +14,17 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 #if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
+#if NET_4_5
+[assembly: AssemblyConfiguration("Debug @ .NET 4.5")]
+#elif NET_4_0
+[assembly: AssemblyConfiguration("Debug @ .NET 4.0")]
+#endif
 #else
-[assembly: AssemblyConfiguration("Release")]
+#if NET_4_5
+[assembly: AssemblyConfiguration("Release @ .NET 4.5")]
+#elif NET_4_0
+[assembly: AssemblyConfiguration("Release @ .NET 4.0")]
+#endif
 #endif
 
 // Setting ComVisible to false makes the types in this assembly not visible 

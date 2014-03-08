@@ -1,5 +1,7 @@
 ﻿using System;
+#if NET_4_0_PLUS
 using System.Threading.Tasks;
+#endif
 
 namespace vProto
 {
@@ -120,6 +122,7 @@ namespace vProto
 
 
 
+#if NET_4_0_PLUS
         /// <summary>
         /// Attempts to send the request. This process is asynchronous; unlike SendFluent, this method is awaitable and results will be delivered both to the caller and through events.
         /// <para>Upon success, the request is marked as sent.</para>
@@ -148,5 +151,6 @@ namespace vProto
 
             //return Task<byte[]>.Factory.FromAsync()
         }
+#endif
     }
 }
