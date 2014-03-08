@@ -28,8 +28,6 @@ namespace vProto
         /// </summary>
         public static readonly TimeSpan MinimumHeartbeatTimeout = new TimeSpan(0, 0, 0, 0, 500);
 
-        private static readonly byte[] emptyPayload = new byte[] { };
-
 
         private TimeSpan _hbTimeout = DefaultHeartbeatTimeout;
 
@@ -86,7 +84,7 @@ namespace vProto
 
         protected void __heartbeatTimerCallback(object state)
         {
-            if (IsConnected)
+            if (IsInternallyConnected)
                 SendHeartbeat();
         }
 
@@ -154,7 +152,12 @@ namespace vProto
                 awaitingHeartbeat = false;
                 consecutiveFailures++;
 
-                Console.WriteLine("Heartbeat failure! ({0})", consecutiveFailures);
+                //Console.WriteLine("Heartbeat failure! ({0})", consecutiveFailures);
+
+                if (consecutiveFailures >= 3)
+                    _CheckIfStopped(null);
+
+                //  If you do something to cause this, it's your fault.
             }
 
             try
@@ -235,7 +238,7 @@ namespace vProto
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName);
 
-            if (!IsConnected)
+            if (!IsInternallyConnected)
                 return false;
 
             lock (heartbeat_sync)

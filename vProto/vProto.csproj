@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Client\Peers.cs" />
+    <Compile Include="Base Client\Handshake.cs" />
     <Compile Include="Base Client\Remote Method Invocation.cs" />
     <Compile Include="Base Client\Connection.cs" />
     <Compile Include="Base Client\Abstract Methods.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Base Client\%40 Status and Disposal.cs" />
     <Compile Include="Base Client\Package Receipt.cs" />
     <Compile Include="Base Client\Pipe Event Handling.cs" />
+    <Compile Include="Base Server\Peering.cs" />
     <Compile Include="Base Server\Speed.cs" />
     <Compile Include="Collections\PendingResponseCollection.cs" />
     <Compile Include="Collections\PendingRequestCollection.cs" />
@@ -88,8 +91,9 @@
     <Compile Include="Protocols\TCP\Server.cs" />
     <Compile Include="Protocols\TCP\SSL\Client.cs" />
     <Compile Include="Protocols\TCP\SSL\Server.cs" />
-    <Compile Include="Proxies\%40 Interfaces.cs" />
-    <Compile Include="Proxies\Synchronous Proxy.cs" />
+    <Compile Include="RMI\%40 Interfaces.cs" />
+    <Compile Include="RMI\BaseService.cs" />
+    <Compile Include="RMI\Synchronous Proxy.cs" />
     <Compile Include="Internal Utilities\RequestHandler.cs" />
     <Compile Include="Response\%40 Status and Disposal.cs" />
     <Compile Include="Response\Request.cs" />

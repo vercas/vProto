@@ -17,7 +17,7 @@ namespace vProto
             if (IsClientHandler)
                 throw new InvalidOperationException("This object handles a server's connection to a client. This method call is unsupported.");
 
-            if (IsConnected)
+            if (IsInternallyConnected)
                 return false;
 
             try

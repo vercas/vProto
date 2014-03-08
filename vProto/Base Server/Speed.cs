@@ -38,12 +38,13 @@ namespace vProto
         {
             int bytesSent = 0, bytesReceived = 0;
 
-            for (int i = 0; i < _chs.Length; i++)
-                if (_chs[i] != null)
-                {
-                    bytesSent += _chs[i].OutgoingSpeed;
-                    bytesReceived += _chs[i].IncommingSpeed;
-                }
+            lock (_chs_sync)
+                for (int i = 0; i < _chs.Length; i++)
+                    if (_chs[i] != null)
+                    {
+                        bytesSent += _chs[i].OutgoingSpeed;
+                        bytesReceived += _chs[i].IncommingSpeed;
+                    }
 
             OutgoingSpeed = bytesSent;
             IncommingSpeed = bytesReceived;

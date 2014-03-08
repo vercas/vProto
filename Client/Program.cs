@@ -10,6 +10,7 @@ namespace Client
     class Program
     {
         static vProto.BaseClient client;
+        static List<vProto.BaseClient> others = new List<vProto.BaseClient>();
 
         static void Main(string[] args)
         {
@@ -47,7 +48,26 @@ namespace Client
 
             var updater = new Timer(new TimerCallback(delegate(object state)
             {
-                Console.Title = string.Format("Speed: In {0}; Out {1}; Ping: {2}", client.IncommingSpeed, client.OutgoingSpeed, client.Ping.TotalMilliseconds);
+                var peers = client.Peers;
+                string peerStr = string.Empty;
+
+                if (peers == null)
+                {
+                    peerStr = "No peering!";
+                }
+                else
+                {
+                    peerStr = "#" + peers.Count;
+
+                    if (peers.Count < 15)
+                        for (int i = 0; i < peers.Count; i++)
+                            if (i == 0)
+                                peerStr += ": " + peers[i];
+                            else
+                                peerStr += ", " + peers[i];
+                }
+
+                Console.Title = string.Format("Speed: In {0}; Out {1}; Ping: {2}; ID: {3}; Peers: {4}", client.IncommingSpeed, client.OutgoingSpeed, client.Ping.TotalMilliseconds, client.ID, peerStr);
 
             }), null, 1000, 1000);
 
@@ -61,6 +81,10 @@ namespace Client
             {
                 if (!client.Disposed)
                     client.Dispose();
+
+                foreach (var c in others)
+                    if (!c.Disposed)
+                        c.Dispose();
 
                 updater.Dispose();
 
@@ -113,6 +137,26 @@ namespace Client
                 catch(Exception x)
                 {
                     Console.WriteLine("Got exception from RMI: {0}", x);
+                }
+            }
+            else if (s.Substring(0, 4) == "spn ")
+            {
+                var cnt = int.Parse(s.Substring(4));
+
+                for (int i = 0; i < cnt; i++)
+                {
+                    vProto.BaseClient c;
+
+                    if (name == null)
+                        c = new vProto.Protocols.TCP.Client(ep);
+                    else
+                        c = new vProto.Protocols.TCP.SSL.Client(ep, name);
+
+                    others.Add(c);
+
+                    c.Connect();
+
+                    Thread.Sleep(10);
                 }
             }
             else if (s.Substring(0, 4) == "out ")

@@ -32,6 +32,13 @@ namespace vProto
                 case PackageType.HeartbeatResponse:
                     OnInternalHeartbeatResponseReceived(pack);
                     break;
+
+                case PackageType.PeerConnected:
+                    OnInternalPeerConnectedReceived(pack);
+                    break;
+                case PackageType.PeerDisconnected:
+                    OnInternalPeerDisconnectedReceived(pack);
+                    break;
             }
         }
 

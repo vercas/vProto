@@ -58,9 +58,6 @@ namespace vProto
 
             while (!Disposed)
             {
-                //tempB.Seek(0, System.IO.SeekOrigin.Begin);
-                //tempB.SetLength(0);
-
                 //  Emptying the old buffa' and the queue.
                 backQueue.Clear();
 
@@ -117,12 +114,10 @@ namespace vProto
                         OnInternalPacketSent(pack);
                     }
                 }
+                else
+                    Thread.Sleep(1);
 
-                if (!Thread.Yield())
-                    Thread.Sleep(10);
-
-                //  If unable to yield, sleep for 1/100 seconds.
-                //  This shall not do any harm.
+                //  Thread.Yield seems to cause enormous CPU spikes.
             }
         }
 

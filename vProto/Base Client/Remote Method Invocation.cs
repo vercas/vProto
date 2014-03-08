@@ -88,6 +88,15 @@ namespace vProto
 
             if (rmiServices.TryGetValue(call.Interface, out o))
             {
+                var asBase = o as BaseService;
+                BaseClient temp = null;
+
+                if (asBase != null)
+                {
+                    temp = asBase.client.Value;
+                    asBase.client.Value = this;
+                }
+
                 try
                 {
                     /*var types = new Type[call.Args.Length];
@@ -104,6 +113,12 @@ namespace vProto
                 catch (Exception x)
                 {
                     ret = new RmiReturn(null, null, x);
+                }
+
+                if (asBase != null)
+                {
+                    asBase.client.Value = temp;
+                    temp = null;    //  Explicit de-referencing
                 }
             }
             else

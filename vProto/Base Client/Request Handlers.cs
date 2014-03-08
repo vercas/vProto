@@ -13,6 +13,7 @@ namespace vProto
             base.__registerDefaultInternalRequestHandlers();
 
             __addInternalRequestHandler(InternalRequestType.RMI, _handleRmiRequest);
+            __addInternalRequestHandler(InternalRequestType.Handshake, _handleHandshakeRequest);
         }
     }
 }

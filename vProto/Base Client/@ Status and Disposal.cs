@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace vProto
 {
@@ -13,6 +14,12 @@ namespace vProto
     public abstract partial class BaseClient
         : _RequestHandler, IDisposable
     {
+        public static readonly Version ProtocolVersion = new Version(0, 1);
+
+        private static readonly byte[] emptyPayload = new byte[0];
+
+
+
 #if RECEIVER_THREAD
         protected Thread receiver;
 #endif
@@ -38,6 +45,10 @@ namespace vProto
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "Object already disposed!");
+
+            Disposed = true;
+            IsInternallyConnected = false;
+            IsConnected = false;
 
             try
             {
@@ -98,26 +109,32 @@ namespace vProto
 
             }
 #endif
-
-            Disposed = true;
-            IsConnected = false;
         }
 
 
         /// <summary>
         /// Gets a value indicating whether the client is known to be connected or not.
+        /// <para>The handshake must complete for a connection to be declared.</para>
         /// </summary>
         public Boolean IsConnected { get; protected set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the client is known to be connected or not.
+        /// </summary>
+        internal protected Boolean IsInternallyConnected { get; protected set; }
+
         protected void _CheckIfStopped(Exception x, bool force = false)
         {
-            //Console.WriteLine("CHECKING IF STOPPED OMG");
-
-            if (IsConnected || force)
+            if (IsInternallyConnected || force)
             {
+                var isc = IsConnected;
+
                 Dispose();
 
-                OnDisconnected(new Events.ClientDisconnectedEventArgs(x));
+                if (isc)
+                    OnDisconnected(new Events.ClientDisconnectedEventArgs(x));
+                else
+                    OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(x));
             }
         }
 
@@ -163,21 +180,26 @@ namespace vProto
             heartbeatTimer = new Timer(__heartbeatTimerCallback, null, HeartbeatInterval, HeartbeatInterval);
             speedCountingTimer = new Timer(__speedCountingTimerCallback, null, new TimeSpan(0), new TimeSpan(0, 0, 1));
 
-            IsConnected = true;
+            IsInternallyConnected = true;
 
             streamIn = strIn;
             streamOut = strOut ?? strIn;
 
+            __registerDefaultInternalRequestHandlers();
+
+            LowStartGettingPackets();
+
             if (Owner != null)
             {
                 //  I temporarily forgot what I was supposed to do here.
+
+                SERVER = true;
+                CLIENT = false;
+
+                _peers = Owner.GetClientPeersID(this._id);
+
+                _StartHandshake();
             }
-
-            __registerDefaultInternalRequestHandlers();
-
-            OnConnected(new EventArgs());
-
-            LowStartGettingPackets();
         }
 
 
@@ -194,5 +216,17 @@ namespace vProto
         /// <para>Must be set before initializing the client over streams.</para>
         /// </summary>
         protected BaseServer Owner { get; set; }
+
+        /// <summary>
+        /// Used internally to determine which side the BaseClient object belongs to.
+        /// </summary>
+        protected bool SERVER = false, CLIENT = true;
+
+
+
+        /// <summary>
+        /// Gets or sets the object that contains data about the client.
+        /// </summary>
+        public Object Tag { get; set; }
     }
 }

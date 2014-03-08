@@ -4,7 +4,7 @@
     /// Represents all the types of packages used by the protocol.
     /// </summary>
     public enum PackageType
-        : uint
+        : byte
     {
         Reserved = 0,   //  For God knows what, but I like number 0 so I won't use it. >_>
 
@@ -17,5 +17,8 @@
 
         InternalRequest = 6,
         InternalResponse = 7,
+
+        PeerConnected = 8,
+        PeerDisconnected = 9,
     }
 }

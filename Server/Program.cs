@@ -24,12 +24,37 @@ namespace Server
                 serv = new vProto.Protocols.TCP.SSL.Server(5665, cert);
 
             serv.ClientConnected += serv_ClientConnected;
+            serv.ClientConnectionFailed += serv_ClientConnectionFailed;
+            serv.ClientDisconnected += serv_ClientDisconnected;
 
             serv.Start();
 
             var updater = new Timer(new TimerCallback(delegate(object state)
             {
-                Console.Title = string.Format("Speed: In {0}; Out {1}", serv.IncommingSpeed, serv.OutgoingSpeed);
+                var peers = serv.ListAllClientIDs();
+
+                string peerStr = string.Empty;
+
+                if (peers == null)
+                {
+                    peerStr = "No clients!?";
+                }
+                else
+                {
+                    peerStr = "#" + peers.Count;
+
+                    if (peers.Count < 15)
+                        for (int i = 0; i < peers.Count; i++)
+                            if (i == 0)
+                                peerStr += ": " + peers[i];
+                            else
+                                peerStr += ", " + peers[i];
+                }
+
+                Console.Title = string.Format("Speed: In {0}; Out {1}; Clients: {2}", serv.IncommingSpeed, serv.OutgoingSpeed, peerStr);
+
+                //for (int i = 0; i < peers.Count; i++)
+                //    serv[i].SendData(Encoding.UTF8.GetBytes(Console.Title));
 
             }), null, 1000, 1000);
 
@@ -42,14 +67,39 @@ namespace Server
 
         static void serv_ClientConnected(vProto.BaseServer sender, vProto.Events.ServerClientConnectedEventArgs e)
         {
-            Console.WriteLine("Client CONNECTED\t{0}", e.ID);
+            Console.WriteLine("Client CONNECTED: {0}", e.ID);
 
+            e.Client.ConnectionFailed += Client_ConnectionFailed;
             e.Client.Disconnected += Client_Disconnected;
             e.Client.RequestReceived += Client_RequestReceived;
             e.Client.SendFailed += Client_SendFailed;
             e.Client.ReceiptFailed += Client_ReceiptFailed;
 
-            e.Client.RegisterRmiService<Common_Test_Shizzle.RMI_Interface>(new Common_Test_Shizzle.RMI_Object());
+            try
+            {
+                e.Client.RegisterRmiService<Common_Test_Shizzle.RMI_Interface>(new Common_Test_Shizzle.RMI_Object());
+            }
+            catch(Exception x)
+            {
+                Console.WriteLine(x);
+            }
+        }
+
+        static void serv_ClientConnectionFailed(vProto.BaseServer sender, vProto.Events.ServerClientConnectionFailedEventArgs e)
+        {
+            Console.WriteLine("Connection failed: {0}", e.CarriesException ? e.Exception.Message : "No exception.");
+        }
+
+        static void serv_ClientDisconnected(vProto.BaseServer sender, vProto.Events.ServerClientDisconnectedEventArgs e)
+        {
+            Console.WriteLine("Client disconnected: {0}", e.ID);
+        }
+
+        static void Client_ConnectionFailed(vProto.BaseClient sender, vProto.Events.ClientConnectionFailedEventArgs e)
+        {
+            Console.WriteLine("Connection failed for {0}: {1}", sender.ID, e.CarriesException ? e.Exception.Message : "No exception.");
+
+            //Console.WriteLine("Stack trace:\n{0}", Environment.StackTrace);
         }
 
         static void Client_ReceiptFailed(vProto.BaseClient sender, vProto.Events.PipeFailureEventArgs e)
