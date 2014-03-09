@@ -96,7 +96,7 @@ namespace Client
 #if SENDER_THREAD
                     Console.WriteLine("Refused to send! {0} {1}", client.IsConnected, client.IsAwaitingHeartbeat);
 #else
-                    Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat, client.IsSendingPacket);
+                    Console.WriteLine("Refused to send! {0} {1} {2}", client.IsConnected, client.IsAwaitingHeartbeat, client.IsSendingPackage);
 #endif
             }
             else if (uint.TryParse(s, out n))

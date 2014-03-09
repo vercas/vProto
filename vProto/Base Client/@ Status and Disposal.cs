@@ -26,14 +26,14 @@ namespace vProto
 
 #if RECEIVER_THREAD
         /// <summary>
-        /// Thread used to Receive pacjages.
+        /// Thread used to receive packages.
         /// </summary>
         protected Thread receiver;
 #endif
 
 #if SENDER_THREAD
         /// <summary>
-        /// Thread used to send pacjages.
+        /// Thread used to send packages.
         /// </summary>
         protected Thread sender;
 #endif
@@ -210,7 +210,7 @@ namespace vProto
 
             __registerDefaultInternalRequestHandlers();
 
-            LowStartGettingPackets();
+            LowStartGettingPackages();
 
             if (Owner != null)
             {

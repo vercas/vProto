@@ -7,12 +7,12 @@ namespace vProto
 
     partial class BaseClient
     {
-        const int packetHeaderSize = PackageHeader.StructSize;
+        const int packageHeaderSize = PackageHeader.StructSize;
 
 
 
 #if RECEIVER_THREAD
-        protected bool LowStartGettingPackets()
+        protected bool LowStartGettingPackages()
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "This client base is disposed of!");
@@ -31,28 +31,28 @@ namespace vProto
 
         protected void ReceiverLoop()
         {
-            byte[] packetHeaderBuff = new byte[packetHeaderSize], packetPayloadBuff = null;
-            int packetBytesRead = 0, expectedSize = -1, amnt = 0;
+            byte[] packageHeaderBuff = new byte[packageHeaderSize], packagePayloadBuff = null;
+            int packageBytesRead = 0, expectedSize = -1, amnt = 0;
             PackageHeader lastHeader = new PackageHeader();
 
             while (!Disposed)
             {
-                packetBytesRead = 0;
+                packageBytesRead = 0;
                 expectedSize = -1;
                 amnt = 0;
-                packetPayloadBuff = null;
+                packagePayloadBuff = null;
 
                 while (true)
                 {
-                    if (packetPayloadBuff == null)
+                    if (packagePayloadBuff == null)
                         //  No payload buffer means we're reading a header.
                         try
                         {
                             //Console.WriteLine("HEADER Receipt start.");
 
-                            //stream.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
-                            //amnt = stream.Read(packetHeaderBuff, 0, packetHeaderSize);
-                            amnt = streamOut.Read(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead);
+                            //stream.BeginRead(packageHeaderBuff, 0, packageHeaderSize, LowStartGettingPackages_Callback, null);
+                            //amnt = stream.Read(packageHeaderBuff, 0, packageHeaderSize);
+                            amnt = streamOut.Read(packageHeaderBuff, packageBytesRead, packageHeaderSize - packageBytesRead);
                         }
                         catch (ObjectDisposedException x)
                         {
@@ -71,8 +71,8 @@ namespace vProto
                         {
                             //Console.WriteLine("PAYLOAD Receipt start.");
 
-                            //stream.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
-                            amnt = streamOut.Read(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead);
+                            //stream.BeginRead(packagePayloadBuff, packageBytesRead - packageHeaderSize, expectedSize - packageBytesRead, LowStartGettingPackages_Callback, ar.AsyncState);
+                            amnt = streamOut.Read(packagePayloadBuff, packageBytesRead - packageHeaderSize, expectedSize - packageBytesRead);
                         }
                         catch (ObjectDisposedException x)
                         {
@@ -94,31 +94,31 @@ namespace vProto
                         return;
                     }
 
-                    packetBytesRead += amnt;
+                    packageBytesRead += amnt;
 
                     __addReceived(amnt);
 
-                    if (packetBytesRead == packetHeaderSize)
+                    if (packageBytesRead == packageHeaderSize)
                     {
-                        Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
+                        Struct_mapping.ByteArrayToStructure(packageHeaderBuff, ref lastHeader);
                         uint len = lastHeader.Size;
 
-                        expectedSize = (int)len + packetHeaderSize;
+                        expectedSize = (int)len + packageHeaderSize;
 
-                        packetPayloadBuff = new byte[len];
+                        packagePayloadBuff = new byte[len];
                     }
 
-                    if (packetBytesRead == expectedSize)
+                    if (packageBytesRead == expectedSize)
                     {
                         try
                         {
-                            OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff));
+                            OnInternalPackageReceived(new Package(lastHeader, packagePayloadBuff));
                         }
                         finally
                         {
-                            packetPayloadBuff = null;
+                            packagePayloadBuff = null;
 
-                            //  Getting ready to receive the next packet header here.
+                            //  Getting ready to receive the next package header here.
                         }
 
                         break;
@@ -132,8 +132,8 @@ namespace vProto
         object rec_sync = new object();
         bool receiving = false;
 
-        byte[] packetHeaderBuff = new byte[packetHeaderSize], packetPayloadBuff = null;
-        int packetBytesRead = 0, expectedSize = -1;
+        byte[] packageHeaderBuff = new byte[packageHeaderSize], packagePayloadBuff = null;
+        int packageBytesRead = 0, expectedSize = -1;
         PackageHeader lastHeader = new PackageHeader();
 
         DateTime receiptStartTime; //  Not the most precise, but surely the fastest way of accomplishing this.
@@ -142,7 +142,7 @@ namespace vProto
         /// Initiates receiving packages.
         /// </summary>
         /// <returns>False if already receiving; otherwise true.</returns>
-        protected bool LowStartGettingPackets()
+        protected bool LowStartGettingPackages()
         {
             lock (rec_sync)
             {
@@ -155,12 +155,12 @@ namespace vProto
                 receiving = true;
             }
 
-            packetBytesRead = 0;
+            packageBytesRead = 0;
             expectedSize = -1;
 
             try
             {
-                streamReceiver.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
+                streamReceiver.BeginRead(packageHeaderBuff, 0, packageHeaderSize, LowStartGettingPackages_Callback, null);
 
                 //Console.WriteLine("Receipt start.");
 
@@ -178,7 +178,7 @@ namespace vProto
             return false;
         }
 
-        void LowStartGettingPackets_Callback(IAsyncResult ar)
+        void LowStartGettingPackages_Callback(IAsyncResult ar)
         {
             int amnt;
 
@@ -214,18 +214,18 @@ namespace vProto
                 return;
             }
 
-            packetBytesRead += amnt;
+            packageBytesRead += amnt;
 
             __addReceived(amnt);
 
-            if (packetBytesRead == packetHeaderSize)
+            if (packageBytesRead == packageHeaderSize)
             {
-                Struct_mapping.ByteArrayToStructure(packetHeaderBuff, ref lastHeader);
+                Struct_mapping.ByteArrayToStructure(packageHeaderBuff, ref lastHeader);
 
-                expectedSize = (int)lastHeader.Size + packetHeaderSize;
+                expectedSize = (int)lastHeader.Size + packageHeaderSize;
 
-                if (packetPayloadBuff == null)
-                    packetPayloadBuff = new byte[lastHeader.Size];
+                if (packagePayloadBuff == null)
+                    packagePayloadBuff = new byte[lastHeader.Size];
                 else
                     System.Diagnostics.Debug.Assert(false, "This really should not happen.");
 
@@ -234,15 +234,15 @@ namespace vProto
                 //  Length 0 will be handled in the next conditional.
             }
 
-            if (packetBytesRead == expectedSize)
+            if (packageBytesRead == expectedSize)
             {
                 try
                 {
-                    OnInternalPackageReceived(new Package(lastHeader, packetPayloadBuff) { time = DateTime.Now - receiptStartTime });
+                    OnInternalPackageReceived(new Package(lastHeader, packagePayloadBuff) { time = DateTime.Now - receiptStartTime });
                 }
                 finally
                 {
-                    packetPayloadBuff = null;
+                    packagePayloadBuff = null;
                     //  Luckily this is just a reference!
 
                     lock (rec_sync)
@@ -250,14 +250,14 @@ namespace vProto
 
                     //  Should someone call the function between these two instructions, it's fine. :3
 
-                    LowStartGettingPackets();
+                    LowStartGettingPackages();
                 }
             }
-            else if (packetPayloadBuff == null)
+            else if (packagePayloadBuff == null)
             {
                 try
                 {
-                    streamReceiver.BeginRead(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamReceiver.BeginRead(packageHeaderBuff, packageBytesRead, packageHeaderSize - packageBytesRead, LowStartGettingPackages_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {
@@ -276,7 +276,7 @@ namespace vProto
             {
                 try
                 {
-                    streamReceiver.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamReceiver.BeginRead(packagePayloadBuff, packageBytesRead - packageHeaderSize, expectedSize - packageBytesRead, LowStartGettingPackages_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {

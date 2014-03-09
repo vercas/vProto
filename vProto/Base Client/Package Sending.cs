@@ -10,7 +10,7 @@ namespace vProto
     partial class BaseClient
     {
 #if SENDER_THREAD
-        bool LowSendPacket(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
+        bool LowSendPackage(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "This client base is disposed of!");
@@ -27,7 +27,7 @@ namespace vProto
 
             lock (send_lock)
             {
-                sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packetHeaderSize);
+                sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packageHeaderSize);
                 sendingBuffer.Write(bodeh, 0, bodeh.Length);
 
                 sendingQueue.Enqueue(st);
@@ -124,10 +124,10 @@ namespace vProto
 #else
 
         /// <summary>
-        /// Gets a value indicating whether a packet is being sent.
+        /// Gets a value indicating whether a package is being sent.
         /// <para>Attempting to send anything else while this value is true will add the package to a queue, which will be sent as soon as the pipe is free.</para>
         /// </summary>
-        public Boolean IsSendingPacket { get { return sending; } }
+        public Boolean IsSendingPackage { get { return sending; } }
         //  I don't know if making a property whose existence depends on a preprocessor directive is a good idea...
 
 
@@ -137,14 +137,14 @@ namespace vProto
 
         Queue<QueuedPackage> packageQueue = new Queue<QueuedPackage>();
 
-        bool LowSendPacket(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
+        bool LowSendPackage(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
             if (!IsConnected)
                 return false;
 
             header.Size = (uint)bodeh.Length;
 
-            byte[] pack = new byte[bodeh.Length + packetHeaderSize];
+            byte[] pack = new byte[bodeh.Length + packageHeaderSize];
 
             bodeh.CopyTo(pack,
                 Struct_mapping.StructureToByteArray(header, pack, 0) );
@@ -157,10 +157,10 @@ namespace vProto
             if (cbk != null)
                 st.Callbacks.Add(cbk);
 
-            return __sendPack(pack, LowSendPacket_Callback, st, false);
+            return __sendPack(pack, LowSendPackage_Callback, st, false);
         }
 
-        void LowSendPacket_Callback(IAsyncResult ar)
+        void LowSendPackage_Callback(IAsyncResult ar)
         {
             //Console.Write("Package sending callback; ");
 
@@ -190,11 +190,11 @@ namespace vProto
 
             var state = ar.AsyncState as Package;
             state.time = DateTime.Now - sendStartTime;
-            var bytes = state.Payload.Length + packetHeaderSize;
+            var bytes = state.Payload.Length + packageHeaderSize;
 
             __addSent(state.time.TotalSeconds > 1.0 ? (int)((double)bytes / state.time.TotalSeconds) : bytes);
             //  This has to be calculated depending on the timespan for the sake of delivering accurate information.
-            //  Otherwise, sending a 100-megabyte packet will display an outgoing speed of 100 megabytes for a second when the package was successfully sent.
+            //  Otherwise, sending a 100-megabyte package will display an outgoing speed of 100 megabytes for a second when the package was successfully sent.
             //  The check is there because anything that took under one second will be handled by the timer. Also, preventing a division by 0.
 
             try
@@ -204,7 +204,7 @@ namespace vProto
                     foreach (var cbk in state.Callbacks)
                         cbk();
 
-                    OnInternalPacketSent(state);
+                    OnInternalPackageSent(state);
                 }
                 //else dafuq?
             }
@@ -291,7 +291,7 @@ namespace vProto
             if (payload == null)
                 throw new ArgumentNullException("payload", "Payload array cannot be null.");
 
-            LowSendPacket(header, payload, cbk, state);
+            LowSendPackage(header, payload, cbk, state);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace vProto
 
             payload.Read(buff, 0, (int)buflen);
 
-            LowSendPacket(header, buff, cbk, state);
+            LowSendPackage(header, buff, cbk, state);
         }
     }
 }

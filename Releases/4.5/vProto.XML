@@ -279,7 +279,7 @@
         </member>
         <member name="F:vProto.BaseClient.sender">
             <summary>
-            Thread used to send pacjages.
+            Thread used to send packages.
             </summary>
         </member>
         <member name="F:vProto.BaseClient.streamSender">
@@ -324,7 +324,7 @@
             Used internally to determine which side the BaseClient object belongs to.
             </summary>
         </member>
-        <member name="M:vProto.BaseClient.LowStartGettingPackets">
+        <member name="M:vProto.BaseClient.LowStartGettingPackages">
             <summary>
             Initiates receiving packages.
             </summary>
@@ -653,11 +653,6 @@
         <member name="P:vProto.BaseServer.IsOn">
             <summary>
             Gets a value indicating whether the server is on and listening.
-            </summary>
-        </member>
-        <member name="T:vProto.Collections.PendingRequestCollection">
-            <summary>
-            
             </summary>
         </member>
         <member name="T:vProto.Collections.RequestHandlerCollection">

@@ -49,7 +49,7 @@ namespace vProto
         {
             if (SERVER)
             {
-                _CheckIfStopped(new InvalidOperationException("Server should not receive this packet."), true);
+                _CheckIfStopped(new InvalidOperationException("Server should not receive this package."), true);
             }
             else
             {
@@ -69,7 +69,7 @@ namespace vProto
         {
             if (SERVER)
             {
-                _CheckIfStopped(new InvalidOperationException("Server should not receive this packet."), true);
+                _CheckIfStopped(new InvalidOperationException("Server should not receive this package."), true);
             }
             else
             {
@@ -104,7 +104,7 @@ namespace vProto
             {
                 try
                 {
-                    LowSendPacket(new PackageHeader { Type = PackageType.PeerConnected, ID = id }, emptyPayload);
+                    LowSendPackage(new PackageHeader { Type = PackageType.PeerConnected, ID = id }, emptyPayload);
                 }
                 catch { }   //  All exceptions need to be swallowed. The client may get disposed after the first if and before this one.
 
@@ -127,7 +127,7 @@ namespace vProto
             {
                 try
                 {
-                    LowSendPacket(new PackageHeader { Type = PackageType.PeerDisconnected, ID = id }, emptyPayload);
+                    LowSendPackage(new PackageHeader { Type = PackageType.PeerDisconnected, ID = id }, emptyPayload);
                 }
                 catch { }   //  All exceptions need to be swallowed. The client may get disposed after the first if and before this one.
 

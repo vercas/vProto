@@ -205,7 +205,7 @@ namespace vProto
             //Console.WriteLine("Bouncing heartbeat.");
 
             for (int i = 0; i < 3; i++)
-                if (LowSendPacket(new Packages.PackageHeader() { Type = PackageType.HeartbeatResponse, ID = pack.Header.ID }, emptyPayload))
+                if (LowSendPackage(new Packages.PackageHeader() { Type = PackageType.HeartbeatResponse, ID = pack.Header.ID }, emptyPayload))
                     break;
         }
 
@@ -267,7 +267,7 @@ namespace vProto
 
             __prepareHeartbeat();
 
-            bool ok = LowSendPacket(new PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
+            bool ok = LowSendPackage(new PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
 
             if (!ok)
                 __scoreHeartbeatFailure();
