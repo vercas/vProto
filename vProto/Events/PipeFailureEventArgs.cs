@@ -13,6 +13,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.PipeFailureEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
+        /// <param name="outgoing">True if the failure occurred while sending; otherwise false.</param>
         public PipeFailureEventArgs(Exception x, bool outgoing = false)
             : base(x)
         {

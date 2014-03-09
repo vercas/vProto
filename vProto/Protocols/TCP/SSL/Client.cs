@@ -24,7 +24,7 @@ namespace vProto.Protocols.TCP.SSL
             if (sslPolicyErrors == SslPolicyErrors.None)
                 return true;
 
-            Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
+            //Console.WriteLine("Certificate error: {0}", sslPolicyErrors);
 
             // Do not allow this client to communicate with unauthenticated servers. 
             return false;
@@ -95,6 +95,9 @@ namespace vProto.Protocols.TCP.SSL
 
 
 
+        /// <summary>
+        /// Runs when a successful TCP connection has been made.
+        /// </summary>
         protected override void HandleTcpClientConnectionSuccess()
         {
             Sstream = new SslStream(Nstream, false, ValidateServerCertificate, null);

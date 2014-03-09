@@ -42,7 +42,7 @@ namespace vProto
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <param name="origin">The point from which seeking in the stream should take place.</param>
         /// <returns>The response object.</returns>
-        public Response SetPayload(Stream stream, int length = -1, int offset = 0, SeekOrigin origin = SeekOrigin.Begin)
+        public Response SetPayload(Stream stream, SeekOrigin origin, int offset = 0, int length = -1)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed response!");

@@ -12,8 +12,17 @@ namespace vProto.Protocols.TCP
     public class Client
         : vProto.BaseClient
     {
+        /// <summary>
+        /// Underlying TcpClient object.
+        /// </summary>
         protected TcpClient client;
+        /// <summary>
+        /// Underlying NetworkStream associated with the TcpClient.
+        /// </summary>
         protected NetworkStream Nstream;
+        /// <summary>
+        /// IP endpoint of the server to which the client is connected.
+        /// </summary>
         protected IPEndPoint server;
 
 
@@ -84,6 +93,9 @@ namespace vProto.Protocols.TCP
 
 
 
+        /// <summary>
+        /// Starts the connection to the server.
+        /// </summary>
         protected override void StartConnection()
         {
             client.BeginConnect(server.Address, server.Port, ConnectionCallback, null);

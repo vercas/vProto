@@ -6,9 +6,18 @@ namespace vProto.Internals
     using Events;
     using Packages;
 
+    /// <summary>
+    /// Represents an object which may handle requests.
+    /// </summary>
     public abstract class _RequestHandler
     {
+        /// <summary>
+        /// Collection of standard reuqest handlers.
+        /// </summary>
         protected RequestHandlerCollection RequestHandlers = new RequestHandlerCollection();
+        /// <summary>
+        /// Collection of internal request handlers.
+        /// </summary>
         protected RequestHandlerCollection InternalRequestHandlers = new RequestHandlerCollection();
 
 
@@ -96,6 +105,9 @@ namespace vProto.Internals
 
 
 
+        /// <summary>
+        /// When overriden in a derived class, registers the handlers for internal request types.
+        /// </summary>
         protected virtual void __registerDefaultInternalRequestHandlers()
         {
 

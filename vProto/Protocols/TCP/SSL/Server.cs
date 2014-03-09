@@ -29,6 +29,10 @@ namespace vProto.Protocols.TCP.SSL
 
 
 
+        /// <summary>
+        /// Handles a TCP Client object.
+        /// </summary>
+        /// <param name="client"></param>
         protected override void HandleTcpClient(TcpClient client)
         {
             ClientReceived(new Client(this, client, cert));

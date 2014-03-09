@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace vProto
 {
@@ -16,70 +18,123 @@ namespace vProto
 
         private void _StartHandshake()
         {
-            __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client1, sender1, e1) =>
+            using (var str1 = new MemoryStream())
+            using (var bw = new BinaryWriter(str1, Encoding.UTF8))
             {
-                OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e1.Exception));
-            }).SetPayload(BinarySerialization.Serialize(new Handshake1Req
-            {
-                ProtocolVersion = ProtocolVersion
-            })).AddResponseReceivedHandler((client1, sender1, e1) =>
-            {
-                var data1 = BinarySerialization.Deserialize<Handshake1Res>(e1.Payload);
+                bw.Write(ProtocolVersion.Major);
+                bw.Write(ProtocolVersion.Minor);
 
-                if (data1.ProtocolVersion != ProtocolVersion)
-                    this.Dispose();
+                bw.Flush();
+
+                __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client, sender, e) =>
+                {
+                    OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e.Exception));
+                }).SetPayload(str1).AddResponseReceivedHandler((client, sender, e) =>
+                {
+                    using (var str2 = new MemoryStream(e.Payload))
+                    using (var br = new BinaryReader(str2, Encoding.UTF8))
+                    {
+                        int vma = br.ReadInt32();
+                        int vmi = br.ReadInt32();
+
+                        if (ProtocolVersion.Major != vma || ProtocolVersion.Minor != vmi)
+                            _CheckIfStopped(new NotSupportedException("vProto Protocol Version mismatch."));
+                        else
+                            _Handshake2();
+                    }
+                }).SendFluent();
+            }
+        }
+
+        private void _Handshake2()
+        {
+            using (var str = new MemoryStream())
+            using (var bw = new BinaryWriter(str, Encoding.UTF8))
+            {
+                bw.Write(this._id);
+
+                if (this._peers == null)
+                    bw.Write(-1);
                 else
                 {
-                    __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client2, sender2, e2) =>
-                    {
-                        OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e2.Exception));
-                    }).SetPayload(BinarySerialization.Serialize(new Handshake2Req
-                    {
-                        PeerIDs = _peers,
-                        ClientID = this._id
-                    })).AddResponseReceivedHandler((client2, sender2, e2) =>
-                    {
-                        _FinishHandhake();
-                    }).SendFluent();
+                    bw.Write(this._peers.Count);
+
+                    for (int i = this._peers.Count - 1; i >= 0; i--)
+                        bw.Write(this._peers[i]);
                 }
-            }).SendFluent();
+
+                bw.Flush();
+
+                __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client, sender, e) =>
+                {
+                    OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e.Exception));
+                }).SetPayload(str).AddResponseReceivedHandler((client, sender, e) =>
+                {
+                    _FinishHandhake();
+                }).SendFluent();
+            }
         }
+
+
 
         private void _handleHandshakeRequest(BaseClient sender, RequestReceivedEventArgs e)
         {
             if (handshakeStep == 0)
-            {
-                handshakeStep = 1;
-
-                var data = BinarySerialization.Deserialize<Handshake1Req>(e.Response.RequestPayload);
-
-                e.Response.SetPayload(BinarySerialization.Serialize(new Handshake1Res
+                using (var br = new BinaryReader(e.Response.RequestPayloadStream, Encoding.UTF8))
                 {
-                    ProtocolVersion = ProtocolVersion
-                })).Send();
-            }
-            else if (handshakeStep == 1)
-            {
-                var data = BinarySerialization.Deserialize<Handshake2Req>(e.Response.RequestPayload);
+                    int vma = br.ReadInt32();
+                    int vmi = br.ReadInt32();
 
-                _id = data.ClientID;
+                    if (ProtocolVersion.Major != vma || ProtocolVersion.Minor != vmi)
+                        _CheckIfStopped(new NotSupportedException("vProto Protocol Version mismatch."));
+                    else
+                    {
+                        handshakeStep = 1;
 
-                lock (_peers_lock)
-                {
-                    _peers = data.PeerIDs;
+                        using (var str = new MemoryStream())
+                        using (BinaryWriter bw = new BinaryWriter(str, Encoding.UTF8))
+                        {
+                            bw.Write(ProtocolVersion.Major);
+                            bw.Write(ProtocolVersion.Minor);
 
-                    if (_peers != null)
-                        for (int i = 0; i < _peers_queued_temp.Count; i++)
-                            if (!_peers.Contains(_peers_queued_temp[i]))
-                                _peers.Add(_peers_queued_temp[i]);
+                            bw.Flush();
 
-                    _peers_queued_temp = null;
+                            e.Response.SetPayload(str).Send();
+                        }
+                    }
                 }
+            else if (handshakeStep == 1)
+                using (var br = new BinaryReader(e.Response.RequestPayloadStream, Encoding.UTF8))
+                {
+                    this._id = br.ReadInt32();
 
-                _FinishHandhake();
+                    int peers_cnt = br.ReadInt32();
+                    List<int> peers = null;
 
-                e.Response.Send();
-            }
+                    if (peers_cnt != -1)
+                    {
+                        peers = new List<int>(peers_cnt);
+
+                        for (int i = peers_cnt - 1; i >= 0; i--)
+                            peers[i] = br.ReadInt32();
+                    }
+
+                    lock (_peers_lock)
+                    {
+                        _peers = peers;
+
+                        if (peers != null)
+                            for (int i = 0; i < _peers_queued_temp.Count; i++)
+                                if (!_peers.Contains(_peers_queued_temp[i]))
+                                    _peers.Add(_peers_queued_temp[i]);
+
+                        _peers_queued_temp = null;
+                    }
+
+                    _FinishHandhake();
+
+                    e.Response.Send();
+                }
         }
 
         private void _FinishHandhake()
@@ -88,34 +143,7 @@ namespace vProto
 
             OnConnected(new EventArgs());
 
-            Console.WriteLine("Handshake finished! ({0})", _id);
+            //Console.WriteLine("Handshake finished! ({0})", _id);
         }
-    }
-
-
-
-    //  Handshake data containers
-
-
-
-    [Serializable]
-    internal class Handshake1Req
-    {
-        internal Version ProtocolVersion;
-    }
-
-    [Serializable]
-    internal class Handshake1Res
-    {
-        internal Version ProtocolVersion;
-    }
-
-
-    [Serializable]
-    internal class Handshake2Req
-    {
-        [OptionalField]
-        internal List<int> PeerIDs;
-        internal int ClientID;
     }
 }

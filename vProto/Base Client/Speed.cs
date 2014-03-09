@@ -50,11 +50,11 @@ namespace vProto
 
 
 
-        protected Timer speedCountingTimer = null;
+        Timer speedCountingTimer = null;
 
 
 
-        protected void __speedCountingTimerCallback(object state)
+        void __speedCountingTimerCallback(object state)
         {
             lock (speed_lock)
             {

@@ -1,0 +1,1722 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>vProto.Debug</name>
+    </assembly>
+    <members>
+        <member name="T:vProto.BaseClient">
+            <summary>
+            Base class for objects which handle network streams.
+            </summary>
+        </member>
+        <member name="T:vProto.Internals._RequestHandler">
+            <summary>
+            Represents an object which may handle requests.
+            </summary>
+        </member>
+        <member name="F:vProto.Internals._RequestHandler.RequestHandlers">
+            <summary>
+            Collection of standard reuqest handlers.
+            </summary>
+        </member>
+        <member name="F:vProto.Internals._RequestHandler.InternalRequestHandlers">
+            <summary>
+            Collection of internal request handlers.
+            </summary>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.AddRequestHandler(System.Int16,vProto.Events.ClientEventHandler{vProto.Events.RequestReceivedEventArgs})">
+            <summary>
+            Adds a handler delegate for a specific request type.
+            </summary>
+            <param name="requestType">The type of request to handle.</param>
+            <param name="handler">The delegate which will handle the request.</param>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.RemoveRequestHandler(System.Int16)">
+            <summary>
+            Removes the handler for the specified request type.
+            </summary>
+            <param name="requestType"></param>
+            <returns>True if the handler was found and removed; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.ContainsRequestHandler(System.Int16)">
+            <summary>
+            Determines whether a handler exists for a specified request type or not.
+            </summary>
+            <param name="requestType"></param>
+            <returns>True if exists; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.AddInternalRequestHandler(System.Int16,vProto.Events.ClientEventHandler{vProto.Events.RequestReceivedEventArgs})">
+            <summary>
+            Adds a handler delegate for a specific request type.
+            </summary>
+            <param name="requestType">The type of request to handle.</param>
+            <param name="handler">The delegate which will handle the request.</param>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.RemoveInternalRequestHandler(System.Int16)">
+            <summary>
+            Removes the handler for the specified request type.
+            </summary>
+            <param name="requestType"></param>
+            <returns>True if the handler was found and removed; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.ContainsInternalRequestHandler(System.Int16)">
+            <summary>
+            Determines whether a handler exists for a specified request type or not.
+            </summary>
+            <param name="requestType"></param>
+            <returns>True if exists; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.Internals._RequestHandler.__registerDefaultInternalRequestHandlers">
+            <summary>
+            When overriden in a derived class, registers the handlers for internal request types.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.RegisterRmiService``1(``0)">
+            <summary>
+            Registers a Remote Method Invocation service with the client.
+            <para>A RMI service is an object whose methods can be accessed remotely over the connection.</para>
+            </summary>
+            <typeparam name="TService">The service interface.</typeparam>
+            <param name="obj">An instance of the service object which implements the given interface.</param>
+            <returns>False if the service already exists; otherwise true</returns>
+        </member>
+        <member name="M:vProto.BaseClient.ProxyRmiService``1">
+            <summary>
+            Acquires a proxy object to a Remote Method Invocation service on the other side.
+            <para>The proxy is used to remotely access methods of the service object over the connection.</para>
+            </summary>
+            <typeparam name="TService">The service interface.</typeparam>
+            <returns>RMI service proxy object</returns>
+        </member>
+        <member name="M:vProto.BaseClient.Connect">
+            <summary>
+            Starts an asynchronous request for a remote host connection.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.StartConnection">
+            <summary>
+            When overriden in a derived class, attempts to connect to a previously specified server.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.__registerDefaultInternalRequestHandlers">
+            <summary>
+            Registers handlers for several internal request types.
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.HeartbeatInterval">
+            <summary>
+            Default interval at which heartbeats are sent.
+            <para>30 seconds.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.DefaultHeartbeatTimeout">
+            <summary>
+            Default value for heartbeat timeout.
+            <para>10 seconds.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.MinimumHeartbeatTimeout">
+            <summary>
+            Minimum value for heartbeat timeout.
+            <para>500 milliseconds or half a second.</para>
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalHeartbeatRequestReceived(vProto.Packages.Package)">
+            <summary>
+            Invoked on receipt of heartbeat request from the other side.
+            </summary>
+            <param name="pack">Package detailing heartbeat data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalHeartbeatResponseReceived(vProto.Packages.Package)">
+            <summary>
+            Invoked on receipt of heartbeat response from the other side.
+            </summary>
+            <param name="pack">Package detailing heartbeat data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalHeartbeatFailure(vProto.Packages.Package,System.Exception)">
+            <summary>
+            Invoked when a heartbeat-related failure occurred.
+            </summary>
+            <param name="pack">Package detailing heartbeat data, if available.</param>
+            <param name="x">Exception causing the failure.</param>
+        </member>
+        <member name="M:vProto.BaseClient.SendHeartbeat">
+            <summary>
+            Sends a heartbeat package to the other end.
+            <para>Used to check connection health and calculate the ping.</para>
+            </summary>
+            <returns>False if a heartbeat is already awaiting or disconnected; otherwise true.</returns>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalRequestReceived(vProto.Packages.Package)">
+            <summary>
+            Invoked on receipt of a request from the other side.
+            </summary>
+            <param name="pack">Package detailing request data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalRequestSent(vProto.Packages.Package)">
+            <summary>
+            Invoked on successful sending of a request to the other side.
+            </summary>
+            <param name="pack">Package detailing request data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalResponseReceived(vProto.Packages.Package)">
+            <summary>
+            Invoked on receipt of a response from the other side.
+            </summary>
+            <param name="pack">Package detailing response data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalResponseSent(vProto.Packages.Package)">
+            <summary>
+            Invoked on successful sending of a response to the other side.
+            </summary>
+            <param name="pack">Package detailing response data.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalRequestSendFailed(vProto.Packages.Package,System.Exception)">
+            <summary>
+            Invoked on failure to send a request.
+            </summary>
+            <param name="pack">Package detailing request data.</param>
+            <param name="x">Exception which caused failure.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalResponseSendFailed(vProto.Packages.Package,System.Exception)">
+            <summary>
+            Invoked on failure to send a response.
+            </summary>
+            <param name="pack">Package detailing response data.</param>
+            <param name="x">Exception which caused failure.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalResponseReceiveFailed(vProto.Packages.Package,System.Exception)">
+            <summary>
+            Invoked on failure to receive a response.
+            </summary>
+            <param name="pack">Package detailing response data, if available.</param>
+            <param name="x">Exception which caused failure.</param>
+        </member>
+        <member name="M:vProto.BaseClient.SendData(System.Byte[],System.Int32,System.Action)">
+            <summary>
+            Sends a shoot-and-forget payload.
+            </summary>
+            <param name="payload">The data to send.</param>
+            <param name="id">An optional ID to associate with the data; useful for identifying its purpose.</param>
+            <param name="cbk">An optional action to execute after the package has been sent successfully.</param>
+        </member>
+        <member name="M:vProto.BaseClient.SendData(System.IO.Stream,System.Nullable{System.Int32},System.Int32,System.Action)">
+            <summary>
+            Sends a shoot-and-forget payload.
+            <para>Reading from the stream happens synchronously.</para>
+            </summary>
+            <param name="payload">The stream from which to extract the data.</param>
+            <param name="len">An optional amount of bytes to send from the stream starting from the current position.<para>Use null to send all of it.</para></param>
+            <param name="id">An optional ID to associate with the data; useful for identifying its purpose.</param>
+            <param name="cbk">An optional action to execute after the package has been sent successfully.</param>
+        </member>
+        <member name="M:vProto.BaseClient.CreateRequest(System.Nullable{System.Int16},System.Byte[])">
+            <summary>
+            Creates, assigns and returns a new request object.
+            </summary>
+            <param name="type">An optional number to identify the type of request. Can be specified later.</param>
+            <param name="payload">The data to send; mandatory but may be specified later.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.BaseClient.OnConnected(System.EventArgs)">
+            <summary>
+            Raises the Connected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnConnectionFailed(vProto.Events.ClientConnectionFailedEventArgs)">
+            <summary>
+            Raises the ConnectionFailed event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnAuthFailed(vProto.Events.ClientAuthFailedEventArgs)">
+            <summary>
+            Raises the AuthFailed event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnDisconnected(vProto.Events.ClientDisconnectedEventArgs)">
+            <summary>
+            Raises the Disconnected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnPeerConnected(vProto.Events.PeerChangeEventArgs)">
+            <summary>
+            Raises the PeerConnected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnPeerDisconnected(vProto.Events.PeerChangeEventArgs)">
+            <summary>
+            Raises the PeerDisconnected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnDataReceived(vProto.Events.DataReceivedEventArgs)">
+            <summary>
+            Raises the DataReceived event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnRequestReceived(vProto.Events.RequestReceivedEventArgs)">
+            <summary>
+            Raises the RequestReceived event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnPipeFailure(vProto.Events.PipeFailureEventArgs)">
+            <summary>
+            Raises the PipeFailure event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="F:vProto.BaseClient.ProtocolVersion">
+            <summary>
+            The internal vProto protocol version of the available library.
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.sender">
+            <summary>
+            Thread used to send pacjages.
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.streamSender">
+            <summary>
+            Input stream (to the other side).
+            <para>Used to send packages.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.streamReceiver">
+            <summary>
+            Output stream (from the other side).
+            <para>Used to receive packages.</para>
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.Dispose">
+            <summary>
+            Releases all the resources used by the current instance of vProto.BaseClient.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient._CheckIfStopped(System.Exception,System.Boolean)">
+            <summary>
+            Halts the connection and raises the appropriate events.
+            </summary>
+            <param name="x">optional; Exception which caused the halting.</param>
+            <param name="force">True to force the procedure even if the client is technically not connected yet.</param>
+        </member>
+        <member name="M:vProto.BaseClient.InitializeFromStreams(System.IO.Stream,System.IO.Stream)">
+            <summary>
+            Initializes the client communication through the specified stream(s).
+            <para>The stream(s) passed on to this function are not disposed by the base client! Disposal will have to be performed by the provider.</para>
+            </summary>
+            <param name="strReceiver">The communication input stream. This is the stream which is checked for incomming packages (read from).</param>
+            <param name="strSender">optional; The communication output stream. This is the stream which is given outgoing packages (written to). If null, will be the same as the input stream.</param>
+        </member>
+        <member name="F:vProto.BaseClient.SERVER">
+            <summary>
+            Used internally to determine which side the BaseClient object belongs to.
+            </summary>
+        </member>
+        <member name="F:vProto.BaseClient.CLIENT">
+            <summary>
+            Used internally to determine which side the BaseClient object belongs to.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseClient.LowStartGettingPackets">
+            <summary>
+            Initiates receiving packages.
+            </summary>
+            <returns>False if already receiving; otherwise true.</returns>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalPackageReceived(vProto.Packages.Package)">
+            <summary>
+            Invoked when receiving any package from the other side.
+            </summary>
+            <param name="pack">Package received.</param>
+        </member>
+        <member name="M:vProto.BaseClient.OnInternalPackageSent(vProto.Packages.Package)">
+            <summary>
+            Invoked when successfully sending any package to the other side.
+            </summary>
+            <param name="pack">Package sent.</param>
+        </member>
+        <member name="M:vProto.BaseClient._SendPack(System.Byte[],vProto.Packages.PackageHeader,System.Action,System.Object)">
+            <summary>
+            Sends the specified byte array as payload for a package.
+            <para>Size is automatically set in header.</para>
+            </summary>
+            <param name="payload">Body of package.</param>
+            <param name="header">Header of package.</param>
+            <param name="cbk">Action to execute on successful sending.</param>
+            <param name="state">State object associated with the package for internal use.</param>
+        </member>
+        <member name="M:vProto.BaseClient._SendPack(System.IO.Stream,vProto.Packages.PackageHeader,System.Nullable{System.Int32},System.Action,System.Object)">
+            <summary>
+            Sends from the specified stream as payload for a package.
+            <para>Size is automatically set in header.</para>
+            </summary>
+            <param name="payload">The stream from which to pick the body.</param>
+            <param name="header">Header of package.</param>
+            <param name="len">How many bytes to copy from current position on stream; use null to copy until the end.</param>
+            <param name="cbk">Action to execute on successful sending.</param>
+            <param name="state">State object associated with the package for internal use.</param>
+        </member>
+        <member name="P:vProto.BaseClient.Peers">
+            <summary>
+            Gets a read only collection of IDs of peers.
+            <para>A peer is a client connected to the same server.</para>
+            <para>Returns null if peer discovery is disabled.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.PeerDiscoveryEnabled">
+            <summary>
+            Gets whether peer discovery is enabled or not on the server associated with the current client.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.OutgoingSpeed">
+            <summary>
+            Gets the number of bytes sent in the last second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IncommingSpeed">
+            <summary>
+            Gets the number of bytes received in the last second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.OutgoingSpeedPeak">
+            <summary>
+            Gets the maximum number of bytes sent in a second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IncommingSpeedPeak">
+            <summary>
+            Gets the maximum number of bytes received in a second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.HeartbeatTimeout">
+            <summary>
+            Gets or sets the timeout duration of a heartbeat.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.Ping">
+            <summary>
+            Gets a delayed and inaccurate approximation of the connection's one-way latency.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IsAwaitingHeartbeat">
+            <summary>
+            Gets a value indicating whether a heartbeat request is pending.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.Connected">
+            <summary>
+            Runs when a full connection (including handshake) occurs successfully.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.ConnectionFailed">
+            <summary>
+            Runs when a connection or handshake failed.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.AuthFailed">
+            <summary>
+            Runs when authentication (if any) failed.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.Disconnected">
+            <summary>
+            Runs when the client is disconnected (either voluntarily or not).
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.PeerConnected">
+            <summary>
+            Runs when a peer connection is signalled by the server.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.PeerDisconnected">
+            <summary>
+            Runs when a peer disconnection is signalled by the server.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.DataReceived">
+            <summary>
+            Runs when a data package is received from the other side.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.RequestReceived">
+            <summary>
+            Runs when a request is received from the other side.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.SendFailed">
+            <summary>
+            Runs when an error occured while attempting to send data.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseClient.ReceiptFailed">
+            <summary>
+            Runs when an error occured while attempting to receive data.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.Disposed">
+            <summary>
+            Gets a value indicating whether the object is disposed or not.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IsConnected">
+            <summary>
+            Gets a value indicating whether the client is known to be connected or not.
+            <para>The handshake must complete for a connection to be declared.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IsInternallyConnected">
+            <summary>
+            Gets a value indicating whether the client is known to be connected or not.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.ID">
+            <summary>
+            Gets the unique ID of the client.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.IsClientHandler">
+            <summary>
+            Gets whether this vProto.BaseClient handles a server's connection to a client (true) or handles a client's connection to a server (false).
+            <para>Equivalent to checking whether the owner is non-null.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.Owner">
+            <summary>
+            Gets or sets the server which owns this client object.
+            <para>If non-null, this instance becomes known as a client handler.</para>
+            <para>Must be set before initializing the client over streams.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.BaseClient.Tag">
+            <summary>
+            Gets or sets the object that contains data about the client.
+            </summary>
+        </member>
+        <member name="T:vProto.BaseServer">
+            <summary>
+            Listens and handles connections.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseServer.GetClientPeersID(System.Int32)">
+            <summary>
+            Builds a list of IDs of peers of a given client.
+            <para>Will return null if peer discovery is disabled.</para>
+            </summary>
+            <param name="id">The ID of the client whose peers to retrieve.</param>
+            <returns>List of IDs of peers if peer discovery is enabled; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.BaseServer.StartListening">
+            <summary>
+            When overriden in a derived class, attempts to start listening for client connections with previously specified settings.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseServer.ClientReceived(vProto.BaseClient)">
+            <summary>
+            Integrates a new client into the server and raises appropriate events.
+            </summary>
+            <param name="client">The client to integrate.</param>
+        </member>
+        <member name="M:vProto.BaseServer.ListAllClientIDs">
+            <summary>
+            Builds a list of IDs of connected clients.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.BaseServer.Start">
+            <summary>
+            Starts listening to incomming connection requests asynchronously.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.BaseServer.OnStarted(System.EventArgs)">
+            <summary>
+            Raises the Started event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.OnStartupFailed(vProto.Events.ServerStartupFailedEventArgs)">
+            <summary>
+            Raises the StartupFailed event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.OnStopped(vProto.Events.ServerStoppedEventArgs)">
+            <summary>
+            Raises the Stopped event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.OnClientConnected(vProto.Events.ServerClientConnectedEventArgs)">
+            <summary>
+            Raises the ClientConnected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.OnClientConnectionFailed(vProto.Events.ServerClientConnectionFailedEventArgs)">
+            <summary>
+            Raises the ClientConnectionFailed event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.OnClientDisconnected(vProto.Events.ServerClientDisconnectedEventArgs)">
+            <summary>
+            Raises the ClientDisconnected event.
+            </summary>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.BaseServer.Dispose">
+            <summary>
+            Releases all the resources used by the current instance of vProto.Server.
+            </summary>
+        </member>
+        <member name="M:vProto.BaseServer._CheckIfStopped(System.Exception)">
+            <summary>
+            Halts the server and raises the appropriate events.
+            </summary>
+            <param name="x">Exception which caused halting.</param>
+        </member>
+        <member name="P:vProto.BaseServer.PeerDiscoveryEnabled">
+            <summary>
+            Gets or sets whether clients are given peer IDs or not.
+            <para>May only be set before starting the server.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.OutgoingSpeed">
+            <summary>
+            Gets the number of bytes sent in the last second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.IncommingSpeed">
+            <summary>
+            Gets the number of bytes received in the last second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.OutgoingSpeedPeak">
+            <summary>
+            Gets the maximum number of bytes sent in a second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.IncommingSpeedPeak">
+            <summary>
+            Gets the maximum number of bytes received in a second.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.Item(System.Int32)">
+            <summary>
+            Gets the vProto.BaseClient object with the specified ID.
+            </summary>
+            <param name="id">The client ID.</param>
+            <returns></returns>
+        </member>
+        <member name="E:vProto.BaseServer.Started">
+            <summary>
+            Runs when the server successfully started.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseServer.StartupFailed">
+            <summary>
+            Runs when the server failed to start.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseServer.Stopped">
+            <summary>
+            Runs when the server stopped.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseServer.ClientConnected">
+            <summary>
+            Runs when a client successfully connected to the server.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseServer.ClientConnectionFailed">
+            <summary>
+            Runs when a client faile to connect to (or handshake with) the server.
+            </summary>
+        </member>
+        <member name="E:vProto.BaseServer.ClientDisconnected">
+            <summary>
+            Runs when a client disconnected from the server.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.Disposed">
+            <summary>
+            Gets a value indicating whether the object is disposed or not.
+            </summary>
+        </member>
+        <member name="P:vProto.BaseServer.IsOn">
+            <summary>
+            Gets a value indicating whether the server is on and listening.
+            </summary>
+        </member>
+        <member name="T:vProto.Collections.PendingRequestCollection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:vProto.Collections.RequestHandlerCollection">
+            <summary>
+            A collection of handlers for specific request types.
+            </summary>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.ExecuteHandler(System.Int16,vProto.BaseClient,vProto.Events.RequestReceivedEventArgs)">
+            <summary>
+            Executes the handlers for a specified request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <param name="client">Client on which to execute handler; provided in event delegate.</param>
+            <param name="e">Desired event arguments.</param>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.Add(System.Int16,vProto.Events.ClientEventHandler{vProto.Events.RequestReceivedEventArgs})">
+            <summary>
+            Assigns the handler to a request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <param name="value">Handler.</param>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.ContainsKey(System.Int16)">
+            <summary>
+            Determines whether there is a handler for the specified request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.Remove(System.Int16)">
+            <summary>
+            Removes the handler for the specified request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <returns>True if there was a handler for the specified request type; otherwise false.</returns>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.TryGetValue(System.Int16,vProto.Events.ClientEventHandler{vProto.Events.RequestReceivedEventArgs}@)">
+            <summary>
+            Gets the handler associated with the specified request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <param name="value">The handler of the specified request type, if found.</param>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.Collections.RequestHandlerCollection.Clear">
+            <summary>
+            Clears the collection, leaving all request types handler-free.
+            </summary>
+        </member>
+        <member name="P:vProto.Collections.RequestHandlerCollection.Item(System.Int16)">
+            <summary>
+            Gets or sets the handler associated with the given request type.
+            </summary>
+            <param name="key">The request type.</param>
+            <returns>Handler associated with given request type.</returns>
+        </member>
+        <member name="P:vProto.Collections.RequestHandlerCollection.Count">
+            <summary>
+            Gets the number of request types with associated handlers.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.ClientEventHandler">
+            <summary>
+            Represents a method that will handle a client-related event with no data.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">An EventArgs that contains no event data.</param>
+        </member>
+        <member name="T:vProto.Events.ClientEventHandler`1">
+            <summary>
+            Represents a method that will handle a client-related event.
+            </summary>
+            <typeparam name="TEventArgs">The type of event data generated by the event.</typeparam>
+            <param name="sender">The source of the event.</param>
+            <param name="e">An EventArgs that contains the event data.</param>
+        </member>
+        <member name="T:vProto.Events.RequestEventHandler">
+            <summary>
+            Represents a method that will handle a request-related event with no data.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="client">The client which the request is related to.</param>
+            <param name="e">An System.EventArgs that contains no event data.</param>
+        </member>
+        <member name="T:vProto.Events.RequestEventHandler`1">
+            <summary>
+            Represents a method that will handle a request-related event.
+            </summary>
+            <typeparam name="TEventArgs">The type of event data generated by the event.</typeparam>
+            <param name="sender">The source of the event.</param>
+            <param name="client">The client which the request is related to.</param>
+            <param name="e">An System.EventArgs that contains the event data.</param>
+        </member>
+        <member name="T:vProto.Events.ServerEventHandler">
+            <summary>
+            Represents a method that will handle a server-related event with no data.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">An System.EventArgs that contains no event data.</param>
+        </member>
+        <member name="T:vProto.Events.ServerEventHandler`1">
+            <summary>
+            Represents a method that will handle a server-related event.
+            </summary>
+            <typeparam name="TEventArgs">The type of event data generated by the event.</typeparam>
+            <param name="sender">The source of the event.</param>
+            <param name="e">An System.EventArgs that contains the event data.</param>
+        </member>
+        <member name="T:vProto.Events.ExceptionCarryingEventArgs">
+            <summary>
+            Base class for events which may carry an exception.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ExceptionCarryingEventArgs.#ctor(System.Exception)">
+            <summary>
+            Event argument which may carry an exception.
+            </summary>
+            <param name="x">The possible exception.</param>
+        </member>
+        <member name="P:vProto.Events.ExceptionCarryingEventArgs.Exception">
+            <summary>
+            Gets the exception carried by this event.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.ExceptionCarryingEventArgs.CarriesException">
+            <summary>
+            Gets a value indicating whether this event carries an exception or not.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.RequestFailureEventArgs">
+            <summary>
+            Provides data for the vProto.Request.RequestFailure event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.RequestFailureEventArgs.#ctor(System.Exception,System.Boolean)">
+            <summary>
+            Initializes a new instance of the vProto.Events.RequestFailureEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+            <param name="sending">True if the failure occurred while sending; otherwise false.</param>
+        </member>
+        <member name="P:vProto.Events.RequestFailureEventArgs.Sending">
+            <summary>
+            Gets a value indicating whether the error occurred when sending the request.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.RequestFailureEventArgs.Receiving">
+            <summary>
+            Gets a value indicating whether the error occurred when receiving the response.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.PeerChangeEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.PeerConnected and vProto.BaseClient.PeerDisconnected events. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.PeerChangeEventArgs.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new instance of the vProto.Events.PeerChangeEventArgs with the specified response object.
+            </summary>
+            <param name="id">The ID of the (dis)connected peer.</param>
+            <param name="connected">True if client connected; otherwise False (if disconnected).</param>
+        </member>
+        <member name="P:vProto.Events.PeerChangeEventArgs.ID">
+            <summary>
+            Gets the ID of the peer who (dis)connected.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.PeerChangeEventArgs.Connected">
+            <summary>
+            Gets whether the peer has connected (true) or disconnected (false).
+            </summary>
+        </member>
+        <member name="P:vProto.Events.PeerChangeEventArgs.Disconnected">
+            <summary>
+            Gets whether the peer has disconnected (true) or connected (false).
+            </summary>
+        </member>
+        <member name="T:vProto.Events.ResponseReceivedEventArgs">
+            <summary>
+            Provides data for the vProto.Request.ResponseReceived event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ResponseReceivedEventArgs.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the vProto.Events.ResponseReceivedEventArgs with the specified payload and package ID.
+            </summary>
+            <param name="payload">The response payload.</param>
+        </member>
+        <member name="P:vProto.Events.ResponseReceivedEventArgs.Payload">
+            <summary>
+            Gets the array of bytes that make up the Response payload.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.DataReceivedEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.DataReceived event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.DataReceivedEventArgs.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            Initializes a new instance of the vProto.Events.DataReceivedEventArgs with the specified payload and package ID.
+            </summary>
+            <param name="payload">The data payload.</param>
+            <param name="type">The ID of the data package.</param>
+        </member>
+        <member name="P:vProto.Events.DataReceivedEventArgs.Payload">
+            <summary>
+            Gets the array of bytes that make up the data payload.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.DataReceivedEventArgs.Type">
+            <summary>
+            Gets the ID associated with this data package.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.RequestReceivedEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.RequestReceived event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.RequestReceivedEventArgs.#ctor(vProto.Response)">
+            <summary>
+            Initializes a new instance of the vProto.Events.RequestReceivedEventArgs with the specified response object.
+            </summary>
+            <param name="response">The object used to read and respond to the request.</param>
+        </member>
+        <member name="P:vProto.Events.RequestReceivedEventArgs.Response">
+            <summary>
+            Gets the object used to read the request and respond to it.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.PipeFailureEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.SendFailed or vProto.BaseClient.ReceiptFailed events. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.PipeFailureEventArgs.#ctor(System.Exception,System.Boolean)">
+            <summary>
+            Initializes a new instance of the vProto.Events.PipeFailureEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+            <param name="outgoing">True if the failure occurred while sending; otherwise false.</param>
+        </member>
+        <member name="P:vProto.Events.PipeFailureEventArgs.Outgoing">
+            <summary>
+            Gets a value indicating whether the error occurred when sending data or when receiving data.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.ServerClientConnectionFailedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.ClientConnectionFailed event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ServerClientConnectionFailedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerClientConnectionFailedEventArgs with the specified client object, client ID and exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ServerClientDisconnectedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.ClientDisconnected event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ServerClientDisconnectedEventArgs.#ctor(System.Int32,vProto.BaseClient,System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerClientDisconnectedEventArgs with the specified client object, client ID and exception.
+            </summary>
+            <param name="id">The ID of the client.</param>
+            <param name="client">The client object.</param>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="M:vProto.Events.ServerClientDisconnectedEventArgs.#ctor(vProto.BaseClient,System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerClientDisconnectedEventArgs with the specified client handler object and exception.
+            <para>The client ID will be extracted from the client handler object.</para>
+            </summary>
+            <param name="client">The client handler object.</param>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="P:vProto.Events.ServerClientDisconnectedEventArgs.ID">
+            <summary>
+            Gets the ID of the client.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.ServerClientDisconnectedEventArgs.Client">
+            <summary>
+            Gets the client object.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.ServerClientConnectedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.ClientConnected event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ServerClientConnectedEventArgs.#ctor(System.Int32,vProto.BaseClient)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerClientConnectedEventArgs with the specified client object and client ID.
+            </summary>
+            <param name="id">The ID of the client.</param>
+            <param name="client">The client object.</param>
+        </member>
+        <member name="M:vProto.Events.ServerClientConnectedEventArgs.#ctor(vProto.BaseClient)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerClientConnectedEventArgs with the specified client handler object.
+            <para>The client ID will be extracted from the client handler object.</para>
+            </summary>
+            <param name="client">The client handler object.</param>
+        </member>
+        <member name="P:vProto.Events.ServerClientConnectedEventArgs.ID">
+            <summary>
+            Gets the ID of the client.
+            </summary>
+        </member>
+        <member name="P:vProto.Events.ServerClientConnectedEventArgs.Client">
+            <summary>
+            Gets the client object.
+            </summary>
+        </member>
+        <member name="T:vProto.Events.ClientConnectionFailedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.ClientConnectionFailed event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ClientConnectionFailedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ClientConnectionFailedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ClientAuthFailedEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.AuthFailed event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ClientAuthFailedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ClientAuthFailedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ClientDisconnectedEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.Disconnected event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ClientDisconnectedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ClientDisconnectedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ListeningFailedEventArgs">
+            <summary>
+            Provides data for the vProto.BaseClient.ListeningFailed event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ListeningFailedEventArgs.#ctor(System.IO.IOException)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ListeningFailedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ServerStoppedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.Disconnected event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ServerStoppedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerStoppedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Events.ServerStartupFailedEventArgs">
+            <summary>
+            Provides data for the vProto.Server.ServerStartupFailed event. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:vProto.Events.ServerStartupFailedEventArgs.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the vProto.Events.ServerStartupFailedEventArgs with the specified exception.
+            </summary>
+            <param name="x">The exception carried by the event.</param>
+        </member>
+        <member name="T:vProto.Packages.PackageType">
+            <summary>
+            Represents all the types of packages used by the protocol.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.Reserved">
+            <summary>
+            A reserved package type value.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.Request">
+            <summary>
+            A package which demands a response.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.Response">
+            <summary>
+            A response to a demanding package.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.Data">
+            <summary>
+            Shoot-and-forget package.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.HeartbeatRequest">
+            <summary>
+            Used to check connection health and estimate latency.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.HeartbeatResponse">
+            <summary>
+            Used to check connection health and estimate latency.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.InternalRequest">
+            <summary>
+            Internal requests, usually wrapping other functionalities.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.InternalResponse">
+            <summary>
+            Internal responses, usually wrapping other functionalities.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.PeerConnected">
+            <summary>
+            Signals the connection of a peer to the server.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageType.PeerDisconnected">
+            <summary>
+            Signals the disconnection of a peer from the server.
+            </summary>
+        </member>
+        <member name="T:vProto.Packages.Package">
+            <summary>
+            Wrapper of a protocol package. This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="P:vProto.Packages.Package.Header">
+            <summary>
+            Header of the package;
+            </summary>
+        </member>
+        <member name="P:vProto.Packages.Package.Payload">
+            <summary>
+            Payload of the package.
+            </summary>
+        </member>
+        <member name="T:vProto.Packages.PackageHeader">
+            <summary>
+            The header structure of all the packages of the protocol.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.StructSize">
+            <summary>
+            The exact size in bytes of the vProto.Packages.PackageHeader structure.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.Size">
+            <summary>
+            Size of the package's payload.
+            <para>Header not included.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.Type">
+            <summary>
+            Type of package.
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.ID">
+            <summary>
+            ID of the package.
+            <para>Used as a whole for data types.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.IDTop">
+            <summary>
+            Top half of the package ID.
+            <para>Used for request and response matching.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.IDBottom">
+            <summary>
+            Bottom half of the package ID.
+            <para>Used for requst and response types.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Packages.PackageHeader.RequestTimeout">
+            <summary>
+            Request timeout duration.
+            <para>Expressed in centiseconds.</para>
+            </summary>
+        </member>
+        <member name="T:vProto.Protocols.TCP.Client">
+            <summary>
+            A TCP/IP client.
+            </summary>
+        </member>
+        <member name="F:vProto.Protocols.TCP.Client.client">
+            <summary>
+            Underlying TcpClient object.
+            </summary>
+        </member>
+        <member name="F:vProto.Protocols.TCP.Client.Nstream">
+            <summary>
+            Underlying NetworkStream associated with the TcpClient.
+            </summary>
+        </member>
+        <member name="F:vProto.Protocols.TCP.Client.server">
+            <summary>
+            IP endpoint of the server to which the client is connected.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.Dispose">
+            <summary>
+            Releases all the resources used by the current instance of vProto.Protocols.TCP.Client.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.#ctor(vProto.BaseServer)">
+            <summary>
+            Default constructor to be used by inheriting classes.
+            </summary>
+            <param name="server">Server object which owns this client.</param>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.#ctor(System.Net.IPEndPoint)">
+            <summary>
+            Initializes a new instance of the vProto.Protocols.TCP.Client class targeted at the given server.
+            </summary>
+            <param name="server">The address of the server to which this client will connect.</param>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.StartConnection">
+            <summary>
+            Starts the connection to the server.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.HandleTcpServerConnectionSuccess">
+            <summary>
+            Used by inheriting classes to do more with the freshly-acquired TCP/IP client.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Client.HandleTcpClientConnectionSuccess">
+            <summary>
+            Used by inheriting classes to do more with the freshly-connected TCP/IP client.
+            </summary>
+        </member>
+        <member name="T:vProto.Protocols.TCP.Server">
+            <summary>
+            A TCP/IP server.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Server.Dispose">
+            <summary>
+            Releases all the resources used by the current instance of vProto.Protocols.TCP.Server.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Server.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the vProto.Protocols.TCP.Server which will listen for connections on the specified port.
+            </summary>
+            <param name="port">The port on which to listen for connections.</param>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Server.StartListening">
+            <summary>
+            Starts listenning for connections on the previously-specified TCP port.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.Protocols.TCP.Server.HandleTcpClient(System.Net.Sockets.TcpClient)">
+            <summary>
+            Used by inheriting classes to do more with the received TCP client.
+            </summary>
+        </member>
+        <member name="T:vProto.Protocols.TCP.SSL.Client">
+            <summary>
+            A TCP/IP client.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.SSL.Client.Dispose">
+            <summary>
+            Releases all the resources used by the current instance of vProto.ClientHandler.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.SSL.Client.#ctor(System.Net.IPEndPoint,System.String)">
+            <summary>
+            Initializes a new instance of the vProto.Protocols.TCP.Client class targeted at the given server.
+            </summary>
+            <param name="server">The address of the server to which this client will connect.</param>
+            <param name="serverName">The name of the server on its certificate.</param>
+        </member>
+        <member name="M:vProto.Protocols.TCP.SSL.Client.HandleTcpClientConnectionSuccess">
+            <summary>
+            Runs when a successful TCP connection has been made.
+            </summary>
+        </member>
+        <member name="T:vProto.Protocols.TCP.SSL.Server">
+            <summary>
+            A TCP/IP server.
+            </summary>
+        </member>
+        <member name="M:vProto.Protocols.TCP.SSL.Server.#ctor(System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate)">
+            <summary>
+            Initializes a new instance of the vProto.Protocols.TCP.SSL.Server which will listen for connections on the specified port.
+            </summary>
+            <param name="port">The port on which to listen for connections.</param>
+            <param name="certificate">The certificate used to authenticate the server.</param>
+        </member>
+        <member name="M:vProto.Protocols.TCP.SSL.Server.HandleTcpClient(System.Net.Sockets.TcpClient)">
+            <summary>
+            Handles a TCP Client object.
+            </summary>
+            <param name="client"></param>
+        </member>
+        <member name="T:vProto.RMI.INamedProxy">
+            <summary>
+            Represents a proxy with a name.
+            </summary>
+        </member>
+        <member name="P:vProto.RMI.INamedProxy.Name">
+            <summary>
+            Gets the name associated with the proxy object.
+            </summary>
+        </member>
+        <member name="T:vProto.RMI.ITypedProxy`1">
+            <summary>
+            Represent a proxy over an object of known type.
+            </summary>
+            <typeparam name="TObject">The type proxied by the object.</typeparam>
+        </member>
+        <member name="P:vProto.RMI.ITypedProxy`1.Object">
+            <summary>
+            Gets the proxied object.
+            </summary>
+        </member>
+        <member name="T:vProto.RMI.ITypedProxy">
+            <summary>
+            Represents a proxy over an object.
+            </summary>
+        </member>
+        <member name="P:vProto.RMI.ITypedProxy.Object">
+            <summary>
+            Gets the proxied object.
+            </summary>
+        </member>
+        <member name="T:vProto.RMI.BaseService">
+            <summary>
+            Optional base class for vProto RMI services.
+            </summary>
+        </member>
+        <member name="P:vProto.RMI.BaseService.CurrentClient">
+            <summary>
+            Gets the vProto.BaseClient object corresponding to the client which invoked the current service method execution.
+            </summary>
+        </member>
+        <member name="T:vProto.RMI.SynchronousProxy`1">
+            <summary>
+            A proxy for synchronous RMI-based communication.
+            </summary>
+            <typeparam name="TService">The proxied RMI service interface.</typeparam>
+        </member>
+        <member name="M:vProto.RMI.SynchronousProxy`1.Invoke(System.Runtime.Remoting.Messaging.IMessage)">
+            <summary>
+            Handles an invocation.
+            </summary>
+            <param name="msg"></param>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.RMI.SynchronousProxy`1.Handle(vProto.Request,System.Runtime.Remoting.Messaging.IMethodCallMessage)">
+            <summary>
+            Handles a request.
+            </summary>
+            <param name="req"></param>
+            <param name="mcm"></param>
+            <returns></returns>
+        </member>
+        <member name="P:vProto.RMI.SynchronousProxy`1.Object">
+            <summary>
+            Gets the proxy object of the service.
+            </summary>
+        </member>
+        <member name="P:vProto.RMI.SynchronousProxy`1.Name">
+            <summary>
+            Gets the name of the service.
+            </summary>
+        </member>
+        <member name="P:vProto.RMI.SynchronousProxy`1.Type">
+            <summary>
+            Gets the proxied interface type.
+            </summary>
+        </member>
+        <member name="T:vProto.Response">
+            <summary>
+            Desc
+            </summary>
+        </member>
+        <member name="M:vProto.Response.Dispose">
+            <summary>
+            Sends the response and closes it, cleaning up resources and preventing changes.
+            <para>The disposal happens even if the sending failed.</para>
+            </summary>
+        </member>
+        <member name="M:vProto.Response.Finalize">
+            <summary>
+            Attempts to fix the mistake of a careless user.
+            </summary>
+        </member>
+        <member name="M:vProto.Response.SetPayload(System.Byte[])">
+            <summary>
+            Sets the payload of the response.
+            </summary>
+            <param name="bt">Array of bytes constituting the payload.</param>
+            <returns>The response object.</returns>
+        </member>
+        <member name="M:vProto.Response.SetPayload(System.IO.Stream,System.IO.SeekOrigin,System.Int32,System.Int32)">
+            <summary>
+            Extracts the contents of the given stream according to the parameters and assigns them as the response payload.
+            </summary>
+            <param name="stream">The stream from which the data is extracted.</param>
+            <param name="offset">The offset at which to begin extraction relative to the seek origin.</param>
+            <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
+            <param name="origin">The point from which seeking in the stream should take place.</param>
+            <returns>The response object.</returns>
+        </member>
+        <member name="M:vProto.Response.SetPayload(System.IO.Stream,System.Int32)">
+            <summary>
+            Extracts the contents of the given stream according to the parameters and assigns them as the response payload.
+            </summary>
+            <param name="stream">The stream from which the data is extracted.</param>
+            <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
+            <returns>The response object.</returns>
+        </member>
+        <member name="M:vProto.Response.SetStateObject(System.Object)">
+            <summary>
+            Sets the state object of the response.
+            </summary>
+            <param name="value">The state object.</param>
+            <returns>The response object.</returns>
+        </member>
+        <member name="M:vProto.Response.Send">
+            <summary>
+            Attempts to send the response.
+            <para>Upon success, the response is marked as sent and disposed of.</para>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:vProto.Response.Abort">
+            <summary>
+            Marks the response as aborted and disposed, leaving the request to time out on the sender's side.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:vProto.Response.Disposed">
+            <summary>
+            Gets a value indicating whether the response is disposed or not.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Sent">
+            <summary>
+            Gets a value indicating whether the response has been successfully sent.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Aborted">
+            <summary>
+            Gets a value indicating whether the response has been aborted.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.TimedOut">
+            <summary>
+            Gets a value indicating whether the response has timed out.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Failed">
+            <summary>
+            Gets a value indicating whether the response produced an exception.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Pending">
+            <summary>
+            Gets a value indicating whether the response is (still) pending.
+            <para>A pending response hasn't been sent or aborted (yet).</para>
+            </summary>
+        </member>
+        <member name="P:vProto.Response.RequestPayloadStream">
+            <summary>
+            Gets a memory stream over the request's payload.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.RequestPayload">
+            <summary>
+            Gets an array of bites containing the payload of the request.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.State">
+            <summary>
+            Gets or sets an object which represents the state of the response.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Type">
+            <summary>
+            Gets or sets a short representing the application-level response type.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.TimeLeft">
+            <summary>
+            Gets the amount of time left to send the response.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.TimeElapsed">
+            <summary>
+            Gets the amount of time elapsed since the response was asked for.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.TimeRquested">
+            <summary>
+            Gets the time at which the request was received.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.TimeDue">
+            <summary>
+            Gets the time at which the request and reply will be timed out.
+            </summary>
+        </member>
+        <member name="P:vProto.Response.Timeout">
+            <summary>
+            Gets the amount of time available to send the response.
+            </summary>
+        </member>
+        <member name="T:vProto.Request">
+            <summary>
+            Desc
+            </summary>
+        </member>
+        <member name="M:vProto.Request.Dispose">
+            <summary>
+            Sends the request and closes it, cleaning up resources and preventing changes.
+            <para>The disposal happens even if the sending failed.</para>
+            </summary>
+        </member>
+        <member name="M:vProto.Request.Finalize">
+            <summary>
+            Attempts to fix the mistake of a careless user.
+            </summary>
+        </member>
+        <member name="M:vProto.Request.AddResponseReceivedHandler(vProto.Events.RequestEventHandler{vProto.Events.ResponseReceivedEventArgs})">
+            <summary>
+            Adds a delegate to the ResponseReceived event of this request.
+            </summary>
+            <param name="handler">The handler to add to the event.</param>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.AddSentHandler(vProto.Events.RequestEventHandler)">
+            <summary>
+            Adds a delegate to the RequestSent event of this request.
+            </summary>
+            <param name="handler">The handler to add to the event.</param>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.AddAbortedHandler(vProto.Events.RequestEventHandler)">
+            <summary>
+            Adds a delegate to the RequestAborted event of this request.
+            </summary>
+            <param name="handler">The handler to add to the event.</param>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.AddTimeoutHandler(vProto.Events.RequestEventHandler)">
+            <summary>
+            Adds a delegate to the RequestTimeout event of this request.
+            </summary>
+            <param name="handler">The handler to add to the event.</param>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.AddFailureHandler(vProto.Events.RequestEventHandler{vProto.Events.RequestFailureEventArgs})">
+            <summary>
+            Adds a delegate to the RequestFailure event of this request.
+            </summary>
+            <param name="handler">The handler to add to the event.</param>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetPayload(System.Byte[])">
+            <summary>
+            Sets the payload of the request.
+            </summary>
+            <param name="bt">Array of bytes constituting the payload.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetPayload(System.IO.Stream,System.IO.SeekOrigin,System.Int32,System.Int32)">
+            <summary>
+            Extracts the contents of the given stream according to the parameters and assigns them as the request payload.
+            </summary>
+            <param name="stream">The stream from which the data is extracted.</param>
+            <param name="offset">The offset at which to begin extraction relative to the seek origin.</param>
+            <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
+            <param name="origin">The point from which seeking in the stream should take place.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetPayload(System.IO.Stream,System.Int32)">
+            <summary>
+            Extracts the contents of the given stream according to the parameters and assigns them as the request payload.
+            </summary>
+            <param name="stream">The stream from which the data is extracted.</param>
+            <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="F:vProto.Request.DefaultTimeout">
+            <summary>
+            Default request timeout.
+            <para>10 seconds.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Request.MaxTimeout">
+            <summary>
+            Maximum timeout value.
+            <para>655360 milliseconds or 655 seconds or 10 minutes and 55 seconds.</para>
+            </summary>
+        </member>
+        <member name="F:vProto.Request.MinTimeout">
+            <summary>
+            Minimum timeout value.
+            <para>1 millisecond.</para>
+            </summary>
+        </member>
+        <member name="M:vProto.Request.SetStateObject(System.Object)">
+            <summary>
+            Sets the state object of the request.
+            </summary>
+            <param name="value">The state object.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetType(System.Int16)">
+            <summary>
+            Sets the type of the request.
+            </summary>
+            <param name="value">The type.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetTimeout(System.Int32)">
+            <summary>
+            Sets the timeout of the request.
+            </summary>
+            <param name="value">The timeout amount in milliseconds.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SetTimeout(System.TimeSpan)">
+            <summary>
+            Sets the timeout of the request.
+            </summary>
+            <param name="value">The timeout amount.</param>
+            <returns>The request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SendFluent">
+            <summary>
+            Attempts to send the request. This process is asynchronous; unlike SendAsync, this method is not awaitable and will not deliver any result to the caller, only in events.
+            <para>Upon success, the request is marked as sent.</para>
+            <para>Whether this fails or not, the request will be disposed of.</para>
+            </summary>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.Abort">
+            <summary>
+            Marks the request as aborted and disposed and raises the appropriate event.
+            </summary>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="M:vProto.Request.SendAsync">
+            <summary>
+            Attempts to send the request. This process is asynchronous; unlike SendFluent, this method is awaitable and results will be delivered both to the caller and through events.
+            <para>Upon success, the request is marked as sent.</para>
+            <para>Whether this fails or not, the request will be disposed of.</para>
+            </summary>
+            <returns>The current request object.</returns>
+        </member>
+        <member name="P:vProto.Request.Disposed">
+            <summary>
+            Gets a value indicating whether the request is disposed or not.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Sent">
+            <summary>
+            Gets a value indicating whether the request has been successfully sent.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Aborted">
+            <summary>
+            Gets a value indicating whether the request has been aborted.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.TimedOut">
+            <summary>
+            Gets a value indicating whether the request has timed out.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Failed">
+            <summary>
+            Gets a value indicating whether the request produced an exception.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Responded">
+            <summary>
+            Gets a value indicating whether the request has been responded to.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Pending">
+            <summary>
+            Gets a value indicating whether the request is pending.
+            <para>A pending request hasn't been sent or aborted yet, hasn't timed out and hasn't failed.</para>
+            </summary>
+        </member>
+        <member name="P:vProto.Request.AwaitingResult">
+            <summary>
+            Gets a value indicating whether the request is sent and awaiting a result.
+            <para>Possible results are a response, failure or timeout.</para>
+            </summary>
+        </member>
+        <member name="E:vProto.Request.ResponseReceived">
+            <summary>
+            Runs when a response to the request was successfully received.
+            </summary>
+        </member>
+        <member name="E:vProto.Request.RequestSent">
+            <summary>
+            Runs when the request was successfully sent.
+            </summary>
+        </member>
+        <member name="E:vProto.Request.RequestAborted">
+            <summary>
+            Runs when the request was aborted.
+            </summary>
+        </member>
+        <member name="E:vProto.Request.RequestTimeout">
+            <summary>
+            Runs when the request timed out.
+            </summary>
+        </member>
+        <member name="E:vProto.Request.RequestFailure">
+            <summary>
+            Runs when the request failed to send.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.State">
+            <summary>
+            Gets or sets an object which represents the state of the request.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Type">
+            <summary>
+            Gets or sets a short representing the application-level request type.
+            </summary>
+        </member>
+        <member name="P:vProto.Request.Timeout">
+            <summary>
+            Gets or sets the amount of time to wait for a response to this request before declaring timeout.
+            </summary>
+        </member>
+    </members>
+</doc>

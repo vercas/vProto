@@ -46,13 +46,17 @@ namespace vProto.Protocols.TCP
 
 
 
+        /// <summary>
+        /// Starts listenning for connections on the previously-specified TCP port.
+        /// </summary>
+        /// <returns></returns>
         protected override bool StartListening()
         {
             listener.Start();
 
             IsOn = true;
 
-            OnServerStarted(new EventArgs());
+            OnStarted(new EventArgs());
 
             return StartAcceptingClients();
         }

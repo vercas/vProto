@@ -7,7 +7,11 @@ namespace vProto
 
     partial class BaseClient
     {
-        protected virtual void OnInternalPacketReceived(Package pack)
+        /// <summary>
+        /// Invoked when receiving any package from the other side.
+        /// </summary>
+        /// <param name="pack">Package received.</param>
+        protected virtual void OnInternalPackageReceived(Package pack)
         {
             switch (pack.Header.Type)
             {
@@ -42,7 +46,11 @@ namespace vProto
             }
         }
 
-        protected virtual void OnInternalPacketSent(Package pack)
+        /// <summary>
+        /// Invoked when successfully sending any package to the other side.
+        /// </summary>
+        /// <param name="pack">Package sent.</param>
+        protected virtual void OnInternalPackageSent(Package pack)
         {
             switch (pack.Header.Type)
             {

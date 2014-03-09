@@ -13,6 +13,7 @@ namespace vProto.Events
         /// Initializes a new instance of the vProto.Events.RequestFailureEventArgs with the specified exception.
         /// </summary>
         /// <param name="x">The exception carried by the event.</param>
+        /// <param name="sending">True if the failure occurred while sending; otherwise false.</param>
         public RequestFailureEventArgs(Exception x, bool sending = true)
             : base(x)
         {

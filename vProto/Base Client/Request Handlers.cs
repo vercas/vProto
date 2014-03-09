@@ -8,6 +8,9 @@ namespace vProto
 
     partial class BaseClient
     {
+        /// <summary>
+        /// Registers handlers for several internal request types.
+        /// </summary>
         protected override void __registerDefaultInternalRequestHandlers()
         {
             base.__registerDefaultInternalRequestHandlers();

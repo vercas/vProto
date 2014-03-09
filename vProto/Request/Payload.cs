@@ -42,13 +42,13 @@ namespace vProto
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
         /// <param name="origin">The point from which seeking in the stream should take place.</param>
         /// <returns>The request object.</returns>
-        public Request SetPayload(Stream stream, int length = -1, int offset = 0, SeekOrigin origin = SeekOrigin.Begin)
+        public Request SetPayload(Stream stream, SeekOrigin origin, int offset = 0, int length = -1)
         {
             if (Disposed)
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (stream == null)
-                throw new ArgumentNullException("bt", "Payload cannot be null!");
+                throw new ArgumentNullException("stream", "Payload cannot be null!");
 
             if (str != null)
                 try
@@ -88,7 +88,7 @@ namespace vProto
                 throw new ObjectDisposedException(this.GetType().FullName, "Cannot change a disposed request!");
 
             if (stream == null)
-                throw new ArgumentNullException("bt", "Payload cannot be null!");
+                throw new ArgumentNullException("stream", "Payload cannot be null!");
 
             if (str != null)
                 try

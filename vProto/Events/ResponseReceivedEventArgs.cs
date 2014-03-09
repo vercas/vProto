@@ -18,15 +18,15 @@ namespace vProto.Events
             : base()
         {
             Payload = payload;
-            if (payload != null)
-                PayloadStream = new MemoryStream(payload);
+            //if (payload != null)
+            //    PayloadStream = new MemoryStream(payload);
         }
 
 
-        /// <summary>
+        /*/// <summary>
         /// Gets a memory stream over the payload.
         /// </summary>
-        public MemoryStream PayloadStream { get; private set; }
+        public MemoryStream PayloadStream { get; private set; }*/
         /// <summary>
         /// Gets the array of bytes that make up the Response payload.
         /// </summary>

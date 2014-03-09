@@ -17,6 +17,10 @@ namespace vProto
 
 
 
+        /// <summary>
+        /// Invoked on receipt of a request from the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing request data.</param>
         protected virtual void OnInternalRequestReceived(Package pack)
         {
             var res = new Response(this, pack.Header.IDTop, pack.Header.IDBottom, pack.Payload, new TimeSpan(0, 0, 0, 0, pack.Header.RequestTimeout * 10), DateTime.Now) { isInternal = pack.Header.Type == PackageType.InternalRequest };
@@ -38,22 +42,26 @@ namespace vProto
                 OnRequestReceived(e);
                 RequestHandlers.ExecuteHandler(pack.Header.IDBottom, this, e);
             }
-
-            //Console.WriteLine("Received request: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
         }
 
+        /// <summary>
+        /// Invoked on successful sending of a request to the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing request data.</param>
         protected virtual void OnInternalRequestSent(Package pack)
         {
             if (pack.Header.Type == PackageType.InternalRequest)
                 PendingInternalRequests.Add(pack.State as Request);
             else
                 PendingRequests.Add(pack.State as Request);
-
-            //Console.WriteLine("Sent request: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
         }
 
 
 
+        /// <summary>
+        /// Invoked on receipt of a response from the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing response data.</param>
         protected virtual void OnInternalResponseReceived(Package pack)
         {
             /* Getting unmatching requests might not be a bad thing all the time.
@@ -65,8 +73,6 @@ namespace vProto
              * Wrong things shouldn't happen.
              * Things that shouldn't happen should be debugged.
              */
-
-            //Console.WriteLine("Received response: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
 
             bool res;
 
@@ -87,10 +93,12 @@ namespace vProto
 #endif
         }
 
+        /// <summary>
+        /// Invoked on successful sending of a response to the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing response data.</param>
         protected virtual void OnInternalResponseSent(Package pack)
         {
-            //Console.WriteLine("Sent response: {0} {1}", pack.Header.IDTop, pack.Header.IDBottom);
-
             bool res;
 
             if (pack.Header.Type == PackageType.InternalResponse)
@@ -112,6 +120,11 @@ namespace vProto
 
 
 
+        /// <summary>
+        /// Invoked on failure to send a request.
+        /// </summary>
+        /// <param name="pack">Package detailing request data.</param>
+        /// <param name="x">Exception which caused failure.</param>
         protected virtual void OnInternalRequestSendFailed(Package pack, Exception x)
         {
             bool res;
@@ -133,6 +146,11 @@ namespace vProto
 #endif
         }
 
+        /// <summary>
+        /// Invoked on failure to send a response.
+        /// </summary>
+        /// <param name="pack">Package detailing response data.</param>
+        /// <param name="x">Exception which caused failure.</param>
         protected virtual void OnInternalResponseSendFailed(Package pack, Exception x)
         {
             /*var id = pack.Header.IDTop;
@@ -156,6 +174,11 @@ namespace vProto
 #endif
         }
 
+        /// <summary>
+        /// Invoked on failure to receive a response.
+        /// </summary>
+        /// <param name="pack">Package detailing response data, if available.</param>
+        /// <param name="x">Exception which caused failure.</param>
         protected virtual void OnInternalResponseReceiveFailed(Package pack, Exception x)
         {
             bool res;

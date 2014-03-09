@@ -8,6 +8,9 @@ namespace vProto.Collections
     using IDictType = IDictionary<short, Events.ClientEventHandler<Events.RequestReceivedEventArgs>>;
     using ListType = SortedList<short, Events.ClientEventHandler<Events.RequestReceivedEventArgs>>;
 
+    /// <summary>
+    /// A collection of handlers for specific request types.
+    /// </summary>
     public class RequestHandlerCollection
     {
         internal ListType list = new ListType();
@@ -19,7 +22,7 @@ namespace vProto.Collections
 
 
 
-        public RequestHandlerCollection(RequestHandlerCollection parent = null)
+        internal RequestHandlerCollection(RequestHandlerCollection parent = null)
         {
             inner = list;
 
@@ -40,6 +43,12 @@ namespace vProto.Collections
 
 
 
+        /// <summary>
+        /// Executes the handlers for a specified request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <param name="client">Client on which to execute handler; provided in event delegate.</param>
+        /// <param name="e">Desired event arguments.</param>
         public void ExecuteHandler(short key, BaseClient client, RequestReceivedEventArgs e)
         {
             ClientEventHandler<RequestReceivedEventArgs> value;
@@ -52,12 +61,22 @@ namespace vProto.Collections
 
 
 
+        /// <summary>
+        /// Assigns the handler to a request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <param name="value">Handler.</param>
         public void Add(short key, ClientEventHandler<RequestReceivedEventArgs> value)
         {
             lock (syncRoot)
                 inner.Add(key, value); 
         }
 
+        /// <summary>
+        /// Determines whether there is a handler for the specified request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <returns></returns>
         public bool ContainsKey(short key)
         {
             lock (syncRoot)
@@ -70,12 +89,23 @@ namespace vProto.Collections
             return false;
         }
 
+        /// <summary>
+        /// Removes the handler for the specified request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <returns>True if there was a handler for the specified request type; otherwise false.</returns>
         public bool Remove(short key)
         {
             lock (syncRoot)
                 return inner.Remove(key);
         }
 
+        /// <summary>
+        /// Gets the handler associated with the specified request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <param name="value">The handler of the specified request type, if found.</param>
+        /// <returns></returns>
         public bool TryGetValue(short key, out ClientEventHandler<RequestReceivedEventArgs> value)
         {
             lock (syncRoot)
@@ -90,6 +120,11 @@ namespace vProto.Collections
 
 
 
+        /// <summary>
+        /// Gets or sets the handler associated with the given request type.
+        /// </summary>
+        /// <param name="key">The request type.</param>
+        /// <returns>Handler associated with given request type.</returns>
         public ClientEventHandler<RequestReceivedEventArgs> this[short key]
         {
             get
@@ -112,12 +147,18 @@ namespace vProto.Collections
 
 
 
+        /// <summary>
+        /// Clears the collection, leaving all request types handler-free.
+        /// </summary>
         public void Clear()
         {
             lock (syncRoot)
                 inner.Clear();
         }
 
+        /// <summary>
+        /// Gets the number of request types with associated handlers.
+        /// </summary>
         public int Count
         {
             //  I doubt the need to lock on this one.

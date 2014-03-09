@@ -80,9 +80,9 @@ namespace vProto
         /* Heartbeat regulating timer.
          */
 
-        protected Timer heartbeatTimer = null;
+        Timer heartbeatTimer = null;
 
-        protected void __heartbeatTimerCallback(object state)
+        void __heartbeatTimerCallback(object state)
         {
             if (IsInternallyConnected)
                 SendHeartbeat();
@@ -196,6 +196,10 @@ namespace vProto
         /* The methods that handle heartbeat-specific pipe events.
          */
 
+        /// <summary>
+        /// Invoked on receipt of heartbeat request from the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing heartbeat data.</param>
         protected virtual void OnInternalHeartbeatRequestReceived(Package pack)
         {
             //Console.WriteLine("Bouncing heartbeat.");
@@ -205,6 +209,10 @@ namespace vProto
                     break;
         }
 
+        /// <summary>
+        /// Invoked on receipt of heartbeat response from the other side.
+        /// </summary>
+        /// <param name="pack">Package detailing heartbeat data.</param>
         protected virtual void OnInternalHeartbeatResponseReceived(Package pack)
         {
             bool awaiting = false;
@@ -222,6 +230,11 @@ namespace vProto
             }
         }
 
+        /// <summary>
+        /// Invoked when a heartbeat-related failure occurred.
+        /// </summary>
+        /// <param name="pack">Package detailing heartbeat data, if available.</param>
+        /// <param name="x">Exception causing the failure.</param>
         protected virtual void OnInternalHeartbeatFailure(Package pack, Exception x)
         {
             __scoreHeartbeatFailure();

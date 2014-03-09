@@ -56,8 +56,12 @@ namespace vProto
                 lock (_peers_lock)
                     if (_peers == null)
                         _peers_queued_temp.Add(pack.Header.ID);
-                    else
+                    else if (!_peers.Contains(pack.Header.ID))
+                    {
                         _peers.Add(pack.Header.ID);
+
+                        OnPeerConnected(new PeerChangeEventArgs(pack.Header.ID, true));
+                    }
             }
         }
 
@@ -72,8 +76,9 @@ namespace vProto
                 lock (_peers_lock)
                     if (_peers == null)
                         _peers_queued_temp.Remove(pack.Header.ID);
-                    else
-                        _peers.Remove(pack.Header.ID);
+                    else if (_peers.Remove(pack.Header.ID))
+                        OnPeerDisconnected(new PeerChangeEventArgs(pack.Header.ID, false));
+
             }
         }
 
@@ -88,17 +93,23 @@ namespace vProto
 
             lock (_peers_lock)
                 if (_peers != null)
-                {
-                    _peers.Add(id);
-                    send = true;
-                }
+                    if (!_peers.Contains(id))
+                    {
+                        _peers.Add(id);
+
+                        send = true;
+                    }
 
             if (send)
+            {
                 try
                 {
                     LowSendPacket(new PackageHeader { Type = PackageType.PeerConnected, ID = id }, emptyPayload);
                 }
                 catch { }   //  All exceptions need to be swallowed. The client may get disposed after the first if and before this one.
+
+                OnPeerConnected(new PeerChangeEventArgs(id, true));
+            }
         }
 
         internal void TakePeer(int id)
@@ -110,15 +121,18 @@ namespace vProto
 
             lock (_peers_lock)
                 if (_peers != null)
-                {
                     send = _peers.Remove(id);
-                }
 
-            if (send) try
+            if (send)
+            {
+                try
                 {
                     LowSendPacket(new PackageHeader { Type = PackageType.PeerDisconnected, ID = id }, emptyPayload);
                 }
                 catch { }   //  All exceptions need to be swallowed. The client may get disposed after the first if and before this one.
+
+                OnPeerDisconnected(new PeerChangeEventArgs(id, false));
+            }
         }
     }
 }

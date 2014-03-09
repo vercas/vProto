@@ -30,6 +30,12 @@ namespace vProto
 
 
 
+        /// <summary>
+        /// Builds a list of IDs of peers of a given client.
+        /// <para>Will return null if peer discovery is disabled.</para>
+        /// </summary>
+        /// <param name="id">The ID of the client whose peers to retrieve.</param>
+        /// <returns>List of IDs of peers if peer discovery is enabled; otherwise false.</returns>
         internal protected List<int> GetClientPeersID(int id)
         {
             if (!_peering)

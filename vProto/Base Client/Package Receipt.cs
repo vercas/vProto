@@ -138,13 +138,17 @@ namespace vProto
 
         DateTime receiptStartTime; //  Not the most precise, but surely the fastest way of accomplishing this.
 
+        /// <summary>
+        /// Initiates receiving packages.
+        /// </summary>
+        /// <returns>False if already receiving; otherwise true.</returns>
         protected bool LowStartGettingPackets()
         {
             lock (rec_sync)
             {
                 if (receiving)
                 {
-                    Console.WriteLine("Already receiving!");
+                    //Console.WriteLine("Already receiving!");
                     return false;
                 }
 
@@ -156,7 +160,7 @@ namespace vProto
 
             try
             {
-                streamOut.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
+                streamReceiver.BeginRead(packetHeaderBuff, 0, packetHeaderSize, LowStartGettingPackets_Callback, null);
 
                 //Console.WriteLine("Receipt start.");
 
@@ -182,7 +186,7 @@ namespace vProto
 
             try
             {
-                amnt = streamOut.EndRead(ar);
+                amnt = streamReceiver.EndRead(ar);
             }
             catch (ObjectDisposedException x)
             {
@@ -234,7 +238,7 @@ namespace vProto
             {
                 try
                 {
-                    OnInternalPacketReceived(new Package(lastHeader, packetPayloadBuff) { time = DateTime.Now - receiptStartTime });
+                    OnInternalPackageReceived(new Package(lastHeader, packetPayloadBuff) { time = DateTime.Now - receiptStartTime });
                 }
                 finally
                 {
@@ -253,7 +257,7 @@ namespace vProto
             {
                 try
                 {
-                    streamOut.BeginRead(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamReceiver.BeginRead(packetHeaderBuff, packetBytesRead, packetHeaderSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {
@@ -272,7 +276,7 @@ namespace vProto
             {
                 try
                 {
-                    streamOut.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
+                    streamReceiver.BeginRead(packetPayloadBuff, packetBytesRead - packetHeaderSize, expectedSize - packetBytesRead, LowStartGettingPackets_Callback, ar.AsyncState);
                 }
                 catch (ObjectDisposedException x)
                 {

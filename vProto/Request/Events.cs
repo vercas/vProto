@@ -6,10 +6,25 @@ namespace vProto
 
     partial class Request
     {
+        /// <summary>
+        /// Runs when a response to the request was successfully received.
+        /// </summary>
         public event RequestEventHandler<ResponseReceivedEventArgs> ResponseReceived;
+        /// <summary>
+        /// Runs when the request was successfully sent.
+        /// </summary>
         public event RequestEventHandler RequestSent;
+        /// <summary>
+        /// Runs when the request was aborted.
+        /// </summary>
         public event RequestEventHandler RequestAborted;
+        /// <summary>
+        /// Runs when the request timed out.
+        /// </summary>
         public event RequestEventHandler RequestTimeout;
+        /// <summary>
+        /// Runs when the request failed to send.
+        /// </summary>
         public event RequestEventHandler<RequestFailureEventArgs> RequestFailure;
 
 

@@ -9,6 +9,10 @@ namespace vProto.RMI
     using Internals;
     using Packages;
 
+    /// <summary>
+    /// A proxy for synchronous RMI-based communication.
+    /// </summary>
+    /// <typeparam name="TService">The proxied RMI service interface.</typeparam>
     public class SynchronousProxy<TService>
         : RealProxy, INamedProxy, ITypedProxy<TService>
         where TService : class
@@ -71,6 +75,11 @@ namespace vProto.RMI
 
 
 
+        /// <summary>
+        /// Handles an invocation.
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public override IMessage Invoke(IMessage msg)
         {
             if (!client.IsConnected)
@@ -88,6 +97,12 @@ namespace vProto.RMI
             return null;
         }
 
+        /// <summary>
+        /// Handles a request.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="mcm"></param>
+        /// <returns></returns>
         protected virtual IMessage Handle(Request req, IMethodCallMessage mcm)
         {
             var task = req.SendAsync();

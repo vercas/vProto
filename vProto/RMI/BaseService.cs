@@ -11,6 +11,9 @@ namespace vProto.RMI
     {
         internal ThreadLocal<BaseClient> client = new ThreadLocal<BaseClient>(() => null);
 
+        /// <summary>
+        /// Gets the vProto.BaseClient object corresponding to the client which invoked the current service method execution.
+        /// </summary>
         internal protected BaseClient CurrentClient
         {
             get

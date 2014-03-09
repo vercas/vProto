@@ -15,6 +15,9 @@ namespace vProto.Packages
     [StructLayout(LayoutKind.Explicit, Size = PackageHeader.StructSize, CharSet = CharSet.Ansi)]
     public struct PackageHeader
     {
+        /// <summary>
+        /// The exact size in bytes of the vProto.Packages.PackageHeader structure.
+        /// </summary>
         public const int StructSize = sizeof(TypeOfSize) + sizeof(TypeOfType) + sizeof(TypeOfID) + sizeof(TypeOfTimeout);
 
         /// <summary>

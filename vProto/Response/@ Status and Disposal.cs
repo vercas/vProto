@@ -77,6 +77,9 @@ namespace vProto
         }
 
 
+        /// <summary>
+        /// Attempts to fix the mistake of a careless user.
+        /// </summary>
         ~Response()
         {
             try

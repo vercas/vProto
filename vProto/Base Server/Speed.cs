@@ -30,11 +30,11 @@ namespace vProto
 
 
 
-        protected Timer speedCountingTimer = null;
+        Timer speedCountingTimer = null;
 
 
 
-        protected void __speedCountingTimerCallback(object state)
+        void __speedCountingTimerCallback(object state)
         {
             int bytesSent = 0, bytesReceived = 0;
 

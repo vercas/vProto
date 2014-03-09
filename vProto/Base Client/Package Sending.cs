@@ -48,7 +48,7 @@ namespace vProto
 
         //  Swapped buffers. Brilliant idea.
 
-        protected void SenderLoop()
+        void SenderLoop()
         {
             Queue<Package> tempQueue;
             System.IO.MemoryStream tempBuffer;
@@ -87,7 +87,7 @@ namespace vProto
                     {
                         while ((tempWriteNum = backBuffer.Read(tempWriteBuffer, 0, tempWriteBuffer.Length)) != 0)
                         {
-                            streamIn.Write(tempWriteBuffer, 0, tempWriteNum);
+                            streamSender.Write(tempWriteBuffer, 0, tempWriteNum);
 
                             __addSent(tempWriteNum);
                         }
@@ -111,7 +111,7 @@ namespace vProto
                         foreach (var cbk in pack.Callbacks)
                             cbk();
 
-                        OnInternalPacketSent(pack);
+                        OnInternalPackageSent(pack);
                     }
                 }
                 else
@@ -275,6 +275,14 @@ namespace vProto
 
         //  These functions also check their arguments.
 
+        /// <summary>
+        /// Sends the specified byte array as payload for a package.
+        /// <para>Size is automatically set in header.</para>
+        /// </summary>
+        /// <param name="payload">Body of package.</param>
+        /// <param name="header">Header of package.</param>
+        /// <param name="cbk">Action to execute on successful sending.</param>
+        /// <param name="state">State object associated with the package for internal use.</param>
         internal protected void _SendPack(byte[] payload, PackageHeader header, Action cbk = null, object state = null)
         {
             if (Disposed)
@@ -286,6 +294,15 @@ namespace vProto
             LowSendPacket(header, payload, cbk, state);
         }
 
+        /// <summary>
+        /// Sends from the specified stream as payload for a package.
+        /// <para>Size is automatically set in header.</para>
+        /// </summary>
+        /// <param name="payload">The stream from which to pick the body.</param>
+        /// <param name="header">Header of package.</param>
+        /// <param name="len">How many bytes to copy from current position on stream; use null to copy until the end.</param>
+        /// <param name="cbk">Action to execute on successful sending.</param>
+        /// <param name="state">State object associated with the package for internal use.</param>
         internal protected void _SendPack(System.IO.Stream payload, PackageHeader header, int? len = null, Action cbk = null, object state = null)
         {
             if (Disposed)

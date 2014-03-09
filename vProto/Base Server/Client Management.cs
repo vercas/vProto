@@ -7,6 +7,10 @@ namespace vProto
 
     partial class BaseServer
     {
+        /// <summary>
+        /// Integrates a new client into the server and raises appropriate events.
+        /// </summary>
+        /// <param name="client">The client to integrate.</param>
         protected void ClientReceived(BaseClient client)
         {
             _AddClient(client);
@@ -126,7 +130,7 @@ namespace vProto
         /// <summary>
         /// Gets the vProto.BaseClient object with the specified ID.
         /// </summary>
-        /// <param name="index">The client ID.</param>
+        /// <param name="id">The client ID.</param>
         /// <returns></returns>
         public BaseClient this[int id]
         {

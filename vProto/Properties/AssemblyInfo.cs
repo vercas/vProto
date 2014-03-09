@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Network protocol for the .NET Framework.")]
 [assembly: AssemblyCompany("Vercas")]
 [assembly: AssemblyProduct("vProto")]
-[assembly: AssemblyCopyright("Copyright © Alexandru-Mihai Maftei")]
+[assembly: AssemblyCopyright("Copyright © 2013 Alexandru-Mihai Maftei")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

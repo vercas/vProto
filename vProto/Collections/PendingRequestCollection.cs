@@ -6,7 +6,7 @@ namespace vProto.Collections
 {
     using Internals;
 
-    public class PendingRequestCollection : ICollection<Request>
+    class PendingRequestCollection : ICollection<Request>
     {
         internal Dictionary<short, StoredRequest> dict = new Dictionary<short, StoredRequest>();
 

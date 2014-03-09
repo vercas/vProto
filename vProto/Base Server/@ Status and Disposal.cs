@@ -45,13 +45,17 @@ namespace vProto
         /// </summary>
         public Boolean IsOn { get; protected set; }
 
+        /// <summary>
+        /// Halts the server and raises the appropriate events.
+        /// </summary>
+        /// <param name="x">Exception which caused halting.</param>
         protected void _CheckIfStopped(Exception x)
         {
             if (IsOn)
             {
                 Dispose();
 
-                OnServerStopped(new ServerStoppedEventArgs(x));
+                OnStopped(new ServerStoppedEventArgs(x));
             }
         }
     }

@@ -27,7 +27,7 @@ namespace vProto
             }
             catch (Exception x)
             {
-                OnServerStartupFailed(new ServerStartupFailedEventArgs(x));
+                OnStartupFailed(new ServerStartupFailedEventArgs(x));
 
                 return false;
             }
