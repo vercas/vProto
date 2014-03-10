@@ -29,7 +29,7 @@ namespace vProto
                 __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client, sender, e) =>
                 {
                     OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e.Exception));
-                }).SetPayload(str1).AddResponseReceivedHandler((client, sender, e) =>
+                }).SetPayload(str1, SeekOrigin.Begin).AddResponseReceivedHandler((client, sender, e) =>
                 {
                     using (var str2 = new MemoryStream(e.Payload))
                     using (var br = new BinaryReader(str2, Encoding.UTF8))
@@ -68,7 +68,7 @@ namespace vProto
                 __createInternalRequest(InternalRequestType.Handshake).AddFailureHandler((client, sender, e) =>
                 {
                     OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(e.Exception));
-                }).SetPayload(str).AddResponseReceivedHandler((client, sender, e) =>
+                }).SetPayload(str, SeekOrigin.Begin).AddResponseReceivedHandler((client, sender, e) =>
                 {
                     _FinishHandhake();
                 }).SendFluent();
@@ -99,7 +99,7 @@ namespace vProto
 
                             bw.Flush();
 
-                            e.Response.SetPayload(str).Send();
+                            e.Response.SetPayload(str, SeekOrigin.Begin).Send();
                         }
                     }
                 }
@@ -109,11 +109,11 @@ namespace vProto
                     this._id = br.ReadInt32();
 
                     int peers_cnt = br.ReadInt32();
-                    List<int> peers = null;
+                    int[] peers = null;
 
                     if (peers_cnt != -1)
                     {
-                        peers = new List<int>(peers_cnt);
+                        peers = new int[peers_cnt];
 
                         for (int i = peers_cnt - 1; i >= 0; i--)
                             peers[i] = br.ReadInt32();
@@ -121,7 +121,7 @@ namespace vProto
 
                     lock (_peers_lock)
                     {
-                        _peers = peers;
+                        _peers = new List<int>(peers);
 
                         if (peers != null)
                             for (int i = 0; i < _peers_queued_temp.Count; i++)
@@ -142,8 +142,6 @@ namespace vProto
             IsConnected = true;
 
             OnConnected(new EventArgs());
-
-            //Console.WriteLine("Handshake finished! ({0})", _id);
         }
     }
 }

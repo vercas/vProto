@@ -78,6 +78,7 @@ namespace vProto
 
         /// <summary>
         /// Extracts the contents of the given stream according to the parameters and assigns them as the request payload.
+        /// <para>Reading starts from the current position in the stream.</para>
         /// </summary>
         /// <param name="stream">The stream from which the data is extracted.</param>
         /// <param name="length">The number of bytes to copy. Usage of a negative number means copying everything to the end of the stream.</param>
