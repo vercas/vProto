@@ -220,7 +220,7 @@ namespace vProto
 
             if (packageBytesRead == packageHeaderSize)
             {
-                Struct_mapping.ByteArrayToStructure(packageHeaderBuff, ref lastHeader);
+                lastHeader.Buffer = packageHeaderBuff;
 
                 expectedSize = (int)lastHeader.Size + packageHeaderSize;
 

@@ -21,6 +21,9 @@ namespace vProto
         /// </summary>
         public virtual void Dispose()
         {
+            if (Disposed)
+                return;
+
             for (int i = 0; i < _chs.Length; i++)
                 if (_chs[i] != null && !_chs[i].Disposed)
                     _chs[i].Dispose();

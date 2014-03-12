@@ -32,6 +32,9 @@ namespace vProto.Protocols.TCP
         /// </summary>
         public override void Dispose()
         {
+            if (Disposed)
+                return;
+
             base.Dispose();
 
             try

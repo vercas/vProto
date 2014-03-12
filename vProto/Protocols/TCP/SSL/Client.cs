@@ -44,6 +44,9 @@ namespace vProto.Protocols.TCP.SSL
         /// </summary>
         public override void Dispose()
         {
+            if (Disposed)
+                return;
+
             base.Dispose();
 
             try

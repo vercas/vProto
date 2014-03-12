@@ -78,7 +78,6 @@ namespace vProto
                         _peers_queued_temp.Remove(pack.Header.ID);
                     else if (_peers.Remove(pack.Header.ID))
                         OnPeerDisconnected(new PeerChangeEventArgs(pack.Header.ID, false));
-
             }
         }
 

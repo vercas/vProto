@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Releases\4.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SENDER_THREAD;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Releases\4.5\</OutputPath>
-    <DefineConstants>TRACE;SENDER_THREAD;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <DefineConstants>TRACE;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -41,7 +41,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Releases\4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SENDER_THREAD;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,7 +52,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release .NET 4.0|AnyCPU'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <OutputPath>..\Releases\4.0\</OutputPath>
-    <DefineConstants>TRACE;SENDER_THREAD;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <DefineConstants>TRACE;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

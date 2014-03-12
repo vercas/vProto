@@ -58,18 +58,18 @@ namespace vProto
         {
             if (Disposed)
                 return;
-            else
-                try
-                {
-                    Abort();
 
-                    return;
-                    //  We don't need the code below again, do we? :P
-                }
-                catch
-                {
-                    Sent = false;
-                }
+            try
+            {
+                SendFluent();
+
+                return;
+                //  We don't need the code below again, do we? :P
+            }
+            catch
+            {
+                Sent = false;
+            }
 
             try
             {

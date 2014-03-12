@@ -62,7 +62,7 @@ namespace vProto
         public virtual void Dispose()
         {
             if (Disposed)
-                throw new ObjectDisposedException("vProto.BaseClient", "Object already disposed!");
+                return;
 
             Disposed = true;
             IsInternallyConnected = false;

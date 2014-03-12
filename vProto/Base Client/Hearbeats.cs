@@ -202,11 +202,18 @@ namespace vProto
         /// <param name="pack">Package detailing heartbeat data.</param>
         protected virtual void OnInternalHeartbeatRequestReceived(Package pack)
         {
-            //Console.WriteLine("Bouncing heartbeat.");
-
-            for (int i = 0; i < 3; i++)
-                if (LowSendPackage(new Packages.PackageHeader() { Type = PackageType.HeartbeatResponse, ID = pack.Header.ID }, emptyPayload))
-                    break;
+            try
+            {
+                LowSendPackage(new Packages.PackageHeader() { Type = PackageType.HeartbeatResponse, ID = pack.Header.ID }, emptyPayload);
+            }
+            catch (ObjectDisposedException)
+            {
+                //  Do nothing.
+            }
+            catch (Exception x)
+            {
+                _CheckIfStopped(x);
+            }
         }
 
         /// <summary>
@@ -267,10 +274,18 @@ namespace vProto
 
             __prepareHeartbeat();
 
-            bool ok = LowSendPackage(new PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
-
-            if (!ok)
-                __scoreHeartbeatFailure();
+            try
+            {
+                LowSendPackage(new PackageHeader() { Type = PackageType.HeartbeatRequest, ID = lastIDsent }, emptyPayload);
+            }
+            catch (ObjectDisposedException)
+            {
+                //  Do nothing.
+            }
+            catch (Exception x)
+            {
+                _CheckIfStopped(x);
+            }
 
             return true;
         }

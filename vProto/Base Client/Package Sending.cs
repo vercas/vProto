@@ -10,7 +10,7 @@ namespace vProto
     partial class BaseClient
     {
 #if SENDER_THREAD
-        bool LowSendPackage(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
+        unsafe bool LowSendPackage(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException("vProto.BaseClient", "This client base is disposed of!");
@@ -27,7 +27,8 @@ namespace vProto
 
             lock (send_lock)
             {
-                sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packageHeaderSize);
+                //sendingBuffer.Write(Struct_mapping.StructureToByteArray(header), 0, packageHeaderSize);
+                sendingBuffer.Write(header.Buffer, 0, packageHeaderSize);
                 sendingBuffer.Write(bodeh, 0, bodeh.Length);
 
                 sendingQueue.Enqueue(st);
@@ -123,7 +124,7 @@ namespace vProto
 
 #else
 
-        /// <summary>
+        /*/// <summary>
         /// Gets a value indicating whether a package is being sent.
         /// <para>Attempting to send anything else while this value is true will add the package to a queue, which will be sent as soon as the pipe is free.</para>
         /// </summary>
@@ -270,6 +271,119 @@ namespace vProto
 
             return true;
         }//*/
+
+        unsafe bool LowSendPackage(PackageHeader header, byte[] bodeh, Action cbk = null, object state = null)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException("vProto.BaseClient", "This client base is disposed of!");
+
+            header.Size = (uint)bodeh.Length;
+
+            var st = new Package(header, bodeh) { State = state };
+
+            if (cbk != null)
+                st.Callbacks.Add(cbk);
+
+            lock (send_lock)
+            {
+                sendingBuffer.Write(header.Buffer, 0, packageHeaderSize);
+                sendingBuffer.Write(bodeh, 0, bodeh.Length);
+
+                sendingQueue.Enqueue(st);
+
+                if (!queued)
+                {
+                    queued = true;
+
+                    ThreadPool.QueueUserWorkItem(SenderLoop);
+                }
+            }
+
+            return true;
+        }
+
+
+
+        private object send_lock = new object();
+        bool queued = false;
+
+        Queue<Package> sendingQueue = new Queue<Package>();
+        Queue<Package> backQueue = new Queue<Package>();
+
+        System.IO.MemoryStream sendingBuffer = new System.IO.MemoryStream();
+        System.IO.MemoryStream backBuffer = new System.IO.MemoryStream();
+
+        //  Swapped buffers. Brilliant idea.
+
+        void SenderLoop(object state)
+        {
+            Queue<Package> tempQueue;
+            System.IO.MemoryStream tempBuffer;
+
+            int tempWriteNum;
+            byte[] tempWriteBuffer = new byte[64 * 1024];   //  To be honest, there IS enough RAM.
+
+            bool go = true;
+
+            while (go)
+            {
+                //  Emptying the old buffa' and the queue.
+                backQueue.Clear();
+
+                backBuffer.Seek(0, System.IO.SeekOrigin.Begin);
+                backBuffer.SetLength(0);
+
+                lock (send_lock)
+                {
+                    //  Buffer shift!
+
+                    tempQueue = sendingQueue;
+                    sendingQueue = backQueue;
+                    backQueue = tempQueue;
+
+                    tempBuffer = sendingBuffer;
+                    sendingBuffer = backBuffer;
+                    backBuffer = tempBuffer;
+                }
+
+                backBuffer.Seek(0, System.IO.SeekOrigin.Begin);
+
+                try
+                {
+                    while ((tempWriteNum = backBuffer.Read(tempWriteBuffer, 0, tempWriteBuffer.Length)) != 0)
+                    {
+                        streamSender.Write(tempWriteBuffer, 0, tempWriteNum);
+
+                        __addSent(tempWriteNum);
+                    }
+                }
+                catch (ObjectDisposedException x)
+                {
+                    _CheckIfStopped(x);
+
+                    return;
+                }
+                catch (Exception x)
+                {
+                    foreach (var pack in backQueue)
+                        _OnPipeFailure(x, true, pack);
+
+                    return;
+                }
+
+                foreach (var pack in backQueue)
+                {
+                    foreach (var cbk in pack.Callbacks)
+                        cbk();
+
+                    OnInternalPackageSent(pack);
+                }
+
+                lock(send_lock)
+                    if (sendingQueue.Count == 0)
+                        queued = go = false;
+            }
+        }
 #endif
 
 

@@ -277,11 +277,6 @@
             The internal vProto protocol version of the available library.
             </summary>
         </member>
-        <member name="F:vProto.BaseClient.sender">
-            <summary>
-            Thread used to send packages.
-            </summary>
-        </member>
         <member name="F:vProto.BaseClient.streamSender">
             <summary>
             Input stream (to the other side).
