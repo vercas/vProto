@@ -139,7 +139,7 @@ namespace Client
                     Console.WriteLine("Got exception from RMI: {0}", x);
                 }
             }
-            else if (s.Substring(0, 4) == "spn ")
+            else if (s.Length > 4 && s.Substring(0, 4) == "spn ")
             {
                 var cnt = int.Parse(s.Substring(4));
 
@@ -159,7 +159,7 @@ namespace Client
                     Thread.Sleep(10);
                 }
             }
-            else if (s.Substring(0, 4) == "out ")
+            else if (s.Length > 4 && s.Substring(0, 4) == "out ")
             {
                 try
                 {
@@ -187,7 +187,7 @@ namespace Client
                     Console.WriteLine(x.ToString());
                 }
             }
-            else if (s.Substring(0, 8) == "propset ")
+            else if (s.Length > 8 && s.Substring(0, 8) == "propset ")
             {
                 try
                 {
