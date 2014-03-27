@@ -268,7 +268,7 @@ namespace vProto
                     awaitingHeartbeat = true;
 
             if (heartbeatTimeoutTimer == null)
-                heartbeatTimeoutTimer = new Timer(new TimerCallback(__heartbeatTimeoutCallback));
+                heartbeatTimeoutTimer = new Timer(new TimerCallback(__heartbeatTimeoutCallback), null, BaseClient.InfiniteTimeSpan, BaseClient.InfiniteTimeSpan);
 
             lastIDsent = __getNewHeartbeatID();
 

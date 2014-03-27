@@ -105,13 +105,11 @@ namespace vProto.RMI
         /// <returns></returns>
         protected virtual IMessage Handle(Request req, IMethodCallMessage mcm)
         {
-            var task = req.SendAsync();
             byte[] res;
 
             try
             {
-                task.Wait();
-                res = task.Result;
+                res = req.SendSynchronous();
             }
             catch (Exception x)
             {

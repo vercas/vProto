@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 
+#if NETFX_CORE
+using Windows.System.Threading;
+#endif
+
 namespace vProto
 {
     using Internals;
@@ -295,7 +299,13 @@ namespace vProto
                 {
                     queued = true;
 
+#if NETFX_CORE
+#pragma warning disable 4014
+                    ThreadPool.RunAsync(SenderLoop);
+#pragma warning restore 4014
+#else
                     ThreadPool.QueueUserWorkItem(SenderLoop);
+#endif
                 }
             }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>vProto.Debug</name>
+        <name>vProto.WindowsStore.Debug</name>
     </assembly>
     <members>
         <member name="T:vProto.BaseClient">
@@ -70,23 +70,6 @@
             <summary>
             When overriden in a derived class, registers the handlers for internal request types.
             </summary>
-        </member>
-        <member name="M:vProto.BaseClient.RegisterRmiService``1(``0)">
-            <summary>
-            Registers a Remote Method Invocation service with the client.
-            <para>A RMI service is an object whose methods can be accessed remotely over the connection.</para>
-            </summary>
-            <typeparam name="TService">The service interface.</typeparam>
-            <param name="obj">An instance of the service object which implements the given interface.</param>
-            <returns>False if the service already exists; otherwise true</returns>
-        </member>
-        <member name="M:vProto.BaseClient.ProxyRmiService``1">
-            <summary>
-            Acquires a proxy object to a Remote Method Invocation service on the other side.
-            <para>The proxy is used to remotely access methods of the service object over the connection.</para>
-            </summary>
-            <typeparam name="TService">The service interface.</typeparam>
-            <returns>RMI service proxy object</returns>
         </member>
         <member name="M:vProto.BaseClient.Connect">
             <summary>
@@ -1149,202 +1132,6 @@
             <para>Expressed in centiseconds.</para>
             </summary>
         </member>
-        <member name="T:vProto.Protocols.TCP.Client">
-            <summary>
-            A TCP/IP client.
-            </summary>
-        </member>
-        <member name="F:vProto.Protocols.TCP.Client.client">
-            <summary>
-            Underlying TcpClient object.
-            </summary>
-        </member>
-        <member name="F:vProto.Protocols.TCP.Client.Nstream">
-            <summary>
-            Underlying NetworkStream associated with the TcpClient.
-            </summary>
-        </member>
-        <member name="F:vProto.Protocols.TCP.Client.server">
-            <summary>
-            IP endpoint of the server to which the client is connected.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.Dispose">
-            <summary>
-            Releases all the resources used by the current instance of vProto.Protocols.TCP.Client.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.#ctor(vProto.BaseServer)">
-            <summary>
-            Default constructor to be used by inheriting classes.
-            </summary>
-            <param name="server">Server object which owns this client.</param>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.#ctor(System.Net.IPEndPoint)">
-            <summary>
-            Initializes a new instance of the vProto.Protocols.TCP.Client class targeted at the given server.
-            </summary>
-            <param name="server">The address of the server to which this client will connect.</param>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.StartConnection">
-            <summary>
-            Starts the connection to the server.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.HandleTcpServerConnectionSuccess">
-            <summary>
-            Used by inheriting classes to do more with the freshly-acquired TCP/IP client.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Client.HandleTcpClientConnectionSuccess">
-            <summary>
-            Used by inheriting classes to do more with the freshly-connected TCP/IP client.
-            </summary>
-        </member>
-        <member name="T:vProto.Protocols.TCP.Server">
-            <summary>
-            A TCP/IP server.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Server.Dispose">
-            <summary>
-            Releases all the resources used by the current instance of vProto.Protocols.TCP.Server.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Server.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of the vProto.Protocols.TCP.Server which will listen for connections on the specified port.
-            </summary>
-            <param name="port">The port on which to listen for connections.</param>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Server.StartListening">
-            <summary>
-            Starts listenning for connections on the previously-specified TCP port.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:vProto.Protocols.TCP.Server.HandleTcpClient(System.Net.Sockets.TcpClient)">
-            <summary>
-            Used by inheriting classes to do more with the received TCP client.
-            </summary>
-        </member>
-        <member name="T:vProto.Protocols.TCP.SSL.Client">
-            <summary>
-            A TCP/IP client.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.SSL.Client.Dispose">
-            <summary>
-            Releases all the resources used by the current instance of vProto.ClientHandler.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.SSL.Client.#ctor(System.Net.IPEndPoint,System.String)">
-            <summary>
-            Initializes a new instance of the vProto.Protocols.TCP.Client class targeted at the given server.
-            </summary>
-            <param name="server">The address of the server to which this client will connect.</param>
-            <param name="serverName">The name of the server on its certificate.</param>
-        </member>
-        <member name="M:vProto.Protocols.TCP.SSL.Client.HandleTcpClientConnectionSuccess">
-            <summary>
-            Runs when a successful TCP connection has been made.
-            </summary>
-        </member>
-        <member name="T:vProto.Protocols.TCP.SSL.Server">
-            <summary>
-            A TCP/IP server.
-            </summary>
-        </member>
-        <member name="M:vProto.Protocols.TCP.SSL.Server.#ctor(System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate)">
-            <summary>
-            Initializes a new instance of the vProto.Protocols.TCP.SSL.Server which will listen for connections on the specified port.
-            </summary>
-            <param name="port">The port on which to listen for connections.</param>
-            <param name="certificate">The certificate used to authenticate the server.</param>
-        </member>
-        <member name="M:vProto.Protocols.TCP.SSL.Server.HandleTcpClient(System.Net.Sockets.TcpClient)">
-            <summary>
-            Handles a TCP Client object.
-            </summary>
-            <param name="client"></param>
-        </member>
-        <member name="T:vProto.RMI.INamedProxy">
-            <summary>
-            Represents a proxy with a name.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.INamedProxy.Name">
-            <summary>
-            Gets the name associated with the proxy object.
-            </summary>
-        </member>
-        <member name="T:vProto.RMI.ITypedProxy`1">
-            <summary>
-            Represent a proxy over an object of known type.
-            </summary>
-            <typeparam name="TObject">The type proxied by the object.</typeparam>
-        </member>
-        <member name="P:vProto.RMI.ITypedProxy`1.Object">
-            <summary>
-            Gets the proxied object.
-            </summary>
-        </member>
-        <member name="T:vProto.RMI.ITypedProxy">
-            <summary>
-            Represents a proxy over an object.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.ITypedProxy.Object">
-            <summary>
-            Gets the proxied object.
-            </summary>
-        </member>
-        <member name="T:vProto.RMI.BaseService">
-            <summary>
-            Optional base class for vProto RMI services.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.BaseService.CurrentClient">
-            <summary>
-            Gets the vProto.BaseClient object corresponding to the client which invoked the current service method execution.
-            </summary>
-        </member>
-        <member name="T:vProto.RMI.SynchronousProxy`1">
-            <summary>
-            A proxy for synchronous RMI-based communication.
-            </summary>
-            <typeparam name="TService">The proxied RMI service interface.</typeparam>
-        </member>
-        <member name="M:vProto.RMI.SynchronousProxy`1.Invoke(System.Runtime.Remoting.Messaging.IMessage)">
-            <summary>
-            Handles an invocation.
-            </summary>
-            <param name="msg"></param>
-            <returns></returns>
-        </member>
-        <member name="M:vProto.RMI.SynchronousProxy`1.Handle(vProto.Request,System.Runtime.Remoting.Messaging.IMethodCallMessage)">
-            <summary>
-            Handles a request.
-            </summary>
-            <param name="req"></param>
-            <param name="mcm"></param>
-            <returns></returns>
-        </member>
-        <member name="P:vProto.RMI.SynchronousProxy`1.Object">
-            <summary>
-            Gets the proxy object of the service.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.SynchronousProxy`1.Name">
-            <summary>
-            Gets the name of the service.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.SynchronousProxy`1.Type">
-            <summary>
-            Gets the proxied interface type.
-            </summary>
-        </member>
         <member name="T:vProto.Response">
             <summary>
             Desc
@@ -1616,14 +1403,6 @@
         <member name="M:vProto.Request.Abort">
             <summary>
             Marks the request as aborted and disposed and raises the appropriate event.
-            </summary>
-            <returns>The current request object.</returns>
-        </member>
-        <member name="M:vProto.Request.SendAsync">
-            <summary>
-            Attempts to send the request. This process is asynchronous; unlike SendFluent, this method is awaitable and results will be delivered both to the caller and through events.
-            <para>Upon success, the request is marked as sent.</para>
-            <para>Whether this fails or not, the request will be disposed of.</para>
             </summary>
             <returns>The current request object.</returns>
         </member>

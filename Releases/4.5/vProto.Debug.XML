@@ -1627,6 +1627,14 @@
             </summary>
             <returns>The current request object.</returns>
         </member>
+        <member name="M:vProto.Request.SendSynchronous">
+            <summary>
+            Attempts to send the request. This process is synchronous.
+            <para>Upon success, the request is marked as sent.</para>
+            <para>Whether this fails or not, the request will be disposed of.</para>
+            </summary>
+            <returns>The body of the response.</returns>
+        </member>
         <member name="P:vProto.Request.Disposed">
             <summary>
             Gets a value indicating whether the request is disposed or not.

@@ -11,7 +11,7 @@ namespace vProto
     partial class BaseClient
     {
         private Dictionary<Type, object> rmiServices = new Dictionary<Type, object>();
-        private Dictionary<Type, Tuple<object, INamedProxy>> rmiClients = new Dictionary<Type, Tuple<object, INamedProxy>>();
+        private Dictionary<Type, KeyValuePair<object, INamedProxy>?> rmiClients = new Dictionary<Type, KeyValuePair<object, INamedProxy>?>();
 
 
 
@@ -58,17 +58,17 @@ namespace vProto
         public TService ProxyRmiService<TService>()
             where TService : class
         {
-            Tuple<object, INamedProxy> res = null;
+            KeyValuePair<object, INamedProxy>? res = null;
 
             if (rmiClients.TryGetValue(typeof(TService), out res))
             {
-                return res.Item1 as TService;
+                return res.Value.Key as TService;
             }
             else
             {
                 var proxy = new SynchronousProxy<TService>(this);
 
-                rmiClients.Add(typeof(TService), new Tuple<object, INamedProxy>(proxy.Object, proxy));
+                rmiClients.Add(typeof(TService), new KeyValuePair<object, INamedProxy>(proxy.Object, proxy));
 
                 return proxy.Object;
             }
@@ -88,6 +88,7 @@ namespace vProto
 
             if (rmiServices.TryGetValue(call.Interface, out o))
             {
+#if NET_4_0_PLUS
                 var asBase = o as BaseService;
                 BaseClient temp = null;
 
@@ -96,16 +97,10 @@ namespace vProto
                     temp = asBase.client.Value;
                     asBase.client.Value = this;
                 }
+#endif
 
                 try
                 {
-                    /*var types = new Type[call.Args.Length];
-
-                    for (int i = 0; i < types.Length; i++)
-                        types[i] = call.Args[i].GetType();
-
-                    var result = o.GetType().GetMethod(call.Method, types).Invoke(o, call.Args); // Y U NO WORK? :( */
-
                     var result = o.GetType().GetMethod(call.Method, BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod).Invoke(o, call.Args);
 
                     ret = new RmiReturn(result, call.Args, null);
@@ -115,15 +110,17 @@ namespace vProto
                     ret = new RmiReturn(null, null, x);
                 }
 
+#if NET_4_0_PLUS
                 if (asBase != null)
                 {
                     asBase.client.Value = temp;
                     temp = null;    //  Explicit de-referencing
                 }
+#endif
             }
             else
             {
-                ret = new RmiReturn(null, null, new TypeAccessException("There is no service object registered to interface {0}"));
+                ret = new RmiReturn(null, null, new NotImplementedException("There is no service object registered to interface {0}"));
             }
 
             e.Response.SetPayload(BinarySerialization.Serialize(ret)).Send();

@@ -1,6 +1,11 @@
 ﻿using System;
-#if NET_4_0_PLUS
+
+#if NET_4_0_PLUS || NETFX_CORE
 using System.Threading.Tasks;
+#endif
+
+#if NET_3_5
+using System.Threading;
 #endif
 
 namespace vProto
@@ -152,5 +157,59 @@ namespace vProto
             //return Task<byte[]>.Factory.FromAsync()
         }
 #endif
+
+        /// <summary>
+        /// Attempts to send the request. This process is synchronous.
+        /// <para>Upon success, the request is marked as sent.</para>
+        /// <para>Whether this fails or not, the request will be disposed of.</para>
+        /// </summary>
+        /// <returns>The body of the response.</returns>
+        public byte[] SendSynchronous()
+        {
+#if NET_4_0_PLUS
+            return SendAsync().Result;
+#else
+            if (Disposed)
+                throw new ObjectDisposedException(this.GetType().FullName, "Cannot send a disposed request!");
+
+            byte[] resD = null;
+            Exception resE = null;
+            int res = 0;
+
+            AddResponseReceivedHandler(delegate(Request sender, BaseClient client, ResponseReceivedEventArgs e)
+            {
+                resD = e.Payload;
+                res = 1;
+            }).AddTimeoutHandler(delegate(Request sender, BaseClient client, EventArgs e)
+            {
+                res = -1;
+            }).AddFailureHandler(delegate(Request sender, BaseClient client, RequestFailureEventArgs e)
+            {
+                resE = e.Exception;
+                res = 2;
+            }).SendFluent();
+
+            while (res == 0)
+            {
+#if NETFX_CORE
+                Task.Delay(1).Wait();
+#else
+                Thread.Sleep(1);
+#endif
+            }
+
+            switch (res)
+            {
+                case -1:
+                case 1:
+                    return resD;
+
+                case 2:
+                    throw resE;
+            }
+
+            return null;
+#endif
+        }
     }
 }

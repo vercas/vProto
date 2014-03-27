@@ -28,7 +28,7 @@ namespace vProto
             get
             {
                 lock (_peers_lock)
-                    return (_peers == null) ? null : ((_peers_ro == null) ? (_peers_ro = _peers.AsReadOnly()) : _peers_ro);
+                    return (_peers == null) ? null : ((_peers_ro == null) ? (_peers_ro = new ReadOnlyCollection<int>(_peers)) : _peers_ro);
             }
         }
 

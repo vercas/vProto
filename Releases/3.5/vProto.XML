@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>vProto.Debug</name>
+        <name>vProto</name>
     </assembly>
     <members>
         <member name="T:vProto.BaseClient">
@@ -1299,16 +1299,6 @@
             Gets the proxied object.
             </summary>
         </member>
-        <member name="T:vProto.RMI.BaseService">
-            <summary>
-            Optional base class for vProto RMI services.
-            </summary>
-        </member>
-        <member name="P:vProto.RMI.BaseService.CurrentClient">
-            <summary>
-            Gets the vProto.BaseClient object corresponding to the client which invoked the current service method execution.
-            </summary>
-        </member>
         <member name="T:vProto.RMI.SynchronousProxy`1">
             <summary>
             A proxy for synchronous RMI-based communication.
@@ -1616,14 +1606,6 @@
         <member name="M:vProto.Request.Abort">
             <summary>
             Marks the request as aborted and disposed and raises the appropriate event.
-            </summary>
-            <returns>The current request object.</returns>
-        </member>
-        <member name="M:vProto.Request.SendAsync">
-            <summary>
-            Attempts to send the request. This process is asynchronous; unlike SendFluent, this method is awaitable and results will be delivered both to the caller and through events.
-            <para>Upon success, the request is marked as sent.</para>
-            <para>Whether this fails or not, the request will be disposed of.</para>
             </summary>
             <returns>The current request object.</returns>
         </member>

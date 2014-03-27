@@ -121,7 +121,7 @@ namespace Client
                 //client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(1000).AddResponseReceivedHandler(responseHandler).SendFluent();
                 try
                 {
-                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(10000).SendAsync().Result));
+                    Console.WriteLine("Inlined request response: {0}", Encoding.UTF8.GetString(client.CreateRequest(-1, Encoding.UTF8.GetBytes(s)).SetTimeout(10000).SendSynchronous()));
                 }
                 catch (Exception x)
                 {

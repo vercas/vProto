@@ -4,95 +4,130 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B71627E2-D86D-44E4-8B55-1E1C28A95493}</ProjectGuid>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4A69023-EEB4-4AD3-8979-1EB35050F0EB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>vProto</RootNamespace>
-    <AssemblyName>vProto</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyName>vProto.WindowsStore</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug .NET 4.5|AnyCPU' ">
-    <AssemblyName>vProto.Debug</AssemblyName>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DocumentationFile>..\Releases\Windows Store\vProto.WindowsStore.Debug.XML</DocumentationFile>
+    <AssemblyName>vProto.WindowsStore.Debug</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Releases\4.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <OutputPath>..\Releases\Windows Store\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\Releases\4.5\vProto.Debug.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release .NET 4.5|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DocumentationFile>..\Releases\Windows Store\vProto.WindowsStore.XML</DocumentationFile>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Releases\4.5\</OutputPath>
-    <DefineConstants>TRACE;NET_4_5;NET_4_5_PLUS;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <OutputPath>..\Releases\Windows Store\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\Releases\4.5\vProto.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 4.0|AnyCPU'">
-    <AssemblyName>vProto.Debug</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DocumentationFile>..\Releases\Windows Store\ARM\vProto.WindowsStore.Debug.XML</DocumentationFile>
+    <AssemblyName>vProto.WindowsStore.Debug</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Releases\4.0\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\Releases\Windows Store\ARM\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\Releases\4.0\vProto.Debug.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release .NET 4.0|AnyCPU'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <OutputPath>..\Releases\4.0\</OutputPath>
-    <DefineConstants>TRACE;NET_4_0;NET_4_0_PLUS;NET_3_5_PLUS</DefineConstants>
+    <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\Releases\4.0\vProto.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 3.5|AnyCPU'">
-    <AssemblyName>vProto.Debug</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <DocumentationFile>..\Releases\Windows Store\ARM\vProto.WindowsStore.XML</DocumentationFile>
+    <OutputPath>..\Releases\Windows Store\ARM\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DocumentationFile>..\Releases\Windows Store\x64\vProto.WindowsStore.Debug.XML</DocumentationFile>
+    <AssemblyName>vProto.WindowsStore.Debug</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Releases\3.5\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET_3_5;NET_3_5_PLUS</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>..\Releases\Windows Store\x64\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\Releases\3.5\vProto.Debug.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release .NET 3.5|AnyCPU'">
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <OutputPath>..\Releases\3.5\</OutputPath>
-    <DefineConstants>TRACE;NET_3_5;NET_3_5_PLUS</DefineConstants>
+    <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DocumentationFile>..\Releases\Windows Store\x64\vProto.WindowsStore.XML</DocumentationFile>
+    <OutputPath>..\Releases\Windows Store\x64\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>..\Releases\3.5\vProto.XML</DocumentationFile>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DocumentationFile>..\Releases\Windows Store\x86\vProto.WindowsStore.Debug.XML</DocumentationFile>
+    <AssemblyName>vProto.WindowsStore.Debug</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Releases\Windows Store\x86\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\Releases\Windows Store\x86\</OutputPath>
+    <DocumentationFile>..\Releases\Windows Store\x86\vProto.WindowsStore.XML</DocumentationFile>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base Client\Peers.cs" />
     <Compile Include="Base Client\Handshake.cs" />
-    <Compile Include="Base Client\Remote Method Invocation.cs" />
     <Compile Include="Base Client\Connection.cs" />
     <Compile Include="Base Client\Abstract Methods.cs" />
     <Compile Include="Base Client\Request Handlers.cs" />
@@ -126,23 +161,15 @@
     <Compile Include="Events\ServerStoppedEventArgs.cs" />
     <Compile Include="Events\ServerStartupFailedEventArgs.cs" />
     <Compile Include="Internal Utilities\Allocator.cs" />
-    <Compile Include="Internal Utilities\Binary Serialization.cs" />
     <Compile Include="Internal Utilities\Bit Conversions.cs" />
     <Compile Include="Internal Utilities\IHazID.cs" />
     <Compile Include="Internal Utilities\Queued Package.cs" />
-    <Compile Include="Internal Utilities\RMI Containers.cs" />
     <Compile Include="Internal Utilities\Stored Request-Response.cs" />
     <Compile Include="Packages\Internal Request Types.cs" />
     <Compile Include="Packages\Package Types.cs" />
     <Compile Include="Packages\Package.cs" />
     <Compile Include="Packages\Packet Header.cs" />
-    <Compile Include="Protocols\TCP\Client.cs" />
-    <Compile Include="Protocols\TCP\Server.cs" />
-    <Compile Include="Protocols\TCP\SSL\Client.cs" />
-    <Compile Include="Protocols\TCP\SSL\Server.cs" />
-    <Compile Include="RMI\%40 Interfaces.cs" />
-    <Compile Include="RMI\BaseService.cs" />
-    <Compile Include="RMI\Synchronous Proxy.cs" />
+    <Compile Include="Protocols\StreamSocket\Client.cs" />
     <Compile Include="Internal Utilities\RequestHandler.cs" />
     <Compile Include="Response\%40 Status and Disposal.cs" />
     <Compile Include="Response\Request.cs" />
@@ -165,7 +192,10 @@
   <ItemGroup>
     <None Include="key.pfx" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -173,9 +203,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <!--<Target Name="Build">
-    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net45\;IntermediateOutputPath=obj\Release\net45\;TargetFrameworkVersion=v4.5" />
-    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net40\;IntermediateOutputPath=obj\Release\net40\;TargetFrameworkVersion=v4.0" />
-    <MSBuild Projects="vProto.csproj" Properties="Configuration=Release;OutputPath=BuildArtifacts\net35\;IntermediateOutputPath=obj\Release\net35\;TargetFrameworkVersion=v3.5" />
-  </Target>-->
 </Project>

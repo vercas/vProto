@@ -1,4 +1,10 @@
 ﻿using System;
+using System.IO;
+
+#if NETFX_CORE
+using Windows.Foundation;
+using Windows.System.Threading;
+#endif
 
 namespace vProto
 {
@@ -160,7 +166,11 @@ namespace vProto
 
             try
             {
+#if NETFX_CORE
+                streamReceiver.ReadAsync(packageHeaderBuff, 0, packageHeaderSize).AsAsyncOperation().Completed = LowStartGettingPackages_Callback;
+#else
                 streamReceiver.BeginRead(packageHeaderBuff, 0, packageHeaderSize, LowStartGettingPackages_Callback, null);
+#endif
 
                 //Console.WriteLine("Receipt start.");
 
@@ -178,12 +188,33 @@ namespace vProto
             return false;
         }
 
+#if NETFX_CORE
+        void LowStartGettingPackages_Callback(IAsyncOperation<int> asyncInfo, AsyncStatus asyncStatus)
+#else
         void LowStartGettingPackages_Callback(IAsyncResult ar)
+#endif
         {
-            int amnt;
+            int amnt = 0;
 
             //Console.WriteLine("Receipt callback.");
 
+#if NETFX_CORE
+            if (asyncInfo.Status == AsyncStatus.Error)
+            {
+                if (asyncInfo.ErrorCode is ObjectDisposedException || asyncInfo.ErrorCode is IOException)
+                {
+                    _CheckIfStopped(asyncInfo.ErrorCode);
+
+                    return;
+                }
+
+                _OnPipeFailure(asyncInfo.ErrorCode, false, null);
+
+                return;
+            }
+            else if (asyncInfo.Status == AsyncStatus.Completed)
+                amnt = asyncInfo.GetResults();
+#else
             try
             {
                 amnt = streamReceiver.EndRead(ar);
@@ -194,7 +225,7 @@ namespace vProto
 
                 return;
             }
-            catch (System.IO.IOException x)
+            catch (IOException x)
             {
                 _CheckIfStopped(x);
 
@@ -206,6 +237,7 @@ namespace vProto
 
                 return;
             }
+#endif
 
             if (amnt == 0)
             {
@@ -257,7 +289,11 @@ namespace vProto
             {
                 try
                 {
+#if NETFX_CORE
+                    streamReceiver.ReadAsync(packageHeaderBuff, packageBytesRead, packageHeaderSize - packageBytesRead).AsAsyncOperation().Completed = LowStartGettingPackages_Callback;
+#else
                     streamReceiver.BeginRead(packageHeaderBuff, packageBytesRead, packageHeaderSize - packageBytesRead, LowStartGettingPackages_Callback, ar.AsyncState);
+#endif
                 }
                 catch (ObjectDisposedException x)
                 {
@@ -276,7 +312,11 @@ namespace vProto
             {
                 try
                 {
+#if NETFX_CORE
+                    streamReceiver.ReadAsync(packagePayloadBuff, packageBytesRead - packageHeaderSize, expectedSize - packageBytesRead).AsAsyncOperation().Completed = LowStartGettingPackages_Callback;
+#else
                     streamReceiver.BeginRead(packagePayloadBuff, packageBytesRead - packageHeaderSize, expectedSize - packageBytesRead, LowStartGettingPackages_Callback, ar.AsyncState);
+#endif
                 }
                 catch (ObjectDisposedException x)
                 {

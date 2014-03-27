@@ -88,7 +88,7 @@ namespace vProto
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine("Got bogus response of id {0} and type {1}. Request might have timed out?", pack.Header.IDTop, pack.Header.IDBottom);
+                System.Diagnostics.Debug.WriteLine(string.Format("Got bogus response of id {0} and type {1}. Request might have timed out?", pack.Header.IDTop, pack.Header.IDBottom));
             }
 #endif
         }
@@ -113,7 +113,7 @@ namespace vProto
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine("Sent bogus response of id {0} and type {1}. Shouldn't happen...", pack.Header.IDTop, pack.Header.IDBottom);
+                System.Diagnostics.Debug.WriteLine(string.Format("Sent bogus response of id {0} and type {1}. Shouldn't happen...", pack.Header.IDTop, pack.Header.IDBottom));
             }
 #endif
         }
@@ -141,7 +141,7 @@ namespace vProto
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine("Failed to send request {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+                System.Diagnostics.Debug.WriteLine(string.Format("Failed to send request {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom));
             }
 #endif
         }
@@ -169,7 +169,7 @@ namespace vProto
 #if DEBUG
             //else
             {
-                System.Diagnostics.Debug.WriteLine("Failed to send response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+                System.Diagnostics.Debug.WriteLine(string.Format("Failed to send response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom));
             }
 #endif
         }
@@ -195,7 +195,7 @@ namespace vProto
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine("Failed to receive response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom);
+                System.Diagnostics.Debug.WriteLine(string.Format("Failed to receive response {0} of type {1}!", pack.Header.IDTop, pack.Header.IDBottom));
             }
 #endif
         }
