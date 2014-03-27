@@ -127,6 +127,8 @@ namespace vProto
 
             }
 #endif
+
+            GC.SuppressFinalize(this);
         }
 
 

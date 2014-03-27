@@ -73,12 +73,14 @@ namespace vProto
 
             try
             {
-                str.Close();
+                str.Dispose();
             }
             catch { }
             finally
             {
                 Disposed = true;
+
+                GC.SuppressFinalize(this);
             }
         }
 

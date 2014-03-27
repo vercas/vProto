@@ -5,7 +5,9 @@ namespace vProto.Events
     /// <summary>
     /// Provides data for the vProto.BaseClient.SendFailed or vProto.BaseClient.ReceiptFailed events. This class cannot be inherited.
     /// </summary>
+#if !NETFX_CORE
     [Serializable]
+#endif
     public sealed class PipeFailureEventArgs
         : ExceptionCarryingEventArgs
     {

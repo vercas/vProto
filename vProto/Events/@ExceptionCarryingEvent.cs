@@ -5,7 +5,9 @@ namespace vProto.Events
     /// <summary>
     /// Base class for events which may carry an exception.
     /// </summary>
+#if !NETFX_CORE
     [Serializable]
+#endif
     public class ExceptionCarryingEventArgs
         : EventArgs
     {

@@ -6,7 +6,11 @@ namespace vProto.Collections
     using Events;
 
     using IDictType = IDictionary<short, Events.ClientEventHandler<Events.RequestReceivedEventArgs>>;
+#if NET_3_5_PLUS
     using ListType = SortedList<short, Events.ClientEventHandler<Events.RequestReceivedEventArgs>>;
+#else
+    using ListType = Dictionary<short, Events.ClientEventHandler<Events.RequestReceivedEventArgs>>;
+#endif
 
     /// <summary>
     /// A collection of handlers for specific request types.

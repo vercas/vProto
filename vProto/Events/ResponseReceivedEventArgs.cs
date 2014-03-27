@@ -6,7 +6,9 @@ namespace vProto.Events
     /// <summary>
     /// Provides data for the vProto.Request.ResponseReceived event. This class cannot be inherited.
     /// </summary>
+#if !NETFX_CORE
     [Serializable]
+#endif
     public sealed class ResponseReceivedEventArgs
         : EventArgs
     {

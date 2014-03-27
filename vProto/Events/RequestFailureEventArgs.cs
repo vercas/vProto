@@ -5,7 +5,9 @@ namespace vProto.Events
     /// <summary>
     /// Provides data for the vProto.Request.RequestFailure event. This class cannot be inherited.
     /// </summary>
+#if !NETFX_CORE
     [Serializable]
+#endif
     public sealed class RequestFailureEventArgs
         : ExceptionCarryingEventArgs
     {

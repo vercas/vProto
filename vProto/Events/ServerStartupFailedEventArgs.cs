@@ -5,7 +5,9 @@ namespace vProto.Events
     /// <summary>
     /// Provides data for the vProto.Server.ServerStartupFailed event. This class cannot be inherited.
     /// </summary>
+#if !NETFX_CORE
     [Serializable]
+#endif
     public sealed class ServerStartupFailedEventArgs
         : ExceptionCarryingEventArgs
     {

@@ -109,7 +109,6 @@
     <Compile Include="Internal Utilities\Stored Request-Response.cs" />
     <Compile Include="Packages\Internal Request Types.cs" />
     <Compile Include="Packages\Package Types.cs" />
-    <Compile Include="Internal Utilities\Struct mapping.cs" />
     <Compile Include="Packages\Package.cs" />
     <Compile Include="Packages\Packet Header.cs" />
     <Compile Include="Protocols\TCP\Client.cs" />

@@ -65,14 +65,16 @@ namespace vProto
             try
             {
                 if (str != null)
-                    str.Close();
+                    str.Dispose();
 
-                reqstr.Close();
+                reqstr.Dispose();
             }
             catch { }
             finally
             {
                 Disposed = true;
+
+                GC.SuppressFinalize(this);
             }
         }
 

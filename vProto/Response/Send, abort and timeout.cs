@@ -26,9 +26,9 @@ namespace vProto
 
                 try
                 {
-                    str.Close();
+                    str.Dispose();
 
-                    reqstr.Close();
+                    reqstr.Dispose();
                 }
                 catch { }
                 finally
@@ -54,9 +54,9 @@ namespace vProto
                 try
                 {
                     if (str != null)
-                        str.Close();
+                        str.Dispose();
 
-                    reqstr.Close();
+                    reqstr.Dispose();
                 }
                 catch { }
                 finally
@@ -77,9 +77,9 @@ namespace vProto
                 try
                 {
                     if (str != null)
-                        str.Close();
+                        str.Dispose();
 
-                    reqstr.Close();
+                    reqstr.Dispose();
                 }
                 catch { }
                 finally

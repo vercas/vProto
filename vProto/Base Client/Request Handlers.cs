@@ -15,7 +15,9 @@ namespace vProto
         {
             base.__registerDefaultInternalRequestHandlers();
 
+#if NET_4_0_PLUS
             __addInternalRequestHandler(InternalRequestType.RMI, _handleRmiRequest);
+#endif
             __addInternalRequestHandler(InternalRequestType.Handshake, _handleHandshakeRequest);
         }
     }

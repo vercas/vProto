@@ -39,6 +39,8 @@ namespace vProto
 
             Disposed = true;
             IsOn = false;
+
+            GC.SuppressFinalize(this);
         }
 
 
