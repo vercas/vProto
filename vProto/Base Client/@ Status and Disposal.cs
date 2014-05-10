@@ -23,6 +23,8 @@ namespace vProto
         internal static readonly TimeSpan InfiniteTimeSpan = new TimeSpan(0, 0, 0, 0, -1);
 
 
+        internal Exception disposalException = null;
+
 
 #if RECEIVER_THREAD
         /// <summary>
@@ -128,6 +130,11 @@ namespace vProto
             }
 #endif
 
+            if (IsConnected)
+                OnDisconnected(new Events.ClientDisconnectedEventArgs(disposalException));
+            else
+                OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(disposalException));
+
             GC.SuppressFinalize(this);
         }
 
@@ -152,14 +159,9 @@ namespace vProto
         {
             if (IsInternallyConnected || force)
             {
-                var isc = IsConnected;
+                disposalException = x;
 
                 Dispose();
-
-                if (isc)
-                    OnDisconnected(new Events.ClientDisconnectedEventArgs(x));
-                else
-                    OnConnectionFailed(new Events.ClientConnectionFailedEventArgs(x));
             }
         }
 
