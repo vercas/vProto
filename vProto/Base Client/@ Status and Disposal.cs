@@ -67,6 +67,15 @@ namespace vProto
             Disposed = true;
             IsInternallyConnected = false;
             IsConnected = false;
+            
+            try
+            {
+                Owner.RemoveClient(this);
+            }
+            catch (Exception)
+            {
+
+            }
 
             try
             {
