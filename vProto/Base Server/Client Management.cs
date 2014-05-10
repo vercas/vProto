@@ -80,6 +80,16 @@ namespace vProto
                 }
                 // else what the heck is going on?
         }
+        
+        //Because Vercas didn't add it
+        /// <summary>
+        /// Removes client from BaseServer client list
+        /// </summary>
+        /// <returns></returns>
+        public void RemoveClient(BaseClient h)
+        {
+            _RemoveClient(h);
+        }
 
 
 
